@@ -1,0 +1,33 @@
+list of improvements to do (SOME ARE ALREADY implemented, the others arent yet)
+
+(this whole .txt file is a NOTE TO SELF)
+
+1. sort and filter the accepted product requests
+2. sort and filter the type of requests (based on products)
+3. overall UI
+4. payment gateway integration
+5. soonest payment first
+6. warning for deadline nearings
+7. overdue payments
+8. implement EEFM present worth, future worth, emi, interest schemes - give option for company to pay lesser amount now,
+or eventually pay larger amount over period of time - stuff like that - varied partial payments (NOTE: NET30 and pay earlier than 30
+are the most sensible ones to implement for MSMEs, that too in india. look into these options though)
+9. giving discounts and star ratings/credits for companies/vendors for keeping integrity.
+10. switch to mongodb atlas? check if i should be having all the database stuff in compass ka localhost 120710 something
+or if it is better to have it connected to that VendorManagement thing that i created (maybe create a new one)
+
+i think, we can have individual payment requests ke liye ek ek button and then at the bottom of the page, we can have 
+"all displayed payment requests" ko clear karne ke liye ek button.
+and we can use filters and sort and stuff to change whats displayed on the page - so we can kinda group the payments and pay in bulk.
+
+alright now, can you add a  button next to each of the accepted products, which says "make payment" along with an input text box.
+this text box should accept any amount thats equal to or lesser than the total price of the quantity of the same product bought.
+and on clicking on "make payment" it should ask the company to re-enter the password. if it is same, then it should make the
+transaction and keep track of how much is paid and how much needs to be paid next, and change the status from unpaid
+to partially paid and if at all the entire amount is paid then change it to paid.
+
+done done, final things to implement are:
+1. IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
+2. features like sort, and search/filter by vendor/company
+3. autoscroll to high priority payments, set priorities to payments (defaulting to the deadlines), but editable
+4. make sure any feature implemented on company side, also gets implemented on vendor side
