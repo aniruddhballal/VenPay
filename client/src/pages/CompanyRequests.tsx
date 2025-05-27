@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface Transaction {
   _id: string;
   amountPaid: number;
   paidBy: { name: string };
   createdAt: string;
-  paidAt?: string;  // Add this line
+  paidAt?: string;
 }
 
 interface Request {
@@ -29,28 +30,29 @@ export default function CompanyRequests() {
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/requests/company/full", { withCredentials: true })
-      .then(res => setRequests(res.data))
-      .catch(err => {
+      .then((res) => setRequests(res.data))
+      .catch((err: any) => {
         console.error(err);
-        alert("Failed to load product requests.");
+        const message = err.response?.data?.error || "Failed to load product requests.";
+        toast.error(message);
       })
       .finally(() => setLoading(false));
   }, []);
 
   const grouped = {
-    accepted: requests.filter(r => r.status === "accepted"),
-    declined: requests.filter(r => r.status === "declined"),
-    pending: requests.filter(r => r.status === "pending"),
+    accepted: requests.filter((r) => r.status === "accepted"),
+    declined: requests.filter((r) => r.status === "declined"),
+    pending: requests.filter((r) => r.status === "pending"),
   };
 
-  if (loading) return <div>Loading requests...</div>;
+  if (loading) return <div className="requests-loading">Loading requests...</div>;
 
   return (
-    <div>
-      <h3>Your Product Requests</h3>
+    <div className="company-requests-container">
+      <h3 className="requests-title">Your Product Requests</h3>
 
       {requests.length === 0 ? (
-        <p>No requests sent yet.</p>
+        <p className=".no-requests">No requests sent yet.</p>
       ) : (
         <>
           <RequestSection title="Accepted Requests" data={grouped.accepted} />
@@ -85,7 +87,7 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
 
   useEffect(() => {
     data.forEach(async (req) => {
-      if (req.status !== "accepted") return; // only fetch for accepted
+      if (req.status !== "accepted") return;
 
       try {
         const res = await axios.get(
@@ -99,8 +101,10 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
           { withCredentials: true }
         );
         setAmountDueMap((prev) => ({ ...prev, [req._id]: paymentRes.data.amountDue }));
-      } catch (err) {
+      } catch (err: any) {
         console.error(`Failed to load transactions or amount due for request ${req._id}`, err);
+        const message = err.response?.data?.error || `Failed to load data for request ${req._id}`;
+        toast.error(message);
       }
     });
   }, [data]);
@@ -110,12 +114,12 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
     const password = passwords[req._id];
 
     if (!password) {
-      alert("Please enter your password to confirm the payment.");
+      toast.warn("Please enter your password to confirm the payment.");
       return;
     }
 
-    if (isNaN(amount) || amount <= 0 || amount > req.totalPrice) {
-      alert("Enter a valid amount up to the total price.");
+    if (isNaN(amount) || amount <= 0 || amount > (amountDueMap[req._id] ?? req.totalPrice)) {
+      toast.warn("Enter a valid amount up to the amount due.");
       return;
     }
 
@@ -125,18 +129,18 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         { amount, password },
         { withCredentials: true }
       );
-      alert("Payment successful!");
+      toast.success("Payment successful!");
       window.location.reload();
     } catch (err: any) {
-      alert(err?.response?.data?.error || "Payment failed.");
+      toast.error(err?.response?.data?.error || "Payment failed.");
     }
   };
 
   if (data.length === 0) return null;
 
   return (
-    <div style={{ marginBottom: "2rem" }}>
-      <h4>{title}</h4>
+    <section className="request-section">
+      <h4 className="section-title">{title}</h4>
       {data.map((req) => {
         const deadlineDate = req.paymentDeadline
           ? new Date(req.paymentDeadline).toLocaleString("en-IN", {
@@ -152,59 +156,84 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         const timeLeft = req.paymentDeadline ? formatTimeLeft(req.paymentDeadline) : null;
 
         return (
-          <div
-            key={req._id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              margin: "10px 0",
-            }}
-          >
-            <p><strong>Product:</strong> {req.productId.name}</p>
-            <p><strong>Vendor:</strong> {req.vendorId.name} ({req.vendorId.email})</p>
-            <p><strong>Status:</strong> {req.status}</p>
-            <p><strong>Requested Payback Duration:</strong> {req.message || "Net30 (default)"}</p>
-            <p><strong>Requested on:</strong> {new Date(req.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
-            <p><strong>Quantity:</strong> {req.quantity}</p>
-            <p><strong>Unit Price:</strong> ₹{req.unitPrice.toFixed(2)}</p>
-            <p><strong>Total Price:</strong> ₹{req.totalPrice.toFixed(2)}</p>
+          <div key={req._id} className={`request-card status-${req.status}`}>
+            <div className="request-info">
+              <p>
+                <strong>Product:</strong> {req.productId.name}
+              </p>
+              <p>
+                <strong>Vendor:</strong> {req.vendorId.name} ({req.vendorId.email})
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span className={`status-label status-${req.status}`}>{req.status}</span>
+              </p>
+              <p>
+                <strong>Requested Payback Duration:</strong> {req.message || "Net30 (default)"}
+              </p>
+              <p>
+                <strong>Requested on:</strong>{" "}
+                {new Date(req.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+              </p>
+              <p>
+                <strong>Quantity:</strong> {req.quantity}
+              </p>
+              <p>
+                <strong>Unit Price:</strong> ₹{req.unitPrice.toFixed(2)}
+              </p>
+              <p>
+                <strong>Total Price:</strong> ₹{req.totalPrice.toFixed(2)}
+              </p>
+            </div>
 
             {req.status === "accepted" && (
-              <>
-                <p><strong>Amount Due:</strong> ₹{amountDueMap[req._id]?.toFixed(2) ?? "Loading..."}</p>
+              <div className="payment-section">
+                <p>
+                  <strong>Amount Due:</strong> ₹
+                  {amountDueMap[req._id] !== undefined
+                    ? amountDueMap[req._id].toFixed(2)
+                    : "Loading..."}
+                </p>
 
                 {amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0 && (
-                  <p style={{ color: "green", fontWeight: "bold" }}>Payment has been cleared.</p>
+                  <p className="paid-clear">Payment has been cleared.</p>
                 )}
 
                 {req.paymentDeadline && (
-                  <p><strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}</p>
+                  <p>
+                    <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
+                  </p>
                 )}
 
-                <input
-                  type="number"
-                  placeholder="Amount to pay"
-                  value={amounts[req._id] || ""}
-                  onChange={(e) => setAmounts({ ...amounts, [req._id]: e.target.value })}
-                  max={req.totalPrice}
-                  min={1}
-                  disabled={amountDueMap[req._id] <= 0}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={passwords[req._id] || ""}
-                  onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
-                  disabled={amountDueMap[req._id] <= 0}
-                />
-                <button
-                  onClick={() => handlePayment(req)}
-                  disabled={amountDueMap[req._id] <= 0}
-                >
-                  Make Payment
-                </button>
+                <div className="payment-input-group">
+                  <input
+                    className="payment-input-amount"
+                    type="number"
+                    placeholder="Amount to pay"
+                    value={amounts[req._id] || ""}
+                    onChange={(e) => setAmounts({ ...amounts, [req._id]: e.target.value })}
+                    max={amountDueMap[req._id] ?? req.totalPrice}
+                    min={1}
+                    disabled={amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0}
+                  />
+                  <input
+                    className="payment-input-password"
+                    type="password"
+                    placeholder="Password"
+                    value={passwords[req._id] || ""}
+                    onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
+                    disabled={amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0}
+                  />
+                  <button
+                    className="payment-button"
+                    onClick={() => handlePayment(req)}
+                    disabled={amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0}
+                  >
+                    Make Payment
+                  </button>
+                </div>
 
-                <div style={{ marginTop: "1rem" }}>
+                <div className="transactions-list">
                   <h5>Payment Transactions</h5>
                   {transactions[req._id]?.length ? (
                     <ul>
@@ -221,11 +250,11 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                     <p>No payments made yet.</p>
                   )}
                 </div>
-              </>
+              </div>
             )}
           </div>
         );
       })}
-    </div>
+    </section>
   );
 }
