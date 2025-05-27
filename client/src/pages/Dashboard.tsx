@@ -5,6 +5,7 @@ import ProductManagement from "./ProductManagement";
 import ProductList from "./ProductList";
 import VendorRequests from "./VendorRequests";
 import CompanyRequests from "./CompanyRequests";
+import { toast } from "react-toastify";
 
 type User = {
   email: string;
@@ -22,18 +23,21 @@ export default function Dashboard() {
       .get("http://localhost:5000/api/auth/me", { withCredentials: true })
       .then(res => {
         const fetchedUser = res.data.user;
-        //console.log("Fetched user:", fetchedUser);
 
-        // Ensure user has required fields
-        if (fetchedUser?.email && (fetchedUser.userType === "vendor" || fetchedUser.userType === "company")) {
+        if (
+          fetchedUser?.email &&
+          (fetchedUser.userType === "vendor" || fetchedUser.userType === "company")
+        ) {
           setUser(fetchedUser);
         } else {
           console.warn("User data incomplete or invalid:", fetchedUser);
+          toast.error("Invalid user session. Please log in again.");
           navigate("/login");
         }
       })
       .catch(err => {
         console.error("Auth check failed:", err);
+        toast.error(err.response?.data?.error || "Authentication failed. Please log in again.");
         navigate("/login");
       })
       .finally(() => setLoading(false));
@@ -43,22 +47,25 @@ export default function Dashboard() {
     try {
       await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
       navigate("/login");
-    } catch (err) {
+    } catch (err: any) {
       console.error("Logout failed:", err);
+      toast.error(err.response?.data?.error || "Logout failed. Please try again.");
     }
   };
 
-  if (loading) return <div>Loading user data...</div>;
-  if (!user) return <div>Not authorized</div>;
+  if (loading) return <div className="loading">Loading user data...</div>;
+  if (!user) return <div className="unauthorized">Not authorized</div>;
 
   return (
-    <div>
-      <h1>Welcome, {user.name}</h1>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="dashboard-container">
+      <h1 className="dashboard-header">Welcome, {user.name}</h1>
+      <button className="logout-button" onClick={handleLogout}>
+        Logout
+      </button>
 
       {user.userType === "vendor" && (
         <>
-          <h2>Vendor Dashboard</h2>
+          <h2 className="dashboard-subheader">Vendor Dashboard</h2>
           <ProductManagement />
           <VendorRequests />
         </>
@@ -66,7 +73,7 @@ export default function Dashboard() {
 
       {user.userType === "company" && (
         <>
-          <h2>Company Dashboard</h2>
+          <h2 className="dashboard-subheader">Company Dashboard</h2>
           <ProductList />
           <CompanyRequests />
         </>
