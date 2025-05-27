@@ -22,7 +22,6 @@ router.post("/", protect, async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    // ✅ Validate quantity
     if (!quantity || quantity <= 0) {
       res.status(400).json({ error: "Quantity must be a positive number." });
       return;
@@ -30,9 +29,12 @@ router.post("/", protect, async (req: AuthRequest, res: Response): Promise<void>
 
     const product = await Product.findById(productId);
     if (!product) {
+      console.warn(`[WARN] Product not found: ${productId}`);
       res.status(404).json({ error: "Product not found." });
       return;
     }
+
+    console.log(`[DEBUG] Product found: ${product.name}, image: ${product.image}`);
 
     const existingRequest = await ProductRequest.findOne({
       productId,
@@ -41,6 +43,7 @@ router.post("/", protect, async (req: AuthRequest, res: Response): Promise<void>
     });
 
     if (existingRequest) {
+      console.log(`[INFO] Duplicate request blocked for productId: ${productId}`);
       res.status(400).json({ error: "You have already requested this product." });
       return;
     }
@@ -48,10 +51,9 @@ router.post("/", protect, async (req: AuthRequest, res: Response): Promise<void>
     const unitPrice = product.price;
     const totalPrice = unitPrice * quantity;
 
-    // Compute 11:59:59.999 PM today and add 30 days
     const now = new Date();
     const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    const defaultDeadline = new Date(endOfDay.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 days
+    const defaultDeadline = new Date(endOfDay.getTime() + 30 * 24 * 60 * 60 * 1000);
 
     const request = await ProductRequest.create({
       productId,
@@ -59,19 +61,21 @@ router.post("/", protect, async (req: AuthRequest, res: Response): Promise<void>
       companyId: req.user._id,
       message,
       quantity,
-      unitPrice,                  // ✅ Capture price at request time
-      totalPrice,                 // ✅ Compute total
-      defaultDeadline, // ✅ Add this
+      unitPrice,
+      totalPrice,
+      defaultDeadline,
     });
+
+    console.log(`[SUCCESS] ProductRequest created for: ${product.name}, image: ${product.image}`);
 
     res.status(201).json(request);
   } catch (err) {
-    console.error(err);
+    console.error("[ERROR] Failed to create product request:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// ✅ Lightweight route used in ProductList.tsx to show which products have been requested
+// Lightweight route for checking which products a company requested
 router.get("/company", protect, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     if (!req.user || req.user.userType !== "company") {
@@ -85,14 +89,15 @@ router.get("/company", protect, async (req: AuthRequest, res: Response): Promise
     }).select("productId");
 
     const requestedProductIds = requests.map(r => r.productId.toString());
+
     res.json(requestedProductIds);
   } catch (err) {
-    console.error(err);
+    console.error("[ERROR] /company route failed:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// ✅ NEW full detail route for the company dashboard
+// Full product requests with product and vendor info for company dashboard
 router.get("/company/full", protect, async (req: AuthRequest, res: Response) => {
   try {
     const requests = await ProductRequest.find({ companyId: req.user?._id })
@@ -100,7 +105,15 @@ router.get("/company/full", protect, async (req: AuthRequest, res: Response) => 
       .populate("vendorId")
       .lean();
 
-    // For accepted requests, attach payment deadline
+    requests.forEach((req: any, i: number) => {
+      const img = req.productId?.image;
+      if (img) {
+        console.log(`[OK] (Company View) Request #${i} has image: ${img}`);
+      } else {
+        console.warn(`[WARN] (Company View) Request #${i} missing image:`, req.productId);
+      }
+    });
+
     const withDeadlines = await Promise.all(
       requests.map(async (req: any) => {
         if (req.status === "accepted") {
@@ -113,11 +126,10 @@ router.get("/company/full", protect, async (req: AuthRequest, res: Response) => 
 
     res.json(withDeadlines);
   } catch (err) {
-    console.error(err);
+    console.error("[ERROR] /company/full route failed:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
-
 
 // Vendor views requests for their products
 router.get("/vendor", protect, async (req: AuthRequest, res: Response) => {
@@ -128,17 +140,28 @@ router.get("/vendor", protect, async (req: AuthRequest, res: Response) => {
     }
 
     const requests = await ProductRequest.find({ vendorId: req.user._id })
-      .populate("productId")
+      .populate("productId", "name price image image")
       .populate("companyId", "email");
+
+    requests.forEach((req, i) => {
+      const product = req.productId as any;
+      const img = product?.image;
+
+      if (img) {
+        console.log(`[OK] (Vendor View) Request #${i} has image: ${img}`);
+      } else {
+        console.warn(`[WARN] (Vendor View) Request #${i} missing image. Product:`, product);
+      }
+    });
 
     res.json(requests);
   } catch (err) {
-    console.error(err);
+    console.error("[ERROR] /vendor route failed:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// Vendor updates request status
+// Vendor updates request status (accept/decline)
 router.put("/:id", protect, async (req: AuthRequest, res: Response) => {
   try {
     const { status } = req.body;
@@ -162,9 +185,11 @@ router.put("/:id", protect, async (req: AuthRequest, res: Response) => {
     request.status = status;
     await request.save();
 
+    console.log(`[INFO] Request status updated: ${request._id} -> ${status}`);
+
     res.json(request);
   } catch (err) {
-    console.error(err);
+    console.error("[ERROR] PUT /:id failed:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
