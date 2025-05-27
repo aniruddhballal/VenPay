@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,43 +20,56 @@ export default function Login() {
         { email, password },
         { withCredentials: true }
       );
-      setMessage(res.data.message || "Logged in!");
+      const msg = res.data.message || "Logged in!";
+      setMessage(msg);
+      toast.success(msg);
       navigate("/dashboard");
     } catch (err: any) {
-      setMessage(err.response?.data?.error || "Login failed");
+      const errorMsg = err.response?.data?.error || "Login failed";
+      setMessage(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
+
   return (
-    <div style={{ maxWidth: 400, margin: "auto" }}>
-      <h2>Login</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-          />
-        </label>
-        <br />
-        <label>Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-          />
-        </label>
-        <br />
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Don't have an account? <Link to="/register">Register here</Link>
-      </p>
+    <div className="loginContainer">
+      <div className="loginHeader">
+        <img src="/images/venpay-logo.png" alt="VenPay Logo" className="loginLogo" />
+        <img src="/images/venpay-text.png" alt="VenPay Text" className="loginBrandText" />
+      </div>
+      <div className="loginCardWrapper">
+        <div className="loginCard">
+          <h2 className="loginTitle">Login</h2>
+          {message && <p className="loginMessage">{message}</p>}
+          <form onSubmit={handleSubmit} className="loginForm">
+            <input
+              type="email"
+              className="loginInput"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+            <input
+              type="password"
+              className="loginInput"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+            <button type="submit" className="loginButton">
+              Login
+            </button>
+          </form>
+          <p className="loginLink">
+            Don&apos;t have an account? <Link to="/register">Register here</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
