@@ -31,3 +31,24 @@ done done, final things to implement are:
 2. features like sort, and search/filter by vendor/company
 3. autoscroll to high priority payments, set priorities to payments (defaulting to the deadlines), but editable
 4. make sure any feature implemented on company side, also gets implemented on vendor side
+
+updates as of 26th may, 2025:
+1. check different ways for displaying the products, requests - catalogue? idk some scrolling animation - edit: carousel not catalogue lmao
+2. check if background can be made better - colour grading and scheming
+3. filter/search options
+4. company and vendor - total profits/total due/total income/total paid
+5. credit rating scores for companies and vendors
+6. add images for the products - add more details for each product
+7. add reviews for products and vendors and companies - should be able to visit a particular vendor's/company's "profile"
+
+so i think it boils down to - adding more fields in the product schema - and enabling the viewing of vendor/company profiles - separate
+viewing of each product
+1. image(s)
+2. rating, reviews
+
+so yes, images have been added (vendor side only, yet to implement company side). now comes creating new pages for viewing products, companies, vendors - individually.
+can add more metadata about all the products - 
+
+new flow for vendor's side. no longer are there two parts (product management and vendor requests)
+there is just product management (renamed to products) - where every product will have another "expandable" 
+which upon expanding, expands into the list of companies that had requested for it, the current status of that request
