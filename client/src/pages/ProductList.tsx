@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 interface Product {
   _id: string;
   name: string;
@@ -25,18 +25,19 @@ export default function ProductList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productsRes = await axios.get("http://localhost:5000/api/products", { withCredentials: true });
-        const requestsRes = await axios.get<string[]>(
-          "http://localhost:5000/api/requests/company",
-          { withCredentials: true }
-        );
-
+        const [productsRes, requestsRes] = await Promise.all([
+          axios.get("http://localhost:5000/api/products", { withCredentials: true }),
+          axios.get<string[]>("http://localhost:5000/api/requests/company", {
+            withCredentials: true,
+          }),
+        ]);
         setProducts(productsRes.data);
         setRequestedProducts(new Set(requestsRes.data));
-        setLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error("Failed to load products or requests:", err);
         setError("Failed to load data.");
+        toast.error("Failed to load product data.");
+      } finally {
         setLoading(false);
       }
     };
@@ -44,100 +45,87 @@ export default function ProductList() {
     fetchData();
   }, []);
 
-  const handleMessageChange = (productId: string, value: string) => {
-    setMessages(prev => ({ ...prev, [productId]: value }));
-  };
 
-  const handleQuantityChange = (productId: string, value: string) => {
-    const parsed = parseInt(value, 10);
+  const handleQuantityChange = (id: string, value: string) => {
+    const parsed = parseInt(value);
     if (!isNaN(parsed) && parsed > 0) {
-      setQuantities(prev => ({ ...prev, [productId]: parsed }));
+      setQuantities(prev => ({ ...prev, [id]: parsed }));
     }
   };
 
-  const handleRequest = async (productId: string) => {
-    const message = messages[productId] || "";
-    const quantity = quantities[productId] || 1; // default to 1 if not specified
+  const handleRequest = async (id: string) => {
+    const message = messages[id] || "";
+    const quantity = quantities[id] || 1;
 
     try {
       await axios.post(
         "http://localhost:5000/api/requests",
-        { productId, message, quantity },
+        { productId: id, message, quantity },
         { withCredentials: true }
       );
-      alert("Request sent successfully!");
-      setRequestedProducts(prev => new Set(prev).add(productId));
-
-      // Clear inputs
+      setRequestedProducts(prev => new Set(prev).add(id));
       setMessages(prev => {
-        const copy = { ...prev };
-        delete copy[productId];
-        return copy;
+        const { [id]: _, ...rest } = prev;
+        return rest;
       });
       setQuantities(prev => {
-        const copy = { ...prev };
-        delete copy[productId];
-        return copy;
+        const { [id]: _, ...rest } = prev;
+        return rest;
       });
-    } catch (err) {
-      console.error(err);
-      alert("Failed to send request.");
+    } catch (err: any) {
+      console.error("Failed to send request:", err);
+      toast.error(err.response?.data?.error || "Failed to send request.");
     }
   };
 
-  if (loading) return <div>Loading products...</div>;
-  if (error) return <div>{error}</div>;
-  if (products.length === 0) return <div>No products available.</div>;
+  if (loading) return <div className="product-list-loading">Loading products...</div>;
+  if (error) return <div className="product-list-error">{error}</div>;
+  if (products.length === 0) return <div className="product-list-empty">No products available.</div>;
 
   return (
-    <div>
-      <h2>Available Products</h2>
-      <ul>
+    <div className="product-list-wrapper">
+      <h2 className="product-list-title">Available Products</h2>
+      <div className="product-list-grid">
         {products.map(product => {
           const isRequested = requestedProducts.has(product._id);
           return (
-            <li
-              key={product._id}
-              style={{
-                marginBottom: "2rem",
-                borderBottom: "1px solid #ccc",
-                paddingBottom: "1rem",
-              }}
-            >
-              <h3>{product.name}</h3>
-              <p>{product.description}</p>
-              <p><strong>Price:</strong> ₹{product.price.toFixed(2)}</p>
-              <p><strong>Vendor:</strong> {product.vendorId.name}</p>
-              <p><strong>Contact:</strong> {product.vendorId.email}</p>
+            <div className="product-list-card" key={product._id}>
+              <div className="product-list-header">
+                <h3>{product.name}</h3>
+                <span className="product-price">₹{product.price.toFixed(2)}</span>
+              </div>
+              <p className="product-list-description">{product.description}</p>
+              <p className="product-vendor">By {product.vendorId.name} ({product.vendorId.email})</p>
 
               <input
                 type="number"
                 min="1"
+                className="product-list-input"
                 placeholder="Quantity"
                 value={quantities[product._id] || ""}
                 onChange={e => handleQuantityChange(product._id, e.target.value)}
                 disabled={isRequested}
-                style={{ width: "100%", marginBottom: "0.5rem" }}
               />
 
               <textarea
-                placeholder="Request Payback Duration (defaults to Net30 if empty)"
+                className="product-list-textarea"
+                placeholder="Request Payback Duration (defaults to Net30)"
                 value={messages[product._id] || ""}
-                onChange={e => handleMessageChange(product._id, e.target.value)}
+                onChange={e => setMessages(prev => ({ ...prev, [product._id]: e.target.value }))}
                 disabled={isRequested}
-                style={{ width: "100%", height: "60px", marginBottom: "0.5rem" }}
               />
 
               <button
+                className={`product-list-button ${isRequested ? "product-list-button-disabled" : ""}`}
                 onClick={() => handleRequest(product._id)}
                 disabled={isRequested}
               >
                 {isRequested ? "Requested" : "Request Product"}
               </button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     </div>
   );
 }
