@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Card Alternatives</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+            font-size: 1.5rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Option 1: Hover Expand Card */
+        .expand-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 320px;
+        }
+
+        .expand-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            height: 420px;
+        }
+
+        .expand-card .image-section {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expand-card .content {
+            padding: 1.5rem;
+            height: calc(100% - 200px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .expand-card .basic-info h3 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .expand-card .basic-info .price {
+            color: #4299e1;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .expand-card .details {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease 0.1s;
+            margin-top: 1rem;
+        }
+
+        .expand-card:hover .details {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .expand-card .actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease 0.2s;
+        }
+
+        .expand-card:hover .actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Option 2: Slide-up Overlay */
+        .overlay-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            height: 320px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .overlay-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .overlay-card .image-section {
+            height: 200px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .overlay-card .content {
+            padding: 1.5rem;
+            height: 120px;
+        }
+
+        .overlay-card .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(45, 55, 72, 0.95);
+            color: white;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .overlay-card:hover .overlay {
+            transform: translateY(0);
+        }
+
+        /* Option 3: Modal Card */
+        .modal-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            height: 320px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .modal-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-card .image-section {
+            height: 200px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .modal-card .content {
+            padding: 1.5rem;
+        }
+
+        .modal-card .quick-actions {
+            opacity: 0;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-card:hover .quick-actions {
+            opacity: 1;
+        }
+
+        /* Option 4: Accordion Style */
+        .accordion-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            height: 120px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1rem;
+        }
+
+        .accordion-card.expanded {
+            height: 400px;
+        }
+
+        .accordion-card .header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            height: 120px;
+        }
+
+        .accordion-card .expanded-content {
+            padding: 1.5rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .accordion-card.expanded .expanded-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Common button styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #4a5568;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .expand-chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-card.expanded .expand-chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h2>Option 1: Hover Expand Cards</h2>
+        <div class="cards-grid">
+            <div class="expand-card">
+                <div class="image-section">
+                    Product Image
+                </div>
+                <div class="content">
+                    <div class="basic-info">
+                        <h3>Premium Headphones</h3>
+                        <div class="price">₹2,999.00</div>
+                    </div>
+                    <div class="details">
+                        <p>High-quality wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and professionals.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="expand-card">
+                <div class="image-section">
+                    Product Image
+                </div>
+                <div class="content">
+                    <div class="basic-info">
+                        <h3>Smart Watch</h3>
+                        <div class="price">₹15,999.00</div>
+                    </div>
+                    <div class="details">
+                        <p>Advanced fitness tracking, heart rate monitoring, GPS, and smartphone connectivity in a sleek design.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 2: Slide-up Overlay</h2>
+        <div class="cards-grid">
+            <div class="overlay-card">
+                <div class="image-section">
+                    Product Image
+                </div>
+                <div class="content">
+                    <h3>Gaming Laptop</h3>
+                    <div class="price">₹85,999.00</div>
+                </div>
+                <div class="overlay">
+                    <p>High-performance gaming laptop with RTX graphics, 16GB RAM, and ultra-fast SSD storage.</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overlay-card">
+                <div class="image-section">
+                    Product Image
+                </div>
+                <div class="content">
+                    <h3>Wireless Earbuds</h3>
+                    <div class="price">₹4,999.00</div>
+                </div>
+                <div class="overlay">
+                    <p>True wireless earbuds with premium sound quality and active noise cancellation.</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 3: Modal Style with Quick Actions</h2>
+        <div class="cards-grid">
+            <div class="modal-card" onclick="openModal()">
+                <div class="quick-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editProduct()">✏️</button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); deleteProduct()">🗑️</button>
+                </div>
+                <div class="image-section">
+                    Product Image
+                </div>
+                <div class="content">
+                    <h3>Professional Camera</h3>
+                    <div class="price">₹125,999.00</div>
+                    <p>Professional DSLR camera with advanced features...</p>
+                </div>
+            </div>
+            
+            <div class="modal-card" onclick="openModal()">
+                <div class="quick-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editProduct()">✏️</button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); deleteProduct()">🗑️</button>
+                </div>
+                <div class="image-section">
+                    Product Image
+                </div>
+                <div class="content">
+                    <h3>Tablet Pro</h3>
+                    <div class="price">₹45,999.00</div>
+                    <p>High-performance tablet for creative professionals...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Option 4: Accordion Style</h2>
+        <div style="max-width: 600px;">
+            <div class="accordion-card" onclick="toggleAccordion(this)">
+                <div class="header">
+                    <div>
+                        <h3>Smartphone Pro Max</h3>
+                        <div class="price">₹99,999.00</div>
+                    </div>
+                    <div class="expand-chevron">▼</div>
+                </div>
+                <div class="expanded-content">
+                    <p>Latest flagship smartphone with cutting-edge technology, professional camera system, and all-day battery life.</p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-card" onclick="toggleAccordion(this)">
+                <div class="header">
+                    <div>
+                        <h3>Wireless Speaker</h3>
+                        <div class="price">₹8,999.00</div>
+                    </div>
+                    <div class="expand-chevron">▼</div>
+                </div>
+                <div class="expanded-content">
+                    <p>Premium wireless speaker with 360-degree sound, waterproof design, and smart home integration.</p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(element) {
+            element.classList.toggle('expanded');
+        }
+
+        function openModal() {
+            alert('Would open detailed product modal');
+        }
+
+        function editProduct() {
+            alert('Edit product');
+        }
+
+        function deleteProduct() {
+            alert('Delete product');
+        }
+    </script>
+</body>
+</html>
