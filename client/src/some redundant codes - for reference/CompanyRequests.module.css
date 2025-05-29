@@ -1,0 +1,167 @@
+/* CompanyRequests.module.css */
+
+/* Container and general layout */
+.requestsContainer {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.noRequests {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem 0;
+}
+
+.requestSection {
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  border-bottom: 2px solid #007BFF;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+/* Request card */
+.requestCard {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  background: #fff;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.requestCard:hover {
+  box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
+}
+
+/* Status colors */
+.statusLabel {
+  text-transform: capitalize;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.statusAccepted {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.statusPending {
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+.statusDeclined {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+/* Request info */
+.requestInfo p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+/* Payment section */
+.paymentSection {
+  margin-top: 1rem;
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.inputGroup {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.inputAmount,
+.inputPassword {
+  flex: 1 1 150px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.inputAmount:focus,
+.inputPassword:focus {
+  outline: none;
+  border-color: #007BFF;
+}
+
+.btnPay {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 0.48rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.btnPay:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btnPay:disabled {
+  background-color: #9bbefc;
+  cursor: not-allowed;
+}
+
+.paidClear {
+  color: #155724;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+/* Transactions */
+.transactionsList {
+  margin-top: 1rem;
+}
+
+.transactionsList h5 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.transactionsList ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.transactionsList li {
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: #444;
+}
