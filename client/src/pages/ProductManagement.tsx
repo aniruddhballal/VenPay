@@ -8,21 +8,15 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  image?: string; // new optional image URL field
+  image?: string;
 }
 
-// 3D Flip Card Component
-const FlipCard = ({ product, onEdit, onDelete }: { 
+// Hover Expand Card Component
+const ExpandCard = ({ product, onEdit, onDelete }: { 
   product: Product; 
   onEdit: (product: Product) => void; 
   onDelete: (id: string) => void; 
 }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
-
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
     onEdit(product);
@@ -33,68 +27,50 @@ const FlipCard = ({ product, onEdit, onDelete }: {
     onDelete(product._id);
   };
 
-  return (
-    <div 
-      className="flip-card-container"
-      onClick={handleFlip}
-    >
-      <div className={`flip-card ${isFlipped ? 'flipped' : ''}`}>
-        {/* Front Face */}
-        <div className="flip-card-face flip-card-front">
-          <div className="image-container">
-            {product.image ? (
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="product-image"
-              />
-            ) : (
-              <div className="image-placeholder">
-                <span>📦</span>
-              </div>
-            )}
+    return (
+    <div className="expand-card">
+      <div className="image-section">
+        {product.image ? (
+          <img 
+            src={product.image} 
+            alt={product.name}
+            className="product-image"
+          />
+        ) : (
+          <div className="image-placeholder">
+            <span>📦</span>
           </div>
-          <div className="card-content">
-            <h3 className="product-name">{product.name}</h3>
-            <p className="product-price">₹{product.price.toFixed(2)}</p>
-          </div>
-          <div className="flip-indicator">
-            <span>Click for more</span>
-          </div>
+        )}
+      </div>
+      <div className="content">
+        <div className="basic-info">
+          <h3>{product.name}</h3>
+          <div className="price">₹{product.price.toFixed(2)}</div>
         </div>
-
-        {/* Back Face */}
-        <div className="flip-card-face flip-card-back">
-          <div className="back-content">
-            <h3 className="product-name">{product.name}</h3>
-            <div className="product-description">
-              <p>{product.description}</p>
-            </div>
-            <div className="product-price-large">
-              <span>₹{product.price.toFixed(2)}</span>
-            </div>
-            <div className="card-actions">
-              <button 
-                className="action-btn edit-btn"
-                onClick={handleEdit}
-              >
-                ✏️ Edit
-              </button>
-              <button 
-                className="action-btn delete-btn"
-                onClick={handleDelete}
-              >
-                🗑️ Delete
-              </button>
-            </div>
-          </div>
+        <div className="details">
+          <p>{product.description}</p>
+        </div>
+        <div className="actions">
+          <button 
+            className="btn btn-primary"
+            onClick={handleEdit}
+          >
+            ✏️ Edit
+          </button>
+          <button 
+            className="btn btn-danger"
+            onClick={handleDelete}
+          >
+            🗑️ Delete
+          </button>
         </div>
       </div>
     </div>
   );
+
 };
 
-export default function ProductManagement() {
+const ProductManagement = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: "", description: "", price: "" });
@@ -102,19 +78,21 @@ export default function ProductManagement() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const formSectionRef = useRef<HTMLDivElement | null>(null); // New ref for form section
+  const formSectionRef = useRef<HTMLDivElement | null>(null);
 
+  // Restore your original useEffect for fetching from backend:
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/products/my", { withCredentials: true })
-      .then((res) => {
-        setProducts(res.data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch products:", err);
-        toast.warn(err.response?.data?.error || "Failed to fetch products.");
-      })
-      .finally(() => setLoading(false));
+     axios
+       .get("http://localhost:5000/api/products/my", { withCredentials: true })
+       .then((res) => {
+         setProducts(res.data);
+       })
+       .catch((err) => {
+         console.error("Failed to fetch products:", err);
+         toast.warn(err.response?.data?.error || "Failed to fetch products.");
+       })
+       .finally(() => setLoading(false));
+    
   }, []);
 
   // Create image preview on image select
@@ -126,7 +104,6 @@ export default function ProductManagement() {
     const url = URL.createObjectURL(selectedImage);
     setPreviewUrl(url);
 
-    // Clean up URL object on unmount or change
     return () => URL.revokeObjectURL(url);
   }, [selectedImage]);
 
@@ -155,21 +132,23 @@ export default function ProductManagement() {
     formData.append("image", selectedImage);
 
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/products/upload-image/${productId}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
-      );
-      // Update product image url locally in products list
-      setProducts((prev) =>
-        prev.map((p) => (p._id === productId ? { ...p, image: res.data.image } : p))
-      );
+       const res = await axios.post(
+         `http://localhost:5000/api/products/upload-image/${productId}`,
+         formData,
+         {
+           headers: { "Content-Type": "multipart/form-data" },
+           withCredentials: true,
+         }
+       );
+      // // Update product image url locally in products list
+       setProducts((prev) =>
+         prev.map((p) => (p._id === productId ? { ...p, image: res.data.image } : p))
+       );
+      
+      console.log("Image upload placeholder");
     } catch (err: any) {
       console.error("Failed to upload image:", err);
-      toast.error(err.response?.data?.error || "Failed to upload image.");
+       toast.error(err.response?.data?.error || "Failed to upload image.");
     }
   };
 
@@ -185,73 +164,75 @@ export default function ProductManagement() {
       let res: any;
 
       if (editingId) {
-        res = await axios.put(
-          `http://localhost:5000/api/products/${editingId}`,
-          productData,
-          { withCredentials: true }
-        );
-        setProducts(products.map((p) => (p._id === editingId ? res.data : p)));
+         res = await axios.put(
+           `http://localhost:5000/api/products/${editingId}`,
+           productData,
+           { withCredentials: true }
+         );
+         setProducts(products.map((p) => (p._id === editingId ? res.data : p)));
 
-        if (selectedImage) {
-          await uploadImage(editingId);
-          toast.success("Product updated and image uploaded!");
-        } else {
-          toast.success("Product updated successfully!");
-        }
+         if (selectedImage) {
+           await uploadImage(editingId);
+           toast.success("Product updated and image uploaded!");
+         } else {
+           toast.success("Product updated successfully!");
+         }
 
       } else {
-        res = await axios.post("http://localhost:5000/api/products/", productData, {
-          withCredentials: true,
-        });
-        setProducts([...products, res.data]);
+         res = await axios.post("http://localhost:5000/api/products/", productData, {
+           withCredentials: true,
+         });
+         setProducts([...products, res.data]);
 
-        if (selectedImage) {
-          await uploadImage(res.data._id);
-          toast.success("Product created and image uploaded!");
-        } else {
-          toast.success("Product created successfully!");
-        }
+         if (selectedImage) {
+           await uploadImage(res.data._id);
+           toast.success("Product created and image uploaded!");
+         } else {
+           toast.success("Product created successfully!");
+         }
       }
 
       resetForm();
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-      setSelectedImage(null); // clear state too
+      setSelectedImage(null);
     } catch (err: any) {
       console.error("Failed to save product:", err);
-      toast.error(err.response?.data?.error || "Failed to save product.");
+      // toast.error(err.response?.data?.error || "Failed to save product.");
+      alert("Failed to save product.");
     }
   };
 
   const handleDelete = (id: string) => {
-    confirmAlert({
-      title: "Confirm Deletion",
-      message: "Are you sure you want to delete this product?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: async () => {
-            try {
-              await axios.delete(`http://localhost:5000/api/products/${id}`, {
-                withCredentials: true,
-              });
-              setProducts((prev) => prev.filter((p) => p._id !== id));
-              toast.success("Product deleted successfully.");
-            } catch (err: any) {
-              console.error("Failed to delete product:", err);
-              toast.error(err.response?.data?.error || "Failed to delete product.");
-            }
-          },
-        },
-        {
-          label: "No",
-          onClick: () => {
-            toast.info("Deletion cancelled.");
-          },
-        },
-      ],
-    });
+    // Restore your original deletion logic:
+     confirmAlert({
+       title: "Confirm Deletion",
+       message: "Are you sure you want to delete this product?",
+       buttons: [
+         {
+           label: "Yes",
+           onClick: async () => {
+             try {
+               await axios.delete(`http://localhost:5000/api/products/${id}`, {
+                 withCredentials: true,
+               });
+               setProducts((prev) => prev.filter((p) => p._id !== id));
+               toast.success("Product deleted successfully.");
+             } catch (err: any) {
+               console.error("Failed to delete product:", err);
+               toast.error(err.response?.data?.error || "Failed to delete product.");
+             }
+           },
+         },
+         {
+           label: "No",
+           onClick: () => {
+             toast.info("Deletion cancelled.");
+           },
+         },
+       ],
+     });
   };
 
   const handleEdit = (product: Product) => {
@@ -262,9 +243,8 @@ export default function ProductManagement() {
     });
     setEditingId(product._id);
     setPreviewUrl(product.image || "");
-    setSelectedImage(null); // reset selectedImage because image is from server
+    setSelectedImage(null);
 
-    // Scroll to form section smoothly
     if (formSectionRef.current) {
       formSectionRef.current.scrollIntoView({ 
         behavior: 'smooth', 
@@ -273,84 +253,108 @@ export default function ProductManagement() {
     }
   };
 
-  if (loading) return <div className="product-management-container">Loading products...</div>;
+  if (loading) return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <div style={{ fontSize: '1.2rem', color: '#666' }}>Loading products...</div>
+    </div>
+  );
 
-  return (
-    <>
-      <div className="styles.product-management-container">
-        <div ref={formSectionRef}> {/* Wrap form section with ref */}
-          <h2 className="product-management-heading">{editingId ? "Edit Product" : "Add Product"}</h2>
-          <form onSubmit={handleSubmit} className="product-management-form" encType="multipart/form-data">
-            <input
-              className="product-management-input"
-              name="name"
-              placeholder="Name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-            <textarea
-              className="product-list-textarea"
-              name="description"
-              placeholder="Description"
-              value={form.description}
-              onChange={handleChange}
-              required
-            />
-            <input
-              className="product-management-input"
-              name="price"
-              placeholder="Price"
-              type="number"
-              step="0.01"
-              value={form.price}
-              onChange={handleChange}
-              required
-            />
+      return (
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+      <div className="form-section" ref={formSectionRef}>
+        <h2 className="form-heading">
+          {editingId ? "Edit Product" : "Add Product"}
+        </h2>
+        <form onSubmit={handleSubmit} className="product-form">
+          <input
+            className="form-input"
+            name="name"
+            placeholder="Product Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <textarea
+            className="form-textarea"
+            name="description"
+            placeholder="Product Description"
+            value={form.description}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="form-input"
+            name="price"
+            placeholder="Price"
+            type="number"
+            step="1"
+            value={form.price}
+            onChange={handleChange}
+            required
+          />
 
+          <br />
+
+          <div className="custom-file-upload">
             <input
               type="file"
+              id="file-upload"
               accept="image/*"
               onChange={handleImageChange}
               ref={fileInputRef}
-              className="product-image-input"
+              className="hidden-input"
             />
-
-            {previewUrl && (
-              <img
-                src={previewUrl}
-                alt="Selected product"
-                style={{ width: "120px", height: "120px", objectFit: "cover", marginTop: "10px", borderRadius: "8px" }}
-              />
+            <label htmlFor="file-upload" className="upload-button">
+              Upload Image
+            </label>
+            {selectedImage && (
+              <span className="file-name">{selectedImage.name}</span>
             )}
+          </div>
 
-            <div className="product-management-button-group">
-              <button type="submit" className="button submit-button">
-                {editingId ? "Update" : "Create"}
-              </button>
-              {editingId && (
-                <button type="button" onClick={resetForm} className="button cancel-button">
-                  Cancel
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
-
-        <h2 className="product-management-heading">Your Products</h2>
-        {products.length === 0 && <p>No products added yet.</p>}
-        
-        <div className="products-grid">
-          {products.map((product) => (
-            <FlipCard
-              key={product._id}
-              product={product}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Selected product"
+              className="image-preview"
             />
-          ))}
-        </div>
+          )}
+
+          <div className="button-group">
+            <button type="submit" className="submit-button">
+              {editingId ? "Update Product" : "Create Product"}
+            </button>
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="cancel-button"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
       </div>
-    </>
+
+      <h2 className="section-heading">Your Products</h2>
+      {products.length === 0 && (
+        <p className="no-products">No products added yet.</p>
+      )}
+
+      <div className="cards-grid">
+        {products.map((product) => (
+          <ExpandCard
+            key={product._id}
+            product={product}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
+    </div>
   );
-}
+
+};
+
+export default ProductManagement;
