@@ -11,6 +11,89 @@ interface Product {
   image?: string; // new optional image URL field
 }
 
+// 3D Flip Card Component
+const FlipCard = ({ product, onEdit, onDelete }: { 
+  product: Product; 
+  onEdit: (product: Product) => void; 
+  onDelete: (id: string) => void; 
+}) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit(product);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(product._id);
+  };
+
+  return (
+    <div 
+      className="flip-card-container"
+      onClick={handleFlip}
+    >
+      <div className={`flip-card ${isFlipped ? 'flipped' : ''}`}>
+        {/* Front Face */}
+        <div className="flip-card-face flip-card-front">
+          <div className="image-container">
+            {product.image ? (
+              <img 
+                src={product.image} 
+                alt={product.name}
+                className="product-image"
+              />
+            ) : (
+              <div className="image-placeholder">
+                <span>📦</span>
+              </div>
+            )}
+          </div>
+          <div className="card-content">
+            <h3 className="product-name">{product.name}</h3>
+            <p className="product-price">₹{product.price.toFixed(2)}</p>
+          </div>
+          <div className="flip-indicator">
+            <span>Click for more</span>
+          </div>
+        </div>
+
+        {/* Back Face */}
+        <div className="flip-card-face flip-card-back">
+          <div className="back-content">
+            <h3 className="product-name">{product.name}</h3>
+            <div className="product-description">
+              <p>{product.description}</p>
+            </div>
+            <div className="product-price-large">
+              <span>₹{product.price.toFixed(2)}</span>
+            </div>
+            <div className="card-actions">
+              <button 
+                className="action-btn edit-btn"
+                onClick={handleEdit}
+              >
+                ✏️ Edit
+              </button>
+              <button 
+                className="action-btn delete-btn"
+                onClick={handleDelete}
+              >
+                🗑️ Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function ProductManagement() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +102,7 @@ export default function ProductManagement() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const formSectionRef = useRef<HTMLDivElement | null>(null); // New ref for form section
 
   useEffect(() => {
     axios
@@ -139,7 +223,7 @@ export default function ProductManagement() {
       toast.error(err.response?.data?.error || "Failed to save product.");
     }
   };
-  
+
   const handleDelete = (id: string) => {
     confirmAlert({
       title: "Confirm Deletion",
@@ -179,98 +263,94 @@ export default function ProductManagement() {
     setEditingId(product._id);
     setPreviewUrl(product.image || "");
     setSelectedImage(null); // reset selectedImage because image is from server
+
+    // Scroll to form section smoothly
+    if (formSectionRef.current) {
+      formSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
   };
 
   if (loading) return <div className="product-management-container">Loading products...</div>;
 
   return (
-    <div className="product-management-container">
-      <h2 className="product-management-heading">{editingId ? "Edit Product" : "Add Product"}</h2>
-      <form onSubmit={handleSubmit} className="product-management-form" encType="multipart/form-data">
-        <input
-          className="product-management-input"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          className="product-list-textarea"
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="product-management-input"
-          name="price"
-          placeholder="Price"
-          type="number"
-          step="0.01"
-          value={form.price}
-          onChange={handleChange}
-          required
-        />
+    <>
+      <div className="styles.product-management-container">
+        <div ref={formSectionRef}> {/* Wrap form section with ref */}
+          <h2 className="product-management-heading">{editingId ? "Edit Product" : "Add Product"}</h2>
+          <form onSubmit={handleSubmit} className="product-management-form" encType="multipart/form-data">
+            <input
+              className="product-management-input"
+              name="name"
+              placeholder="Name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+            <textarea
+              className="product-list-textarea"
+              name="description"
+              placeholder="Description"
+              value={form.description}
+              onChange={handleChange}
+              required
+            />
+            <input
+              className="product-management-input"
+              name="price"
+              placeholder="Price"
+              type="number"
+              step="0.01"
+              value={form.price}
+              onChange={handleChange}
+              required
+            />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          ref={fileInputRef}
-          className="product-image-input"
-        />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              ref={fileInputRef}
+              className="product-image-input"
+            />
 
-        {previewUrl && (
-          <img
-            src={previewUrl}
-            alt="Selected product"
-            style={{ width: "120px", height: "120px", objectFit: "cover", marginTop: "10px", borderRadius: "8px" }}
-          />
-        )}
-
-        <div className="product-management-button-group">
-          <button type="submit" className="button submit-button">
-            {editingId ? "Update" : "Create"}
-          </button>
-          {editingId && (
-            <button type="button" onClick={resetForm} className="button cancel-button">
-              Cancel
-            </button>
-          )}
-        </div>
-      </form>
-
-      <h2 className="product-management-heading">Your Products</h2>
-      {products.length === 0 && <p>No products added yet.</p>}
-      <ul className="product-list">
-        {products.map((product) => (
-          <li key={product._id} className="product-item">
-            {product.image && (
+            {previewUrl && (
               <img
-                src={product.image}
-                alt={product.name}
-                style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "6px", marginRight: "10px" }}
+                src={previewUrl}
+                alt="Selected product"
+                style={{ width: "120px", height: "120px", objectFit: "cover", marginTop: "10px", borderRadius: "8px" }}
               />
             )}
-            <div style={{ display: "inline-block", verticalAlign: "top" }}>
-              <div className="product-name">
-                {product.name} (₹{product.price.toFixed(2)})
-              </div>
-              <p className="product-description">{product.description}</p>
-              <div className="action-buttons">
-                <button onClick={() => handleEdit(product)} className="button">
-                  Edit
+
+            <div className="product-management-button-group">
+              <button type="submit" className="button submit-button">
+                {editingId ? "Update" : "Create"}
+              </button>
+              {editingId && (
+                <button type="button" onClick={resetForm} className="button cancel-button">
+                  Cancel
                 </button>
-                <button onClick={() => handleDelete(product._id)} className="button cancel-button">
-                  Delete
-                </button>
-              </div>
+              )}
             </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </form>
+        </div>
+
+        <h2 className="product-management-heading">Your Products</h2>
+        {products.length === 0 && <p>No products added yet.</p>}
+        
+        <div className="products-grid">
+          {products.map((product) => (
+            <FlipCard
+              key={product._id}
+              product={product}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
