@@ -17,7 +17,7 @@ interface Request {
   productId: {
     _id: string;
     name: string;
-    image?: string; // ✅ Added image field
+    image?: string;
   };
   companyId: { _id: string; email: string };
   createdAt?: string;
@@ -143,13 +143,13 @@ export default function VendorRequests() {
     return `${days}d ${hours}h ${minutes}m`;
   }
 
-  const renderSection = (title: string, data: Request[]) => (
-    <div className="vendor-section">
-      <h3 className="section-title">{title}</h3>
-      {data.length === 0 ? (
-        <p className="empty-text">No {title.toLowerCase()}.</p>
-      ) : (
-        data.map((req) => {
+  function RequestSection({ title, data }: { title: string; data: Request[] }) {
+    if (data.length === 0) return null;
+
+    return (
+      <section className="request-section">
+        <h4 className="section-title">{title}</h4>
+        {data.map((req) => {
           const deadlineDate = req.paymentDeadline
             ? new Date(req.paymentDeadline).toLocaleString("en-IN", {
                 timeZone: "Asia/Kolkata",
@@ -164,39 +164,61 @@ export default function VendorRequests() {
           const timeLeft = req.paymentDeadline ? formatTimeLeft(req.paymentDeadline) : null;
 
           return (
-            <div key={req._id} className="request-card">
-              {req.productId.image && (
-                <img
-                  src={req.productId.image}
-                  alt={req.productId.name}
-                  className="productImage"
-                />
-              )}
+            <div key={req._id} className={`request-card status-${req.status}`}>
+              <div className="request-info">
+                {req.productId.image && (
+                  <img
+                    src={req.productId.image}
+                    alt={req.productId.name}
+                    className="productRequestImage"
+                  />
+                )}
 
-              <p><strong>Product:</strong> {req.productId.name}</p>
-              <p><strong>From:</strong> {req.companyId.email}</p>
-              <p><strong>Requested Payback Duration:</strong> {req.message || "Net30 (default)"}</p>
-              <p><strong>Status:</strong> {req.status}</p>
-
-              {["pending", "declined", "accepted"].includes(req.status) && (
-                <>
-                  <p><strong>Requested On:</strong> {req.createdAt ? new Date(req.createdAt).toLocaleDateString("en-IN") : "N/A"}</p>
-                  <p><strong>Quantity:</strong> {req.quantity ?? "N/A"}</p>
-                  <p><strong>Unit Price:</strong> ₹{req.unitPrice?.toFixed(2) ?? "N/A"}</p>
-                  <p><strong>Total Price:</strong> ₹{req.totalPrice?.toFixed(2) ?? "N/A"}</p>
-                </>
-              )}
+                <p>
+                  <strong>Product:</strong> {req.productId.name}
+                </p>
+                <p>
+                  <strong>From:</strong> {req.companyId.email}
+                </p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span className={`status-label status-${req.status}`}>{req.status}</span>
+                </p>
+                <p>
+                  <strong>Requested Payback Duration:</strong> {req.message || "Net30 (default)"}
+                </p>
+                <p>
+                  <strong>Requested on:</strong>{" "}
+                  {req.createdAt ? new Date(req.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : "N/A"}
+                </p>
+                <p>
+                  <strong>Quantity:</strong> {req.quantity ?? "N/A"}
+                </p>
+                <p>
+                  <strong>Unit Price:</strong> ₹{req.unitPrice?.toFixed(2) ?? "N/A"}
+                </p>
+                <p>
+                  <strong>Total Price:</strong> ₹{req.totalPrice?.toFixed(2) ?? "N/A"}
+                </p>
+              </div>
 
               {req.status === "accepted" && (
-                <>
-                  <p><strong>Amount Due:</strong> ₹{amountDueMap[req._id]?.toFixed(2) ?? "Loading..."}</p>
-
-                  {req.paymentDeadline && (
-                    <p><strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}</p>
-                  )}
+                <div className="payment-section">
+                  <p>
+                    <strong>Amount Due:</strong> ₹
+                    {amountDueMap[req._id] !== undefined
+                      ? amountDueMap[req._id].toFixed(2)
+                      : "Loading..."}
+                  </p>
 
                   {amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0 && (
                     <p className="paid-clear">Payment has been cleared.</p>
+                  )}
+
+                  {req.paymentDeadline && (
+                    <p>
+                      <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
+                    </p>
                   )}
 
                   <div className="transactions-list">
@@ -216,7 +238,7 @@ export default function VendorRequests() {
                       <p>No payments made yet.</p>
                     )}
                   </div>
-                </>
+                </div>
               )}
 
               {req.status === "pending" && (
@@ -236,25 +258,28 @@ export default function VendorRequests() {
               )}
             </div>
           );
-        })
-      )}
-    </div>
-  );
+        })}
+      </section>
+    );
+  }
 
-  const accepted = requests.filter((r) => r.status === "accepted");
-  const declined = requests.filter((r) => r.status === "declined");
-  const pending = requests.filter((r) => r.status === "pending");
+  const grouped = {
+    accepted: requests.filter((r) => r.status === "accepted"),
+    declined: requests.filter((r) => r.status === "declined"),
+    pending: requests.filter((r) => r.status === "pending"),
+  };
 
   return (
     <div className="vendor-requests-container">
-      <h2 className="requests-title">Product Requests</h2>
+      <h3 className="requests-title">Product Requests</h3>
+      
       {requests.length === 0 ? (
-        <p className="empty-text">No requests yet.</p>
+        <p className="no-requests">No requests received yet.</p>
       ) : (
         <>
-          {renderSection("Accepted Requests", accepted)}
-          {renderSection("Declined Requests", declined)}
-          {renderSection("Pending Requests", pending)}
+          <RequestSection title="Accepted Requests" data={grouped.accepted} />
+          <RequestSection title="Declined Requests" data={grouped.declined} />
+          <RequestSection title="Pending Requests" data={grouped.pending} />
         </>
       )}
     </div>
