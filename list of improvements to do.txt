@@ -52,3 +52,10 @@ can add more metadata about all the products -
 new flow for vendor's side. no longer are there two parts (product management and vendor requests)
 there is just product management (renamed to products) - where every product will have another "expandable" 
 which upon expanding, expands into the list of companies that had requested for it, the current status of that request
+
+check screenshot, there is an issue in showing the flipped side of the product card, the image shows up too, like a glitch in the matrix
+
+the glitch is resolved, product cards are way smoother and better now
+
+let's focus on other things - like the product card alternatives - look into where those stylish designs can be applied and the
+idea of each company/vendor/product having their own pages - all linked to each other - then after that comes star rating and reviews
