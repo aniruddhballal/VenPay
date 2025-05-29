@@ -66,8 +66,14 @@ export default function Dashboard() {
       {user.userType === "vendor" && (
         <>
           <h2 className="dashboard-subheader">Vendor Dashboard</h2>
-          <ProductManagement />
-          <VendorRequests />
+          <section style={{ marginBottom: "3rem" }}>
+            <ProductManagement />
+          </section>
+
+          <section>
+            <VendorRequests />
+          </section>
+
         </>
       )}
 
