@@ -28,7 +28,7 @@ const ExpandCard = ({ product, onEdit, onDelete }: {
   };
 
     return (
-    <div className="expand-card">
+    <div className="expand-card-compact">
       <div className="image-section">
         {product.image ? (
           <img 
@@ -52,13 +52,13 @@ const ExpandCard = ({ product, onEdit, onDelete }: {
         </div>
         <div className="actions">
           <button 
-            className="btn btn-primary"
+            className="btn btn-primary btn-small"
             onClick={handleEdit}
           >
             ✏️ Edit
           </button>
           <button 
-            className="btn btn-danger"
+            className="btn btn-danger btn-small"
             onClick={handleDelete}
           >
             🗑️ Delete
@@ -321,14 +321,14 @@ const ProductManagement = () => {
           )}
 
           <div className="button-group">
-            <button type="submit" className="submit-button">
+            <button type="submit" className="btn btn-success">
               {editingId ? "Update Product" : "Create Product"}
             </button>
             {editingId && (
               <button
                 type="button"
                 onClick={resetForm}
-                className="cancel-button"
+                className="btn btn-cancel"
               >
                 Cancel
               </button>
@@ -342,7 +342,7 @@ const ProductManagement = () => {
         <p className="no-products">No products added yet.</p>
       )}
 
-      <div className="cards-grid">
+      <div className="cards-grid-small">
         {products.map((product) => (
           <ExpandCard
             key={product._id}
