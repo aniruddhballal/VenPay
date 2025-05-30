@@ -59,3 +59,32 @@ the glitch is resolved, product cards are way smoother and better now
 
 let's focus on other things - like the product card alternatives - look into where those stylish designs can be applied and the
 idea of each company/vendor/product having their own pages - all linked to each other - then after that comes star rating and reviews
+
+remove redundacy from ProductManagement.module.css - and then merge with index4.css
+this is done, i am now working on getting the ProductList.tsx to match the ProductManagement.tsx - regarding the display of the products
+in the grid - the hover card idea
+
+note to self: add a buffer/loading thing whilst the new image/new product is being added to database.
+
+upload ProductManagement, ProductList - new components and index5 onto git
+done.
+
+we shall add the loading/buffer thingy now.
+after this should be getting each product their own page. every vendor. every company - when they visit own profile - edit option.
+
+note to self: it is sometimes better to roll back into a previous version of your code, with lesser number of ideas having found implementation.
+But you know it’s a version that works. While developing, it is so crucial to have older versions of your code,
+and knowing when it is too late/too deep in a debug issue that started “after” you modified a safe version of your code 
+and to roll back into this safer version and start over again. start afresh. Maybe re view your ideas that you wanted to
+implement, maybe its not that deep, maybe implement the same idea in a different way. But re start.
+
+check if company side hover cards look okay? or maybe the grid size or the suze of each hover card - hmmm
+
+also, in the "uploading and creating..." - make that also change into "uploading and updating" or "uploading and creating" based on whether
+the new image is for updation or for creation.
+
+https://www.theparisreview.org/blog/2019/07/16/the-crane-wife/
+https://press.uchicago.edu/ucp/books/book/chicago/A/bo209942751.html
+
+
+done with buffer, going to create separate pages for products and vendor/company profiles i guess.
