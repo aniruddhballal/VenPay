@@ -768,6 +768,19 @@ Merged ProductList and ProductManagement up next
   margin-top: 1rem;
 }
 
+/* Loading Spinner Styles */
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
 /* ============================================
    EXPAND CARD STYLES (Enhanced for both components)
    ============================================ */
