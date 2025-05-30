@@ -77,6 +77,8 @@ const ProductManagement = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const formSectionRef = useRef<HTMLDivElement | null>(null);
 
@@ -128,6 +130,7 @@ const ProductManagement = () => {
   const uploadImage = async (productId: string) => {
     if (!selectedImage) return;
 
+    setUploadingImage(true);
     const formData = new FormData();
     formData.append("image", selectedImage);
 
@@ -149,11 +152,15 @@ const ProductManagement = () => {
     } catch (err: any) {
       console.error("Failed to upload image:", err);
        toast.error(err.response?.data?.error || "Failed to upload image.");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    
     const productData = {
       name: form.name,
       description: form.description,
@@ -173,7 +180,7 @@ const ProductManagement = () => {
 
          if (selectedImage) {
            await uploadImage(editingId);
-           toast.success("Product updated and image uploaded!");
+           toast.success("Product with image updated!");
          } else {
            toast.success("Product updated successfully!");
          }
@@ -186,7 +193,7 @@ const ProductManagement = () => {
 
          if (selectedImage) {
            await uploadImage(res.data._id);
-           toast.success("Product created and image uploaded!");
+           toast.success("Product with image created!");
          } else {
            toast.success("Product created successfully!");
          }
@@ -201,6 +208,8 @@ const ProductManagement = () => {
       console.error("Failed to save product:", err);
       // toast.error(err.response?.data?.error || "Failed to save product.");
       alert("Failed to save product.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -273,6 +282,7 @@ const ProductManagement = () => {
             value={form.name}
             onChange={handleChange}
             required
+            disabled={isSubmitting}
           />
           <textarea
             className="form-textarea"
@@ -281,6 +291,7 @@ const ProductManagement = () => {
             value={form.description}
             onChange={handleChange}
             required
+            disabled={isSubmitting}
           />
           <input
             className="form-input"
@@ -291,6 +302,7 @@ const ProductManagement = () => {
             value={form.price}
             onChange={handleChange}
             required
+            disabled={isSubmitting}
           />
 
           <br />
@@ -303,6 +315,7 @@ const ProductManagement = () => {
               onChange={handleImageChange}
               ref={fileInputRef}
               className="hidden-input"
+              disabled={isSubmitting}
             />
             <label htmlFor="file-upload" className="upload-button">
               Upload Image
@@ -321,19 +334,37 @@ const ProductManagement = () => {
           )}
 
           <div className="button-group">
-            <button type="submit" className="btn btn-success">
-              {editingId ? "Update Product" : "Create Product"}
+            <button 
+              type="submit" 
+              className="btn btn-success"
+              disabled={isSubmitting || uploadingImage}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="spinner-small"></div>
+                  {editingId ? (
+                    selectedImage ? 'Uploading & Updating...' : 'Updating...'
+                  ) : (
+                    selectedImage ? 'Uploading & Creating...' : 'Creating...'
+                  )}
+                </>
+              ) : (
+                editingId ? 'Update Product' : 'Create Product'
+              )}
             </button>
+
             {editingId && (
               <button
                 type="button"
                 onClick={resetForm}
                 className="btn btn-cancel"
+                disabled={isSubmitting}
               >
                 Cancel
               </button>
             )}
           </div>
+
         </form>
       </div>
 
