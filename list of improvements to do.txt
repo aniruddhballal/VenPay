@@ -88,3 +88,40 @@ https://press.uchicago.edu/ucp/books/book/chicago/A/bo209942751.html
 
 
 done with buffer, going to create separate pages for products and vendor/company profiles i guess.
+its hard to decide if i have to create the separate products page first or the user details first
+create a universal users page, where only people who have logged in can see the other persons profile. sth like instagram
+and then when you view your own profile, you'll have the edit profile option.
+maybe i should create the individual products' page first but where do the users click on to land there?
+should i end up modifying the current product expand/hover card style?
+
+created the productdisplay page hoorayyy, it works - i gotta style it and stuff - later on.
+now, user display page??
+niceeeee, vendor page display is done on companyside - next is company page display on vendorside
+gotta modify so many codes on git tom morning - SO MCUH TO STYLE TOO - and make the products/users table contain more details.
+UP NEXT: reviews, star ratingssss
+WOWWW company page display from vendors is done toooo! now only:
+1. styling of UserDisplay.tsx ProductDisplay.tsx
+2. make sure only logged in users can see other's profiles
+3. edit profile option
+4. add more fields in product and user schemas
+5. reviews/star ratings
+
+6. add that akon song that lucassfit used + that new thing/profile on consumerism
+
+done with point 2. logged users (used authMiddleware.ts to implement protected routes)
+now, profile edit option if its the same user
+and then add more fields in product/user table/schema (like reviews and stars)
+and then style the frontend
+
+edit profile takes you to a diff page yes but now, i need a editprofile page - right?
+
+YAYYY done with new profile page, new editprofile page - for all users. it shows any profile only if the person is logged into
+their account - and editprofile shows up only while displaying that user's details who is logged in currently
+added a "go to dahsboard" button to go back from the userdisplay page to the dashboard page. 
+"save changes" on editprofile will take user right back to userdisplay page.
+
+NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
+so, done with point 3.
+
+although all these changes have no ui-ux css styling right now, have to work on that. will do that before creating products page now.
+gotta add more fields in user schema too.
