@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 interface Product {
   _id: string;
@@ -38,11 +39,13 @@ const ProductListExpandCard = ({
     <div className="expand-card">
       <div className="image-section">
         {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.name}
-            className="product-image"
-          />
+          <Link to={`/product/${product._id}`}>
+            <img 
+              src={product.image} 
+              alt={product.name}
+              className="product-image"
+            />
+          </Link>
         ) : (
           <div className="image-placeholder">
             <span>📦</span>
@@ -56,8 +59,9 @@ const ProductListExpandCard = ({
         </div>
         <div className="details">
           <p className="product-description">{product.description}</p>
-          <p className="product-vendor">By {product.vendorId.name} ({product.vendorId.email})</p>
-          
+          <Link to={`/user/${product.vendorId._id}`} target="_blank" rel="noopener noreferrer">
+            By {product.vendorId.name} ({product.vendorId.email})
+          </Link>          
           <div className="product-inputs">
             <input
               type="number"
