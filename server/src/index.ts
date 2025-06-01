@@ -10,6 +10,7 @@ import productRoutes from "./routes/productRoutes";
 import productRequests from "./routes/productRequests";
 import paymentRequestRoutes from "./routes/paymentRequests";
 import paymentTransactionRoutes from "./routes/paymentTransactions";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use(rateLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/requests", productRequests);
+app.use("/api/users", userRoutes);
 
 // Mount paymentRequests routes on /api/paymentrequests
 app.use("/api/paymentrequests", paymentRequestRoutes);
