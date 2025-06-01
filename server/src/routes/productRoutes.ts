@@ -91,6 +91,22 @@ router.delete("/:id", protect, async (req: AuthenticatedRequest, res: Response):
   res.json({ message: "Product deleted" });
 });
 
+router.get("/:id", async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+  try {
+    const product = await Product.findById(req.params.id).populate("vendorId", "name email");
+
+    if (!product) {
+      res.status(404).json({ error: "Product not found" });
+      return;
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Upload product image
 router.post(
   "/upload-image/:id",
