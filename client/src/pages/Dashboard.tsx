@@ -8,6 +8,7 @@ import CompanyRequests from "./CompanyRequests";
 import { toast } from "react-toastify";
 
 type User = {
+  _id: string; // ✅ Required for profile navigation
   email: string;
   name: string;
   userType: "vendor" | "company";
@@ -25,6 +26,7 @@ export default function Dashboard() {
         const fetchedUser = res.data.user;
 
         if (
+          fetchedUser?._id &&
           fetchedUser?.email &&
           (fetchedUser.userType === "vendor" || fetchedUser.userType === "company")
         ) {
@@ -53,15 +55,26 @@ export default function Dashboard() {
     }
   };
 
+  const goToProfile = () => {
+    if (user?._id) {
+      navigate(`/user/${user._id}`);
+    }
+  };
+
   if (loading) return <div className="loading">Loading user data...</div>;
   if (!user) return <div className="unauthorized">Not authorized</div>;
 
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-header">Welcome, {user.name}</h1>
-      <button className="logout-button" onClick={handleLogout}>
-        Logout
-      </button>
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+        <button className="profile-button" onClick={goToProfile}>
+          Profile
+        </button>
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
 
       {user.userType === "vendor" && (
         <>
@@ -73,7 +86,6 @@ export default function Dashboard() {
           <section>
             <VendorRequests />
           </section>
-
         </>
       )}
 
