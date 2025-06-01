@@ -20,14 +20,23 @@ export default function Login() {
         { email, password },
         { withCredentials: true }
       );
+
       const msg = res.data.message || "Logged in!";
-      setMessage(msg);
       toast.success(msg);
+
+      // Optionally fetch user and store it in context
+      const userRes = await axios.get("http://localhost:5000/api/auth/me", {
+        withCredentials: true,
+      });
+
+      const user = userRes.data.user;
+      localStorage.setItem("user", JSON.stringify(user)); // optional if using context
+      setMessage(msg);
       navigate("/dashboard");
     } catch (err: any) {
       const errorMsg = err.response?.data?.error || "Login failed";
-      setMessage(errorMsg);
       toast.error(errorMsg);
+      setMessage(errorMsg);
     }
   };
 
