@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 interface Transaction {
   _id: string;
@@ -19,7 +20,7 @@ interface Request {
     name: string;
     image?: string;
   };
-  companyId: { _id: string; email: string };
+  companyId: { _id: string; email: string, name: string};
   createdAt?: string;
   paymentDeadline?: string;
   quantity?: number;
@@ -178,7 +179,10 @@ export default function VendorRequests() {
                   <strong>Product:</strong> {req.productId.name}
                 </p>
                 <p>
-                  <strong>From:</strong> {req.companyId.email}
+                  <strong>From:</strong>{" "}
+                  <Link to={`/user/${req.companyId._id}`}>
+                    {req.companyId.name} ({req.companyId.email})
+                  </Link>
                 </p>
                 <p>
                   <strong>Status:</strong>{" "}
