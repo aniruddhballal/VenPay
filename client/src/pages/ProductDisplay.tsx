@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import styles from "./ProductDisplay.module.css";
 
 interface Product {
   _id: string;
@@ -35,21 +36,59 @@ export default function Product() {
         setLoading(false);
       }
     };
-
     fetchProduct();
   }, [id]);
 
-  if (loading) return <div>Loading product...</div>;
-  if (error) return <div>{error}</div>;
-  if (!product) return <div>Product not found.</div>;
+  if (loading) return <div className={styles.loadingState}>Loading product...</div>;
+  if (error) return <div className={styles.errorState}>{error}</div>;
+  if (!product) return <div className={styles.notFoundState}>Product not found.</div>;
 
   return (
-    <div style={{ maxWidth: "800px", margin: "2rem auto" }}>
-      <h2>{product.name}</h2>
-      {product.image && <img src={product.image} alt={product.name} style={{ width: "100%", maxHeight: "400px", objectFit: "contain" }} />}
-      <p><strong>Price:</strong> ₹{product.price.toFixed(2)}</p>
-      <p><strong>Description:</strong> {product.description}</p>
-      <p><strong>Vendor:</strong> {product.vendorId.name} ({product.vendorId.email})</p>
+    <div className={styles.container}>
+      {/* Image Section */}
+      <div className={styles.imageSection}>
+        {product.image ? (
+          <img 
+            src={product.image} 
+            alt={product.name}
+            className={styles.productImage}
+          />
+        ) : (
+          <div className={styles.imagePlaceholder}></div>
+        )}
+      </div>
+
+      {/* Content Section */}
+      <div className={styles.contentSection}>
+        {/* Product Title */}
+        <h1 className={styles.productTitle}>{product.name}</h1>
+
+        {/* Price Section */}
+        <div className={styles.priceSection}>
+          <div className={styles.priceLabel}>Price</div>
+          <div className={styles.priceValue}>₹{product.price.toFixed(2)}</div>
+        </div>
+
+        {/* Description Section */}
+        <div className={styles.descriptionSection}>
+          <div className={styles.descriptionLabel}>Description</div>
+          <p className={styles.descriptionText}>{product.description}</p>
+        </div>
+
+        {/* Vendor Section */}
+        <div className={styles.vendorSection}>
+          <div className={styles.vendorLabel}>Vendor Information</div>
+          <div className={styles.vendorInfo}>
+            <h3 className={styles.vendorName}>{product.vendorId.name}</h3>
+            <a 
+              href={`mailto:${product.vendorId.email}`}
+              className={styles.vendorEmail}
+            >
+              {product.vendorId.email}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
