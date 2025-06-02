@@ -125,3 +125,15 @@ so, done with point 3.
 
 although all these changes have no ui-ux css styling right now, have to work on that. will do that before creating products page now.
 gotta add more fields in user schema too.
+
+INLINE PRODUCT CARD - EDIT DETAILS IS CRAZYYYY - IMPLEMENT IT FOR PRODUCT IMAGE ALSO, then you can remove the whole top part of the
+vendor dashboard - Create product can be the last productcard out of all the rest. last mai empty template for product creation.
+
+done implementing for product image. i need to make the last part of the product cards gridlist into the create product option 
+
+yes, done with implementing the create product as the last product hover card in the gridlist. yayyy
+css styles to make better:
+1. the onclick field edit option
+2. user profile styles - for editing and viewing both
+new idea to implement + css styles:
+1. product page - reviews and star rating
