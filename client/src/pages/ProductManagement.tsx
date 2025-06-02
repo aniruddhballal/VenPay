@@ -3,6 +3,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 
+// Add this import at the top of your component file
+import { useNavigate } from "react-router-dom";
+
 interface Product {
   _id: string;
   name: string;
@@ -28,6 +31,13 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
+  // Inside your component, add this hook
+  const navigate = useNavigate();
+
+  // Add this handler function
+  const handleVisitProduct = () => {
+    navigate(`/product/${product._id}`);
+  };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -367,7 +377,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             <div className="price-edit-container">
               <input
                 type="number"
-                step="0.01"
+                step="1"
                 min="0"
                 value={editedPrice}
                 onChange={(e) => setEditedPrice(e.target.value)}
@@ -439,6 +449,12 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           )}
         </div>
         <div className="actions">
+          <button
+            className="btn btn-primary btn-small"
+            onClick={handleVisitProduct}
+          >
+            Details
+          </button>
           <button 
             className="btn btn-danger btn-small"
             onClick={handleDelete}
