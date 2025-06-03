@@ -11,6 +11,7 @@ import productRequests from "./routes/productRequests";
 import paymentRequestRoutes from "./routes/paymentRequests";
 import paymentTransactionRoutes from "./routes/paymentTransactions";
 import userRoutes from "./routes/userRoutes";
+import productRatingRoutes from "./routes/productRatingRoutes";
 
 dotenv.config();
 const app = express();
@@ -36,6 +37,8 @@ app.use("/api/paymentrequests", paymentRequestRoutes);
 
 // Mount paymentTransactions routes on /api/paymenttransactions
 app.use("/api/paymenttransactions", paymentTransactionRoutes);
+
+app.use("/api/productratings", productRatingRoutes);
 
 connectDB().then(() => {
   app.listen(5000, () => console.log("Server running on port 5000"));
