@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { Calendar, X, Check } from "lucide-react";
 
 interface Transaction {
   _id: string;
@@ -28,10 +29,138 @@ interface Request {
   totalPrice?: number;
 }
 
-export default function VendorRequests() {
+interface DatePickerModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (date: string) => void;
+  title: string;
+}
+
+function DatePickerModal({ isOpen, onClose, onConfirm, title }: DatePickerModalProps) {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      // Set minimum date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const minDate = tomorrow.toISOString().split('T')[0];
+      setSelectedDate(minDate);
+      setError("");
+    }
+  }, [isOpen]);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value;
+    setSelectedDate(date);
+    
+    const selectedDateObj = new Date(date);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    
+    if (selectedDateObj <= now) {
+      setError("Please select a future date");
+    } else {
+      setError("");
+    }
+  };
+
+  const handleConfirm = () => {
+    if (!selectedDate) {
+      setError("Please select a date");
+      return;
+    }
+    
+    const selectedDateObj = new Date(selectedDate);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    
+    if (selectedDateObj <= now) {
+      setError("Please select a future date");
+      return;
+    }
+    
+    onConfirm(selectedDate);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split('T')[0];
+  const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <div className="modal-header">
+          <div className="modal-title-container">
+            <Calendar className="modal-icon" />
+            <h3 className="modal-title">{title}</h3>
+          </div>
+          <button onClick={onClose} className="modal-close-btn">
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="modal-content">
+          <div className="date-input-container">
+            <label htmlFor="payment-deadline" className="date-label">
+              Payment Deadline
+            </label>
+            <input
+              id="payment-deadline"
+              type="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              min={minDate}
+              max={maxDate}
+              className={`date-input ${error ? 'error' : ''}`}
+            />
+            {error && <span className="error-message">{error}</span>}
+          </div>
+          
+          {selectedDate && !error && (
+            <div className="date-preview">
+              <p className="preview-label">Selected deadline:</p>
+              <p className="preview-date">
+                {new Date(selectedDate + 'T23:59:59').toLocaleDateString('en-IN', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
+            </div>
+          )}
+        </div>
+        
+        <div className="modal-actions">
+          <button onClick={onClose} className="cancel-btn">
+            Cancel
+          </button>
+          <button 
+            onClick={handleConfirm} 
+            className="btn btn-confirm"
+            disabled={!selectedDate || !!error}
+          >
+            <Check size={16} />
+            Set Deadline
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function ProductRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [amountDueMap, setAmountDueMap] = useState<Record<string, number>>({});
   const [transactions, setTransactions] = useState<Record<string, Transaction[]>>({});
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [currentRequest, setCurrentRequest] = useState<Request | null>(null);
 
   useEffect(() => {
     axios
@@ -75,47 +204,67 @@ export default function VendorRequests() {
   }, [requests]);
 
   const handleAccept = async (request: Request) => {
-    let paymentDeadline: Date | undefined;
-
     if (!request.message || request.message.trim() === "") {
-      paymentDeadline = undefined;
+      // Direct accept for net30
+      try {
+        await axios.put(
+          `http://localhost:5000/api/requests/${request._id}`,
+          { status: "accepted" },
+          { withCredentials: true }
+        );
+
+        await axios.post(
+          `http://localhost:5000/api/paymentrequests/${request._id}`,
+          {},
+          { withCredentials: true }
+        );
+
+        setRequests((prev) =>
+          prev.map((req) => (req._id === request._id ? { ...req, status: "accepted" } : req))
+        );
+        
+        toast.success("Request accepted with Net30 terms");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to accept request or create payment request.");
+      }
     } else {
-      const deadlineInput = prompt("Enter payment deadline (YYYY-MM-DD):");
-      if (!deadlineInput) return toast.warn("Deadline is required.");
-
-      const istDateStr = `${deadlineInput}T23:59:59+05:30`;
-      paymentDeadline = new Date(istDateStr);
-      const now = new Date();
-
-      if (isNaN(paymentDeadline.getTime())) {
-        return toast.warn("Invalid date format.");
-      }
-
-      if (paymentDeadline <= now) {
-        return toast.warn("Deadline must be in the future.");
-      }
+      // Show date picker for custom deadline
+      setCurrentRequest(request);
+      setShowDatePicker(true);
     }
+  };
+
+  const handleDateConfirm = async (selectedDate: string) => {
+    if (!currentRequest) return;
+
+    const istDateStr = `${selectedDate}T23:59:59+05:30`;
+    const paymentDeadline = new Date(istDateStr);
 
     try {
       await axios.put(
-        `http://localhost:5000/api/requests/${request._id}`,
+        `http://localhost:5000/api/requests/${currentRequest._id}`,
         { status: "accepted" },
         { withCredentials: true }
       );
 
       await axios.post(
-        `http://localhost:5000/api/paymentrequests/${request._id}`,
-        paymentDeadline ? { deadline: paymentDeadline } : {},
+        `http://localhost:5000/api/paymentrequests/${currentRequest._id}`,
+        { deadline: paymentDeadline },
         { withCredentials: true }
       );
 
       setRequests((prev) =>
-        prev.map((req) => (req._id === request._id ? { ...req, status: "accepted" } : req))
+        prev.map((req) => (req._id === currentRequest._id ? { ...req, status: "accepted" } : req))
       );
+      
+      toast.success("Request accepted with custom deadline");
     } catch (err) {
       console.error(err);
       toast.error("Failed to accept request or create payment request.");
     }
+
+    setCurrentRequest(null);
   };
 
   const updateStatus = async (id: string, status: "declined") => {
@@ -247,14 +396,14 @@ export default function VendorRequests() {
 
               {req.status === "pending" && (
                 <div className="vendor-actions">
-                  <button onClick={() => handleAccept(req)} className="accept-btn">
+                  <button onClick={() => handleAccept(req)} className="btn accept-btn">
                     {!req.message || req.message.trim() === ""
                       ? "Accept (net30)"
                       : "Accept & Set Deadline"}
                   </button>
                   <button
                     onClick={() => updateStatus(req._id, "declined")}
-                    className="decline-btn"
+                    className="btn decline-btn"
                   >
                     Decline
                   </button>
@@ -286,6 +435,16 @@ export default function VendorRequests() {
           <RequestSection title="Pending Requests" data={grouped.pending} />
         </>
       )}
+
+      <DatePickerModal
+        isOpen={showDatePicker}
+        onClose={() => {
+          setShowDatePicker(false);
+          setCurrentRequest(null);
+        }}
+        onConfirm={handleDateConfirm}
+        title="Set Payment Deadline"
+      />
     </div>
   );
 }
