@@ -78,7 +78,7 @@ and knowing when it is too late/too deep in a debug issue that started â€œafterâ
 and to roll back into this safer version and start over again. start afresh. Maybe re view your ideas that you wanted to
 implement, maybe its not that deep, maybe implement the same idea in a different way. But re start.
 
-check if company side hover cards look okay? or maybe the grid size or the suze of each hover card - hmmm
+check if company side hover cards look okay? or maybe the grid size or the size of each hover card - hmmm
 
 also, in the "uploading and creating..." - make that also change into "uploading and updating" or "uploading and creating" based on whether
 the new image is for updation or for creation.
@@ -117,7 +117,7 @@ edit profile takes you to a diff page yes but now, i need a editprofile page - r
 
 YAYYY done with new profile page, new editprofile page - for all users. it shows any profile only if the person is logged into
 their account - and editprofile shows up only while displaying that user's details who is logged in currently
-added a "go to dahsboard" button to go back from the userdisplay page to the dashboard page. 
+added a "go to dashboard" button to go back from the userdisplay page to the dashboard page. 
 "save changes" on editprofile will take user right back to userdisplay page.
 
 NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
@@ -133,7 +133,16 @@ done implementing for product image. i need to make the last part of the product
 
 yes, done with implementing the create product as the last product hover card in the gridlist. yayyy
 css styles to make better:
-1. the onclick field edit option
-2. user profile styles - for editing and viewing both
+1. the onclick field edit option - THIS REMAINS
+2. user profile and product styles - for editing and viewing both - THIS DONE
 new idea to implement + css styles:
-1. product page - reviews and star rating
+1. product page - reviews and star rating - YET TO ADD NEW FIELDS into schema - DONE
+2. sort index.css out and merge the three module.css files - UHH LATER
+
+OH THE MANUAL DEADLINE HAS NO CSS OR UIUX STUFF
+
+left with styling of:
+1. onfield click edit option
+2. manual deadline - DONE
+3. vendor link in company dashboard
+4. index.css + 3 module.css files - note to self, the css files are getting too messy, i think module files are the way to go - that would reduce complexity but the number of css files would growwww;
