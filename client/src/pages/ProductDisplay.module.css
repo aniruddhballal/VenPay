@@ -450,3 +450,206 @@
     display: none;
   }
 }
+
+/* Reviews Section */
+.reviewsSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.reviewsHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.reviewsLabel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ratingsLoading {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Rating Summary */
+.ratingSummary {
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.averageRating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratingValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.ratingStars {
+  font-size: 1.25rem;
+  color: #fbbf24;
+}
+
+.ratingCount {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Filter Section */
+.filterSection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filterLabel {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.companyFilter {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  font-size: 0.875rem;
+  min-width: 200px;
+}
+
+.companyFilter:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Reviews List */
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reviewItem {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.reviewCompany {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reviewCompany strong {
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.reviewEmail {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.reviewMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.reviewRating {
+  font-size: 0.875rem;
+  color: #fbbf24;
+  font-weight: 500;
+}
+
+.reviewDate {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.reviewText {
+  margin-bottom: 0.75rem;
+}
+
+.reviewText p {
+  margin: 0;
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.reviewDetails {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.reviewQuantity,
+.reviewPrice {
+  font-weight: 500;
+}
+
+.noReviews {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-style: italic;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .reviewHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .reviewMeta {
+    align-items: flex-start;
+  }
+  
+  .filterSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .companyFilter {
+    width: 100%;
+  }
+  
+  .reviewDetails {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
