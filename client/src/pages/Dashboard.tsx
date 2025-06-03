@@ -3,8 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ProductManagement from "./ProductManagement";
 import ProductList from "./ProductList";
-import VendorRequests from "./VendorRequests";
-import CompanyRequests from "./CompanyRequests";
+import ProductRequests from "./ProductRequests";
+import PaymentRequests from "./PaymentRequests";
 import { toast } from "react-toastify";
 
 type User = {
@@ -84,7 +84,7 @@ export default function Dashboard() {
           </section>
 
           <section>
-            <VendorRequests />
+            <ProductRequests />
           </section>
         </>
       )}
@@ -93,7 +93,7 @@ export default function Dashboard() {
         <>
           <h2 className="dashboard-subheader">Company Dashboard</h2>
           <ProductList />
-          <CompanyRequests />
+          <PaymentRequests />
         </>
       )}
     </div>
