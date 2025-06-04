@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import styles from "./ProductDisplay.module.css";
+import styles from "../styles/ProductDisplay.module.css";
 import { toast } from "react-toastify";
 
 interface Product {
@@ -55,102 +55,98 @@ export default function Product() {
   const [selectedCompany, setSelectedCompany] = useState<string>("all");
   const [currentUser, setCurrentUser] = useState<any>(null);
 
+  // State to track if auth error toast has been shown to prevent repeats
+  const [authErrorShown, setAuthErrorShown] = useState(false);
+
   // Get unique companies from ratings
   const getUniqueCompanies = () => {
     if (!ratings?.ratings) return [];
-    const companies = ratings.ratings.map(rating => rating.companyId);
-    const uniqueCompanies = companies.filter((company, index, self) => 
-      index === self.findIndex(c => c._id === company._id)
+    const companies = ratings.ratings.map((rating) => rating.companyId);
+    const uniqueCompanies = companies.filter(
+      (company, index, self) =>
+        index === self.findIndex((c) => c._id === company._id)
     );
     return uniqueCompanies;
   };
 
   // Filter ratings based on selected company
-  const filteredRatings = selectedCompany === "all" 
-    ? ratings?.ratings || []
-    : ratings?.ratings.filter(rating => rating.companyId._id === selectedCompany) || [];
+  const filteredRatings =
+    selectedCompany === "all"
+      ? ratings?.ratings || []
+      : ratings?.ratings.filter(
+          (rating) => rating.companyId._id === selectedCompany
+        ) || [];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch product details
-        const productRes = await axios.get(`http://localhost:5000/api/products/${id}`, {
+        // First, fetch current user info
+        const userRes = await axios.get(`http://localhost:5000/api/auth/me`, {
           withCredentials: true,
         });
-        setProduct(productRes.data);
-        //console.log("Product data:", productRes.data);
+        setCurrentUser(userRes.data);
 
-        // Get current user info (to check if they're a vendor)
-        try {
-          const userRes = await axios.get(`http://localhost:5000/api/auth/me`, {
+        // Then, fetch product details
+        const productRes = await axios.get(
+          `http://localhost:5000/api/products/${id}`,
+          {
             withCredentials: true,
-          });
-          setCurrentUser(userRes.data);
-          //console.log("Current user:", userRes.data);
-          //console.log("User type:", userRes.data.user?.userType);
+          }
+        );
+        setProduct(productRes.data);
 
-          // Always try to fetch ratings for now (for debugging)
-          setRatingsLoading(true);
-          try {
-            //console.log("Fetching ratings for product ID:", id);
-            const ratingsRes = await axios.get(`http://localhost:5000/api/productratings/product/${id}`, {
+        // Fetch product ratings
+        setRatingsLoading(true);
+        try {
+          const ratingsRes = await axios.get(
+            `http://localhost:5000/api/productratings/product/${id}`,
+            {
               withCredentials: true,
-            });
-            setRatings(ratingsRes.data);
-            //console.log("Ratings data:", ratingsRes.data);
-          } catch (ratingsErr: any) {
-            console.error(ratingsErr);
-            const message = ratingsErr.response?.data?.error || "Failed to fetch ratings.";
-            toast.error(message);
-            // Set empty ratings instead of leaving it null
-            setRatings({
-              ratings: [],
-              averageRating: 0,
-              totalRatings: 0
-            });
-          } finally {
-            setRatingsLoading(false);
-          }
-        } catch (userErr: any) {
-            console.error(userErr);
-            const message = userErr.response?.data?.error || "Failed to fetch user data.";
-            toast.error(message);
-            
-            // Still try to fetch ratings even if user fetch fails
-          setRatingsLoading(true);
-          try {
-            const ratingsRes = await axios.get(`http://localhost:5000/api/productratings/product/${id}`, {
-              withCredentials: true,
-            });
-            setRatings(ratingsRes.data);
-            //console.log("Ratings data:", ratingsRes.data);
-          } catch (ratingsErr: any) {
-            console.error(ratingsErr);
-            const message = ratingsErr.response?.data?.error || "Failed to fetch ratings.";
-            toast.error(message);
-            
-            // Set empty ratings instead of leaving it null
-            setRatings({
-              ratings: [],
-              averageRating: 0,
-              totalRatings: 0
-            });
-          } finally {
-            setRatingsLoading(false);
-          }
+            }
+          );
+          setRatings(ratingsRes.data);
+        } catch (ratingsErr: any) {
+          console.error("Ratings fetch error:", ratingsErr);
+          const message =
+            ratingsErr.response?.data?.error || "Failed to fetch ratings.";
+          toast.error(message);
+          setRatings({
+            ratings: [],
+            averageRating: 0,
+            totalRatings: 0,
+          });
+        } finally {
+          setRatingsLoading(false);
         }
       } catch (err: any) {
-        console.error(err);
+        console.error("Main fetch error:", err);
         const message = err.response?.data?.error || "Failed to fetch data.";
-        toast.error(message);
-        setError("Failed to load product details.");
+
+        // Show authorization denied toast once
+        if (message === "No token, authorization denied") {
+          if (!authErrorShown) {
+            toast.error(message);
+            setAuthErrorShown(true);
+          }
+        } else {
+          toast.error(message);
+        }
+
+        if (message === "No token, authorization denied") {
+          setError("Please log in to view product details.");
+          setCurrentUser(null);
+          setProduct(null);
+          setRatings(null);
+        } else {
+          setError("Failed to load product details.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, authErrorShown]);
 
   const renderStars = (rating: number) => {
     return "★".repeat(rating) + "☆".repeat(5 - rating);
@@ -160,9 +156,20 @@ export default function Product() {
     return new Date(dateString).toLocaleDateString();
   };
 
-  if (loading) return <div className={styles.loadingState}>Loading product...</div>;
+  if (loading)
+    return <div className={styles.loadingState}>Loading product...</div>;
   if (error) return <div className={styles.errorState}>{error}</div>;
-  if (!product) return <div className={styles.notFoundState}>Product not found.</div>;
+
+  // Add gate to check user is logged in
+  if (!currentUser)
+    return (
+      <div className={styles.unauthenticated}>
+        Please log in to view product details.
+      </div>
+    );
+
+  if (!product)
+    return <div className={styles.notFoundState}>Product not found.</div>;
 
   return (
     <div className={styles.container}>
@@ -215,7 +222,9 @@ export default function Product() {
           <div className={styles.reviewsSection}>
             <div className={styles.reviewsHeader}>
               <div className={styles.reviewsLabel}>Product Reviews</div>
-              {ratingsLoading && <div className={styles.ratingsLoading}>Loading reviews...</div>}
+              {ratingsLoading && (
+                <div className={styles.ratingsLoading}>Loading reviews...</div>
+              )}
             </div>
 
             {ratings && !ratingsLoading && (
@@ -224,9 +233,15 @@ export default function Product() {
                 {ratings.totalRatings > 0 && (
                   <div className={styles.ratingSummary}>
                     <div className={styles.averageRating}>
-                      <span className={styles.ratingValue}>{ratings.averageRating.toFixed(1)}</span>
-                      <span className={styles.ratingStars}>{renderStars(Math.round(ratings.averageRating))}</span>
-                      <span className={styles.ratingCount}>({ratings.totalRatings} reviews)</span>
+                      <span className={styles.ratingValue}>
+                        {ratings.averageRating.toFixed(1)}
+                      </span>
+                      <span className={styles.ratingStars}>
+                        {renderStars(Math.round(ratings.averageRating))}
+                      </span>
+                      <span className={styles.ratingCount}>
+                        ({ratings.totalRatings} reviews)
+                      </span>
                     </div>
                   </div>
                 )}
@@ -234,7 +249,10 @@ export default function Product() {
                 {/* Company Filter */}
                 {ratings.ratings.length > 0 && (
                   <div className={styles.filterSection}>
-                    <label htmlFor="companyFilter" className={styles.filterLabel}>
+                    <label
+                      htmlFor="companyFilter"
+                      className={styles.filterLabel}
+                    >
                       Filter by Company:
                     </label>
                     <select
@@ -243,9 +261,13 @@ export default function Product() {
                       onChange={(e) => setSelectedCompany(e.target.value)}
                       className={styles.companyFilter}
                     >
-                      <option value="all">All Companies ({ratings.totalRatings})</option>
-                      {getUniqueCompanies().map(company => {
-                        const companyRatingCount = ratings.ratings.filter(r => r.companyId._id === company._id).length;
+                      <option value="all">
+                        All Companies ({ratings.totalRatings})
+                      </option>
+                      {getUniqueCompanies().map((company) => {
+                        const companyRatingCount = ratings.ratings.filter(
+                          (r) => r.companyId._id === company._id
+                        ).length;
                         return (
                           <option key={company._id} value={company._id}>
                             {company.name} ({companyRatingCount})
@@ -259,12 +281,14 @@ export default function Product() {
                 {/* Reviews List */}
                 <div className={styles.reviewsList}>
                   {filteredRatings.length > 0 ? (
-                    filteredRatings.map(rating => (
+                    filteredRatings.map((rating) => (
                       <div key={rating._id} className={styles.reviewItem}>
                         <div className={styles.reviewHeader}>
                           <div className={styles.reviewCompany}>
                             <strong>{rating.companyId.name}</strong>
-                            <span className={styles.reviewEmail}>{rating.companyId.email}</span>
+                            <span className={styles.reviewEmail}>
+                              {rating.companyId.email}
+                            </span>
                           </div>
                           <div className={styles.reviewMeta}>
                             <span className={styles.reviewRating}>
@@ -275,13 +299,13 @@ export default function Product() {
                             </span>
                           </div>
                         </div>
-                        
+
                         {rating.review && (
                           <div className={styles.reviewText}>
                             <p>{rating.review}</p>
                           </div>
                         )}
-                        
+
                         <div className={styles.reviewDetails}>
                           <span className={styles.reviewQuantity}>
                             Quantity: {rating.productRequestId.quantity}
@@ -296,10 +320,9 @@ export default function Product() {
                     ))
                   ) : (
                     <div className={styles.noReviews}>
-                      {selectedCompany === "all" 
+                      {selectedCompany === "all"
                         ? "No reviews available for this product yet."
-                        : "No reviews from the selected company."
-                      }
+                        : "No reviews from the selected company."}
                     </div>
                   )}
                 </div>
