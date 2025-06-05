@@ -1,4 +1,4 @@
-# VenPay2.0
+ # VenPay2.0
 Heavily ramped up the 'VenPay' Project
 
 # Currently, the UI-UX is VERY BAD - was working on developing the required functionalities.
@@ -170,3 +170,4 @@ up next:
 also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
 
 okay, the product display page looks too bad right now. ask it to maintain the theme, interactiveness, and colour and styling of the userdisplay and editprofile tsx files.
+gotta MUI-fy the dashboard page too
