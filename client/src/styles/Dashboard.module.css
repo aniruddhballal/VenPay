@@ -1,0 +1,156 @@
+/*Start of Dashboard.module.css*/
+.dashboard-header {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  animation: slideInDown 0.8s ease-out;
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-subheader {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 2rem 0 1.5rem;
+  color: #475569;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.dashboard-subheader::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 2px;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: #1e293b;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-buttons {
+  display: flex;
+  gap: 1rem; /* Space between the buttons */
+}
+
+.dashboard-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  animation: float 20s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.loading,
+.unauthorized {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  font-size: 1.5rem;
+  color: #64748b;
+  font-weight: 600;
+  animation: fadeInSoft 0.5s ease-in;
+}
+
+.loading::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  margin-left: 1rem;
+  border: 3px solid rgba(59, 130, 246, 0.3);
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Logout buttons */
+.logout-button,
+.profile-button {
+  position: absolute;
+  transition: all 0.2s ease;
+  width: 120px;  /* Set a fixed width */
+  height: 50px;  /* Set a fixed height */
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+  line-height: 50px; /* Vertically center text */
+  text-align: center; /* Horizontally center text */
+  padding: 0; /* Remove padding to maintain exact dimensions */
+}
+
+/* Positioning remains specific per button */
+.logout-button {
+  top: 10.6rem;
+  right: 3rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.profile-button {
+  top: 4.6rem;
+  right: 3rem;
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(31, 41, 55, 0.4);
+}
+
+.profile-button:hover{
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(31, 41, 55, 0.5);
+}
+
+.logout-button:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.4s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+/*End of Dashboard.module.css*/
