@@ -130,36 +130,88 @@ const InfoRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '0.75rem',
-  padding: '1.5rem 0',
+  padding: '1.5rem 1.2rem',
+  margin: '0.5rem 0',
   position: 'relative',
-  transition: 'all 0.3s ease',
-  
-  '&:not(:last-child)': {
-    borderBottom: '1px solid #f3f4f6',
-  },
+  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  borderRadius: '12px',
+  border: '1px solid #e5e7eb',
+  background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
   
   '&:hover': {
-    backgroundColor: '#f9fafb',
-    borderRadius: '12px',
-    padding: '1.5rem 1rem',
-    margin: '0 -1rem',
+    backgroundColor: '#f8fafc',
+    border: '1px solid #10b981',
+    boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.1), 0 8px 25px -5px rgba(16, 185, 129, 0.15)',
+    transform: 'translateY(-2px) scale(1.01)',
     
-    '&:not(:last-child)': {
-      borderBottom: 'none',
+    '& .info-icon': {
+      color: '#10b981',
+      transform: 'scale(1.1)',
+    },
+    
+    '& .info-label': {
+      color: '#047857',
+    },
+    
+    '& .info-value': {
+      color: '#065f46',
+    },
+  },
+  
+  '&:nth-of-type(2n)': {
+    '&:hover': {
+      border: '1px solid #3b82f6',
+      boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1), 0 8px 25px -5px rgba(59, 130, 246, 0.15)',
+      
+      '& .info-icon': {
+        color: '#3b82f6',
+      },
+      
+      '& .info-label': {
+        color: '#1d4ed8',
+      },
+      
+      '& .info-value': {
+        color: '#1e40af',
+      },
+    },
+  },
+  
+  '&:nth-of-type(4n)': {
+    '&:hover': {
+      border: '1px solid #8b5cf6',
+      boxShadow: '0 0 0 3px rgba(139, 92, 246, 0.1), 0 8px 25px -5px rgba(139, 92, 246, 0.15)',
+      
+      '& .info-icon': {
+        color: '#8b5cf6',
+      },
+      
+      '& .info-label': {
+        color: '#7c3aed',
+      },
+      
+      '& .info-value': {
+        color: '#6d28d9',
+      },
     },
   },
   
   [theme.breakpoints.down('sm')]: {
     gap: '0.5rem',
-    padding: '1rem 0',
-    
-    '&:hover': {
-      padding: '1rem',
-    },
+    padding: '1.2rem 1rem',
+    margin: '0.25rem 0',
   },
   
   '@media (prefers-reduced-motion: reduce)': {
-    transition: 'none',
+    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+    
+    '&:hover': {
+      transform: 'none',
+      
+      '& .info-icon': {
+        transform: 'none',
+      },
+    },
   },
 }));
 
@@ -172,6 +224,11 @@ const InfoLabel = styled(Typography)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: '0.5rem',
+  transition: 'color 0.3s ease',
+  
+  '& .MuiSvgIcon-root': {
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  },
   
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.8rem',
@@ -183,6 +240,7 @@ const InfoValue = styled(Typography)(({ theme }) => ({
   fontWeight: 500,
   color: '#1f2937',
   wordBreak: 'break-word',
+  transition: 'color 0.3s ease',
   
   [theme.breakpoints.down('sm')]: {
     fontSize: '1rem',
@@ -196,6 +254,7 @@ const UserTypeChip = styled(Chip)<{ usertype: 'company' | 'vendor' }>(({ theme, 
   height: 'auto',
   borderRadius: '8px',
   textTransform: 'capitalize',
+  transition: 'all 0.3s ease',
   
   ...(usertype === 'company' && {
     backgroundColor: '#dbeafe',
@@ -204,6 +263,11 @@ const UserTypeChip = styled(Chip)<{ usertype: 'company' | 'vendor' }>(({ theme, 
     
     '& .MuiChip-icon': {
       color: '#1e40af',
+    },
+    
+    '&:hover': {
+      backgroundColor: '#bfdbfe',
+      boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.2)',
     },
   }),
   
@@ -214,6 +278,11 @@ const UserTypeChip = styled(Chip)<{ usertype: 'company' | 'vendor' }>(({ theme, 
     
     '& .MuiChip-icon': {
       color: '#065f46',
+    },
+    
+    '&:hover': {
+      backgroundColor: '#a7f3d0',
+      boxShadow: '0 0 0 2px rgba(16, 185, 129, 0.2)',
     },
   }),
   
@@ -497,38 +566,38 @@ export default function UserDisplay() {
 
             <Box sx={{ marginBottom: '3rem' }}>
               <InfoRow>
-                <InfoLabel>
-                  <BadgeIcon fontSize="small" />
+                <InfoLabel className="info-label">
+                  <BadgeIcon fontSize="small" className="info-icon" />
                   User ID
                 </InfoLabel>
-                <InfoValue sx={{ fontFamily: 'monospace', fontSize: '1rem' }}>
+                <InfoValue className="info-value" sx={{ fontFamily: 'monospace', fontSize: '1rem' }}>
                   {user._id}
                 </InfoValue>
               </InfoRow>
 
               <InfoRow>
-                <InfoLabel>
-                  <PersonIcon fontSize="small" />
+                <InfoLabel className="info-label">
+                  <PersonIcon fontSize="small" className="info-icon" />
                   Full Name
                 </InfoLabel>
-                <InfoValue>
+                <InfoValue className="info-value">
                   {user.name}
                 </InfoValue>
               </InfoRow>
 
               <InfoRow>
-                <InfoLabel>
-                  <EmailIcon fontSize="small" />
+                <InfoLabel className="info-label">
+                  <EmailIcon fontSize="small" className="info-icon" />
                   Email Address
                 </InfoLabel>
-                <InfoValue>
+                <InfoValue className="info-value">
                   {user.email}
                 </InfoValue>
               </InfoRow>
 
               <InfoRow>
-                <InfoLabel>
-                  <AccountCircleIcon fontSize="small" />
+                <InfoLabel className="info-label">
+                  <AccountCircleIcon fontSize="small" className="info-icon" />
                   Account Type
                 </InfoLabel>
                 <Box>
