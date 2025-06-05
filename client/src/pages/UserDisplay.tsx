@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import styles from "./UserDisplay.module.css";
+import styles from "../styles/UserDisplay.module.css";
 
 interface User {
   _id: string;
