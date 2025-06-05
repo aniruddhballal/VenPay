@@ -148,4 +148,12 @@ left with styling of:
 4. index.css + 3 module.css files - note to self, the css files are getting too messy, i think module files are the way to go - that would reduce complexity but the number of css files would growwww;
 modules done for the simpler, single use classnames - productrequests, paymentrequests, productmanagement, productlist - these are all put in one big remaining.css for further sorting on some other day i guess 
 
-there is an issue with who can see the product details - the reviews, comments - make it all public for logged in users.
+there is an issue with who can see the product details - the reviews, comments - make it all public for logged in users. - DONE
+modified multiple react_css into react_mui
+learnt about react+mui dependency issues
+
+up next:
+1. onfield click edit option
+3. vendor link in company dashboard
+
+also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
