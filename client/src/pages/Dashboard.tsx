@@ -6,9 +6,10 @@ import ProductList from "./ProductList";
 import ProductRequests from "./ProductRequests";
 import PaymentRequests from "./PaymentRequests";
 import { toast } from "react-toastify";
+import styles from "../styles/Dashboard.module.css"; // 👈 CSS Module import
 
 type User = {
-  _id: string; // ✅ Required for profile navigation
+  _id: string;
   email: string;
   name: string;
   userType: "vendor" | "company";
@@ -61,24 +62,24 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) return <div className="loading">Loading user data...</div>;
-  if (!user) return <div className="unauthorized">Not authorized</div>;
+  if (loading) return <div className={styles["loading"]}>Loading user data...</div>;
+  if (!user) return <div className={styles["unauthorized"]}>Not authorized</div>;
 
   return (
-    <div className="dashboard-container">
-      <h1 className="dashboard-header">Welcome, {user.name}</h1>
+    <div className={styles["dashboard-container"]}>
+      <h1 className={styles["dashboard-header"]}>Welcome, {user.name}</h1>
       <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <button className="profile-button" onClick={goToProfile}>
+        <button className={`${styles["btn"]} ${styles["profile-button"]}`} onClick={goToProfile}>
           Profile
         </button>
-        <button className="logout-button" onClick={handleLogout}>
+        <button className={`${styles["btn"]} ${styles["logout-button"]}`} onClick={handleLogout}>
           Logout
         </button>
       </div>
 
       {user.userType === "vendor" && (
         <>
-          <h2 className="dashboard-subheader">Vendor Dashboard</h2>
+          <h2 className={styles["dashboard-subheader"]}>Vendor Dashboard</h2>
           <section style={{ marginBottom: "3rem" }}>
             <ProductManagement />
           </section>
@@ -91,7 +92,7 @@ export default function Dashboard() {
 
       {user.userType === "company" && (
         <>
-          <h2 className="dashboard-subheader">Company Dashboard</h2>
+          <h2 className={styles["dashboard-subheader"]}>Company Dashboard</h2>
           <ProductList />
           <PaymentRequests />
         </>
