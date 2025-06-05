@@ -164,7 +164,9 @@ modified multiple react_css into react_mui
 learnt about react+mui dependency issues
 
 up next:
-1. onfield click edit option
-3. vendor link in company dashboard
+1. onfield click edit option - not done yet
+3. vendor link in company dashboard - not done yet
 
 also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
+
+okay, the product display page looks too bad right now. ask it to maintain the theme, interactiveness, and colour and styling of the userdisplay and editprofile tsx files.
