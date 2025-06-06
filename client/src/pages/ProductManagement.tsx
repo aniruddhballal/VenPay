@@ -19,6 +19,7 @@ import {
   Tooltip,
   alpha
 } from '@mui/material';
+import type { ButtonProps } from "@mui/material";
 import {
   Check,
   Close,
@@ -34,6 +35,78 @@ interface Product {
 }
 
 import { styled } from '@mui/material/styles';
+
+interface StyledButton2Props extends ButtonProps {
+  variantType?: 'primary' | 'danger';
+}
+
+const StyledButton2 = styled(({ variantType, ...props }: StyledButton2Props) => (
+  <Button {...props} />
+))(({ theme, variantType }) => ({
+  padding: '0.375rem 0.875rem',
+  fontSize: '0.75rem',
+  borderRadius: '6px',
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  letterSpacing: '0.025em',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.375rem',
+  position: 'relative',
+  overflow: 'hidden',
+  transition: 'all 0.2s ease',
+  color: 'white',
+  flex: 1,
+  justifyContent: 'center',
+
+
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+    transition: 'left 0.4s ease',
+  },
+
+  '&:hover::before': {
+    left: '100%',
+  },
+
+  ...(variantType === 'primary' && {
+    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+    boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)',
+
+    '&:hover': {
+      background: 'linear-gradient(135deg, #2563eb, #1e40af)',
+      boxShadow: '0 4px 8px rgba(59, 130, 246, 0.4)',
+      transform: 'translateY(-1px)',
+    },
+
+    '&:active': {
+      transform: 'translateY(0)',
+      boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)',
+    },
+  }),
+
+  ...(variantType === 'danger' && {
+    background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+    boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)',
+
+    '&:hover': {
+      background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+      boxShadow: '0 4px 8px rgba(239, 68, 68, 0.4)',
+      transform: 'translateY(-1px)',
+    },
+
+    '&:active': {
+      transform: 'translateY(0)',
+      boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)',
+    },
+  }),
+}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   padding: '0rem 1rem',
@@ -713,20 +786,28 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           )}
         </Box>
 
-        <div className="actions">
-          <button
-            className="btn btn-primary btn-small"
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+          <StyledButton2
+            variantType="primary"
             onClick={handleVisitProduct}
+            sx={{
+              fontSize: '0.875rem',
+            }}
           >
             Details
-          </button>
-          <button 
-            className="btn btn-danger btn-small"
+          </StyledButton2>
+
+          <StyledButton2
+            variantType="danger"
             onClick={handleDelete}
+            sx={{
+              fontSize: '0.875rem',
+            }}
           >
             🗑️ Delete
-          </button>
+          </StyledButton2>
         </div>
+        
       </div>
     </div>
   );
