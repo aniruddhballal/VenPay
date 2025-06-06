@@ -6,6 +6,26 @@ import { confirmAlert } from "react-confirm-alert";
 // Add this import at the top of your component file
 import { useNavigate } from "react-router-dom";
 
+// IMPORT THESE MUI COMPONENTS AT THE TOP OF YOUR FILE:
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Fade,
+  Grow,
+  Chip,
+  Tooltip,
+  ButtonGroup,
+  alpha
+} from '@mui/material';
+import {
+  Check,
+  Close,
+  Edit,
+} from '@mui/icons-material';
+
 interface Product {
   _id: string;
   name: string;
@@ -13,6 +33,75 @@ interface Product {
   price: number;
   image?: string;
 }
+
+import { styled } from '@mui/material/styles';
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  padding: '1.25rem 2rem',
+  borderRadius: '12px',
+  fontWeight: 600,
+  fontSize: '1.1rem',
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
+  minHeight: '56px',
+  position: 'relative',
+  overflow: 'hidden',
+  transition: 'all 0.3s ease',
+  margin: '0 0.5rem',
+
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+    transition: 'left 0.6s ease',
+
+    '@media (prefers-reduced-motion: reduce)': {
+      display: 'none',
+    },
+  },
+
+  '&:hover::before': {
+    left: '100%',
+  },
+
+  '&:not(:disabled)': {
+    color: 'white',
+    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
+
+    '&:hover': {
+      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.5)',
+      transform: 'translateY(-2px)',
+    },
+
+    '&:active': {
+      transform: 'translateY(0)',
+      boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
+    },
+  },
+
+  '&:disabled': {
+    background: '#9ca3af !important',
+    color: '#ffffff !important',
+    boxShadow: 'none !important',
+    transform: 'none !important',
+  },
+
+  [theme.breakpoints.down('md')]: {
+    padding: '1rem 2rem',
+    fontSize: '1rem',
+  },
+
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': { transform: 'none' },
+    '&:active': { transform: 'none' },
+  },
+}));
+
 
 // Hover Expand Card Component
 const ExpandCard = ({ product, onDelete, onFieldUpdate }: { 
@@ -33,7 +122,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   // Inside your component, add this hook
   const navigate = useNavigate();
-
+  const descriptionInputRef = useRef<HTMLInputElement | null>(null);
   // Add this handler function
   const handleVisitProduct = () => {
     navigate(`/product/${product._id}`);
@@ -75,6 +164,15 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     setIsEditingPrice(true);
     setEditedPrice(product.price.toString());
   };
+
+  useEffect(() => {
+    if (isEditingDescription && descriptionInputRef.current) {
+      const input = descriptionInputRef.current;
+      const length = input.value.length;
+      input.setSelectionRange(length, length);
+      input.focus();
+    }
+  }, [isEditingDescription]);
 
   const handlePriceSave = async () => {
     const newPrice = parseFloat(editedPrice);
@@ -411,43 +509,224 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             </div>
           )}
         </div>
-        <div className="details">
+
+        <Box className="details" sx={{ position: 'relative', my: 3 }}>
           {isEditingDescription ? (
-            <div className="description-edit-container">
-              <textarea
-                value={editedDescription}
-                onChange={(e) => setEditedDescription(e.target.value)}
-                onKeyDown={handleDescriptionKeyPress}
-                onBlur={handleDescriptionSave}
-                autoFocus
-                className="description-edit-textarea"
-                rows={3}
-              />
-              <div className="description-edit-buttons">
-                <button 
-                  className="btn-save-description"
-                  onClick={handleDescriptionSave}
+            <Grow in={isEditingDescription} timeout={300}>
+              <Box>
+                <TextField
+                  inputRef={descriptionInputRef}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={editedDescription}
+                  onChange={(e) => setEditedDescription(e.target.value)}
+                  onKeyDown={handleDescriptionKeyPress}
+                  autoFocus
+                  variant="outlined"
+                  placeholder="Enter product description..."
+                  sx={{
+                    mb: 2,
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 3,
+                      background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
+                      fontSize: '1.1rem',
+                      lineHeight: 1.6,
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:hover': {
+                        background: 'rgba(102, 126, 234, 0.04)',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#667eea',
+                          borderWidth: 2
+                        }
+                      },
+                      '&.Mui-focused': {
+                        background: '#ffffff',
+                        boxShadow: '0 0 0 4px rgba(102, 126, 234, 0.1)',
+                        transform: 'translateY(-2px)',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#667eea',
+                          borderWidth: 2
+                        }
+                      }
+                    }
+                  }}
+                />
+                
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  mb: 2 
+                }}>
+                  <Typography variant="caption" color="text.secondary">
+                    {editedDescription.length} characters
+                  </Typography>
+                  <Chip
+                    label="Enter to save • Esc to cancel"
+                    size="small"
+                    variant="outlined"
+                    sx={{
+                      fontSize: '0.7rem',
+                      height: 10,
+                      borderColor: alpha('#667eea', 0.3),
+                      color: 'text.secondary'
+                    }}
+                  />
+                </Box>
+                
+                <ButtonGroup
+                  variant="contained"
+                  sx={{
+                    boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
+                    borderRadius: 2,
+                    overflow: 'hidden'
+                  }}
                 >
-                  ✓
-                </button>
-                <button 
-                  className="btn-cancel-description"
-                  onClick={handleDescriptionCancel}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
+                  <Box sx={{ width: '100%' /* make sure this fits the product card */, mt: 2, mr: 4 }}>
+                    <Box sx={{ display: 'flex', width: '90%', gap: 0 , paddingLeft: 0, paddingRight: 0}}>
+                      <Tooltip title="Save changes (Enter)" arrow>
+                        <StyledButton
+                          onClick={handleDescriptionSave}
+                          startIcon={<Check />}
+                          sx={{
+                            flex: 1, // take equal space
+                            fontSize: '0.9rem',
+                            height: '48px',
+                            borderTopRightRadius: 0,
+                            borderBottomRightRadius: 0,
+                            borderTopLeftRadius: '12px',
+                            borderBottomLeftRadius: '12px',
+                            boxSizing: 'border-box',
+                            background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                            '&:hover': {
+                              background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                            },
+                            '&:active': {
+                              background: 'linear-gradient(135deg, #1e40af, #1d4ed8)',
+                            },
+                          }}
+                        >
+                          Save
+                        </StyledButton>
+                      </Tooltip>
+
+                      <Tooltip title="Cancel editing (Esc)" arrow>
+                        <StyledButton
+                          onClick={handleDescriptionCancel}
+                          startIcon={<Close />}
+                          sx={{
+                            flex: 1, // equal width
+                            fontSize: '0.9rem',
+                            height: '48px',
+                            borderTopLeftRadius: 0,
+                            borderBottomLeftRadius: 0,
+                            borderTopRightRadius: '12px',
+                            borderBottomRightRadius: '12px',
+                            boxSizing: 'border-box',
+                            background: 'linear-gradient(135deg, #ef4444, #b91c1c)',
+                            '&:hover': {
+                              background: 'linear-gradient(135deg, #dc2626, #991b1b)',
+                            },
+                            '&:active': {
+                              background: 'linear-gradient(135deg, #7f1d1d, #991b1b)',
+                            },
+                          }}
+                        >
+                          Cancel
+                        </StyledButton>
+                      </Tooltip>
+                    </Box>
+                  </Box>
+                </ButtonGroup>
+              </Box>
+            </Grow>
           ) : (
-            <p 
-              className="product-description-editable"
-              onClick={handleDescriptionClick}
-              title="Click to edit"
-            >
-              {product.description}
-            </p>
+            <Fade in={!isEditingDescription} timeout={200}>
+              <Paper
+                onClick={handleDescriptionClick}
+                elevation={0}
+                sx={{
+                  p: 3,
+                  cursor: 'pointer',
+                  borderRadius: 3,
+                  background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
+                  border: '2px solid transparent',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                  '&:hover .edit-indicator': {
+                    opacity: 1,
+                    transform: 'scale(1)'
+                  },
+                  '&:hover .desc-text': {
+                    opacity: 0
+                  }
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  className="desc-text"
+                  sx={{
+                    fontSize: '1.1rem',
+                    lineHeight: 1.6,
+                    color: 'text.primary',
+                    pr: 8,
+                    transition: 'opacity 0.3s ease'
+                  }}
+                >
+                  {product.description}
+                </Typography>
+                <Box
+                  className="edit-indicator"
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    zIndex: 2,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    gap: 1,
+                    background: alpha('#667eea', 0.08),
+                    backdropFilter: 'blur(4px)',
+                    borderRadius: 3,
+                    opacity: 0,
+                    transform: 'scale(0.98)',
+                    transition: 'all 0.3s ease',
+                    pointerEvents: 'none' // allow click to fall through to Paper
+                  }}
+                >
+                  <Edit
+                    sx={{
+                      fontSize: 20,
+                      color: '#667eea',
+                      animation: 'pulse 2s infinite',
+                      '@keyframes pulse': {
+                        '0%, 100%': { transform: 'scale(1)' },
+                        '50%': { transform: 'scale(1.1)' }
+                      }
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: '#667eea',
+                      fontWeight: 700,
+                      fontSize: '0.75rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: 1
+                    }}
+                  >
+                    Click to edit
+                  </Typography>
+                </Box>
+
+              </Paper>
+            </Fade>
           )}
-        </div>
+        </Box>
+
         <div className="actions">
           <button
             className="btn btn-primary btn-small"
