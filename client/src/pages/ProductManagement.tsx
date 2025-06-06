@@ -17,7 +17,6 @@ import {
   Grow,
   Chip,
   Tooltip,
-  ButtonGroup,
   alpha
 } from '@mui/material';
 import {
@@ -37,17 +36,15 @@ interface Product {
 import { styled } from '@mui/material/styles';
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  padding: '1.25rem 2rem',
+  padding: '0rem 1rem',
   borderRadius: '12px',
   fontWeight: 600,
-  fontSize: '1.1rem',
+  fontSize: '0.875rem',
   textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-  minHeight: '56px',
   position: 'relative',
   overflow: 'hidden',
   transition: 'all 0.3s ease',
-  margin: '0 0.5rem',
+  color: 'white',
 
   '&::before': {
     content: '""',
@@ -58,7 +55,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
     height: '100%',
     background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
     transition: 'left 0.6s ease',
-
     '@media (prefers-reduced-motion: reduce)': {
       display: 'none',
     },
@@ -66,21 +62,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
   '&:hover::before': {
     left: '100%',
-  },
-
-  '&:not(:disabled)': {
-    color: 'white',
-    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
-
-    '&:hover': {
-      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.5)',
-      transform: 'translateY(-2px)',
-    },
-
-    '&:active': {
-      transform: 'translateY(0)',
-      boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
-    },
   },
 
   '&:disabled': {
@@ -102,8 +83,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-
-// Hover Expand Card Component
+// Updated ExpandCard component with proper height management
 const ExpandCard = ({ product, onDelete, onFieldUpdate }: { 
   product: Product; 
   onDelete: (id: string) => void;
@@ -120,10 +100,9 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
-  // Inside your component, add this hook
   const navigate = useNavigate();
   const descriptionInputRef = useRef<HTMLInputElement | null>(null);
-  // Add this handler function
+
   const handleVisitProduct = () => {
     navigate(`/product/${product._id}`);
   };
@@ -233,7 +212,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedImage(e.target.files[0]);
-      // Create preview URL
       const url = URL.createObjectURL(e.target.files[0]);
       setPreviewUrl(url);
     }
@@ -259,11 +237,9 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         }
       );
       
-      // Update the product with new image URL
       await onFieldUpdate(product._id, 'image', res.data.image);
       toast.success("Product image updated!");
       
-      // Clean up
       setSelectedImage(null);
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
@@ -293,7 +269,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     setIsEditingImage(false);
   };
 
-  // Clean up preview URL on unmount
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -303,7 +278,16 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   }, [previewUrl]);
 
   return (
-    <div className="expand-card-compact">
+    <div 
+      className="expand-card-compact"
+      style={{
+        // Override any fixed heights when editing description
+        height: isEditingDescription ? 'auto' : undefined,
+        minHeight: isEditingDescription ? '650px' : undefined,
+        maxHeight: isEditingDescription ? 'none' : undefined,
+        transition: 'all 0.3s ease',
+      }}
+    >
       <div className="image-section">
         {isEditingImage && selectedImage ? (
           <div className="image-edit-container">
@@ -424,7 +408,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           </div>
         )}
         
-        {/* Hidden file input for image editing */}
         <input
           type="file"
           ref={imageInputRef}
@@ -510,7 +493,16 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           )}
         </div>
 
-        <Box className="details" sx={{ position: 'relative', my: 3 }}>
+        <Box 
+          className="details" 
+          sx={{
+            position: 'relative',
+            my: 3,
+            // Remove the fixed height - let it grow naturally
+            minHeight: isEditingDescription ? '300px' : 'auto',
+            transition: 'all 0.3s ease',
+          }}
+        >
           {isEditingDescription ? (
             <Grow in={isEditingDescription} timeout={300}>
               <Box>
@@ -518,7 +510,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   inputRef={descriptionInputRef}
                   fullWidth
                   multiline
-                  rows={4}
+                  rows={6} // Increased from 4 to 6 for more space
                   value={editedDescription}
                   onChange={(e) => setEditedDescription(e.target.value)}
                   onKeyDown={handleDescriptionKeyPress}
@@ -565,7 +557,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   <Chip
                     label="Enter to save • Esc to cancel"
                     size="small"
-                    variant="outlined"
+                    variant="filled"
                     sx={{
                       fontSize: '0.7rem',
                       height: 10,
@@ -575,70 +567,65 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   />
                 </Box>
                 
-                <ButtonGroup
-                  variant="contained"
-                  sx={{
-                    boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
-                    borderRadius: 2,
-                    overflow: 'hidden'
-                  }}
-                >
-                  <Box sx={{ width: '100%' /* make sure this fits the product card */, mt: 2, mr: 4 }}>
-                    <Box sx={{ display: 'flex', width: '90%', gap: 0 , paddingLeft: 0, paddingRight: 0}}>
-                      <Tooltip title="Save changes (Enter)" arrow>
-                        <StyledButton
-                          onClick={handleDescriptionSave}
-                          startIcon={<Check />}
-                          sx={{
-                            flex: 1, // take equal space
-                            fontSize: '0.9rem',
-                            height: '48px',
-                            borderTopRightRadius: 0,
-                            borderBottomRightRadius: 0,
-                            borderTopLeftRadius: '12px',
-                            borderBottomLeftRadius: '12px',
-                            boxSizing: 'border-box',
-                            background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
-                            '&:hover': {
-                              background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-                            },
-                            '&:active': {
-                              background: 'linear-gradient(135deg, #1e40af, #1d4ed8)',
-                            },
-                          }}
-                        >
-                          Save
-                        </StyledButton>
-                      </Tooltip>
+                <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                  <Tooltip title="Save changes (Enter)" arrow>
+                    <StyledButton
+                      onClick={handleDescriptionSave}
+                      startIcon={<Check />}
+                      sx={{
+                        flex: 1,
+                        fontSize: '0.875rem',
+                        height: '35px',
+                        fontWeight: '400',
+                        borderRadius: '12px',
+                        background: '#ffffff',
+                        color: '#2563eb',
+                        boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                        '&:hover': {
+                          background: '#f0f4ff',
+                          boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
+                          transform: 'translateY(-2px)',
+                        },
+                        '&:active': {
+                          background: '#e0eaff',
+                          boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                          transform: 'translateY(0)',
+                        },
+                      }}
+                    >
+                      Save
+                    </StyledButton>
+                  </Tooltip>
 
-                      <Tooltip title="Cancel editing (Esc)" arrow>
-                        <StyledButton
-                          onClick={handleDescriptionCancel}
-                          startIcon={<Close />}
-                          sx={{
-                            flex: 1, // equal width
-                            fontSize: '0.9rem',
-                            height: '48px',
-                            borderTopLeftRadius: 0,
-                            borderBottomLeftRadius: 0,
-                            borderTopRightRadius: '12px',
-                            borderBottomRightRadius: '12px',
-                            boxSizing: 'border-box',
-                            background: 'linear-gradient(135deg, #ef4444, #b91c1c)',
-                            '&:hover': {
-                              background: 'linear-gradient(135deg, #dc2626, #991b1b)',
-                            },
-                            '&:active': {
-                              background: 'linear-gradient(135deg, #7f1d1d, #991b1b)',
-                            },
-                          }}
-                        >
-                          Cancel
-                        </StyledButton>
-                      </Tooltip>
-                    </Box>
-                  </Box>
-                </ButtonGroup>
+                  <Tooltip title="Cancel editing (Esc)" arrow>
+                    <StyledButton
+                      onClick={handleDescriptionCancel}
+                      startIcon={<Close />}
+                      sx={{
+                        flex: 1,
+                        fontSize: '0.875rem',
+                        height: '35px',
+                        fontWeight: '400',
+                        borderRadius: '12px',
+                        background: '#ffffff',
+                        color: '#b91c1c',
+                        boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                        '&:hover': {
+                          background: '#fef2f2',
+                          boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
+                          transform: 'translateY(-2px)',
+                        },
+                        '&:active': {
+                          background: '#fee2e2',
+                          boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                          transform: 'translateY(0)',
+                        },
+                      }}
+                    >
+                      Cancel
+                    </StyledButton>
+                  </Tooltip>
+                </Box>
               </Box>
             </Grow>
           ) : (
@@ -694,7 +681,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     opacity: 0,
                     transform: 'scale(0.98)',
                     transition: 'all 0.3s ease',
-                    pointerEvents: 'none' // allow click to fall through to Paper
+                    pointerEvents: 'none'
                   }}
                 >
                   <Edit
@@ -721,7 +708,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     Click to edit
                   </Typography>
                 </Box>
-
               </Paper>
             </Fade>
           )}
