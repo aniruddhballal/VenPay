@@ -489,7 +489,7 @@ const AddProductCard = ({
   previewUrl: string;
   isSubmitting: boolean;
   uploadingImage: boolean;
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
+  fileInputRef: React.RefObject<HTMLInputElement>;
   editingId: string | null;
   onCancel: () => void;
 }) => {
@@ -649,7 +649,7 @@ const ProductManagement = () => {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null!);
 
   // Restore your original useEffect for fetching from backend:
   useEffect(() => {
@@ -820,7 +820,7 @@ const ProductManagement = () => {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleDelete = (id: string) => {
     // Restore your original deletion logic:
      confirmAlert({
