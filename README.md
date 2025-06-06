@@ -171,3 +171,9 @@ also, gotta make some real app like tariq said - not some to do - also learn mor
 
 okay, the product display page looks too bad right now. ask it to maintain the theme, interactiveness, and colour and styling of the userdisplay and editprofile tsx files.
 gotta MUI-fy the dashboard page too
+
+HMM, or MUI-fy the sub contents of the dashboard page, let'see - the dark theme is getting to me. lighter is kinda better
+
+gotta match the details/delete button for all the products with the green, purple thingy.
+
+add go back to dashboard button after visiting the product page
