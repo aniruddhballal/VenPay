@@ -753,7 +753,7 @@ const ProductManagement = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+  
     const productData = {
       name: form.name,
       description: form.description,
@@ -762,50 +762,65 @@ const ProductManagement = () => {
 
     try {
       let res: any;
-
       if (editingId) {
-         res = await axios.put(
-           `http://localhost:5000/api/products/${editingId}`,
-           productData,
-           { withCredentials: true }
-         );
-         setProducts(products.map((p) => (p._id === editingId ? res.data : p)));
+        res = await axios.put(
+          `http://localhost:5000/api/products/${editingId}`,
+          productData,
+          { withCredentials: true }
+        );
         
-         if (selectedImage) {
-           await uploadImage(editingId);
-           toast.success("Product with image updated!");
-         } else {
-           toast.success("Product updated successfully!");
-         }
-
+        if (selectedImage) {
+          await uploadImage(editingId);
+          
+          // Fetch the updated product data with image URL
+          const updatedProduct = await axios.get(`http://localhost:5000/api/products/${editingId}`, {
+            withCredentials: true,
+          });
+          setProducts(products.map((p) => (p._id === editingId ? updatedProduct.data : p)));
+          toast.success("Product with image updated!");
+        } else {
+          // No image, use original response data
+          setProducts(products.map((p) => (p._id === editingId ? res.data : p)));
+          toast.success("Product updated successfully!");
+        }
+        
       } else {
-         res = await axios.post("http://localhost:5000/api/products/", productData, {
-           withCredentials: true,
-         });
-         setProducts([...products, res.data]);
-
-         if (selectedImage) {
-           await uploadImage(res.data._id);
-           toast.success("Product with image created!");
-         } else {
-           toast.success("Product created successfully!");
-         }
+        // Create the product first
+        res = await axios.post("http://localhost:5000/api/products/", productData, {
+          withCredentials: true,
+        });
+        
+        // Upload image if selected (before adding to state)
+        if (selectedImage) {
+          await uploadImage(res.data._id);
+          
+          // Fetch the updated product data with image URL
+          const updatedProduct = await axios.get(`http://localhost:5000/api/products/${res.data._id}`, {
+            withCredentials: true,
+          });
+          setProducts([...products, updatedProduct.data]);
+          toast.success("Product with image created!");
+        } else {
+          // No image, use original response data
+          setProducts([...products, res.data]);
+          toast.success("Product created successfully!");
+        }
       }
-
+      
       resetForm();
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
       setSelectedImage(null);
+      
     } catch (err: any) {
       console.error("Failed to save product:", err);
-        toast.error(err.response?.data?.error || "Failed to save product.");
-      //alert("Failed to save product.");
+      toast.error(err.response?.data?.error || "Failed to save product.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  
   const handleDelete = (id: string) => {
     // Restore your original deletion logic:
      confirmAlert({
