@@ -156,7 +156,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-// Updated ExpandCard component with proper height management
+// Updated ExpandCard component with hover-based resizing
 const ExpandCard = ({ product, onDelete, onFieldUpdate }: { 
   product: Product; 
   onDelete: (id: string) => void;
@@ -166,6 +166,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const [isEditingPrice, setIsEditingPrice] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // New hover state
   const [editedName, setEditedName] = useState(product.name);
   const [editedPrice, setEditedPrice] = useState(product.price.toString());
   const [editedDescription, setEditedDescription] = useState(product.description);
@@ -175,6 +176,57 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const descriptionInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Calculate the appropriate height and styling based on states
+  const getCardStyles = () => {
+    if (isEditingDescription) {
+      // When editing description
+      if (isHovered) {
+        // Full expansion when editing + hovering
+        return {
+          height: 'auto',
+          minHeight: '650px',
+          maxHeight: 'none',
+          transform: 'scale(1.02)',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+          zIndex: 10,
+        };
+      } else {
+        // Compact when editing but not hovering
+        return {
+          height: 'auto',
+          minHeight: '320px', // Smaller than full expansion
+          maxHeight: '320px',
+          transform: 'scale(1)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          zIndex: 1,
+        };
+      }
+    } else {
+      // When not editing description
+      if (isHovered) {
+        // Partial expansion on normal hover
+        return {
+          height: 'auto',
+          minHeight: '500px', // Partial expansion
+          maxHeight: '500px',
+          transform: 'scale(1.01)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+          zIndex: 5,
+        };
+      } else {
+        // Default compact size
+        return {
+          height: 'auto',
+          minHeight: '320px',
+          maxHeight: '320px',
+          transform: 'scale(1)',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+          zIndex: 1,
+        };
+      }
+    }
+  };
 
   const handleVisitProduct = () => {
     navigate(`/product/${product._id}`);
@@ -350,15 +402,18 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     };
   }, [previewUrl]);
 
+  const cardStyles = getCardStyles();
+
   return (
     <div 
       className="expand-card-compact"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        // Override any fixed heights when editing description
-        height: isEditingDescription ? 'auto' : undefined,
-        minHeight: isEditingDescription ? '650px' : undefined,
-        maxHeight: isEditingDescription ? 'none' : undefined,
-        transition: 'all 0.3s ease',
+        ...cardStyles,
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
       <div className="image-section">
@@ -571,9 +626,11 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           sx={{
             position: 'relative',
             my: 3,
-            // Remove the fixed height - let it grow naturally
-            minHeight: isEditingDescription ? '300px' : 'auto',
-            transition: 'all 0.3s ease',
+            // Dynamic height based on editing and hover states
+            minHeight: isEditingDescription ? (isHovered ? '300px' : '200px') : (isHovered ? '100px' : '80px'),
+            maxHeight: isEditingDescription ? (isHovered ? 'none' : '200px') : (isHovered ? '100px' : '80px'),
+            overflow: isEditingDescription && !isHovered ? 'hidden' : 'visible',
+            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {isEditingDescription ? (
@@ -583,7 +640,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   inputRef={descriptionInputRef}
                   fullWidth
                   multiline
-                  rows={6} // Increased from 4 to 6 for more space
+                  rows={isHovered ? 8 : 4} // More rows when hovered while editing
                   value={editedDescription}
                   onChange={(e) => setEditedDescription(e.target.value)}
                   onKeyDown={handleDescriptionKeyPress}
@@ -618,87 +675,95 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   }}
                 />
                 
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  mb: 2 
-                }}>
-                  <Typography variant="caption" color="text.secondary">
-                    {editedDescription.length} characters
-                  </Typography>
-                  <Chip
-                    label="Enter to save • Esc to cancel"
-                    size="small"
-                    variant="filled"
-                    sx={{
-                      fontSize: '0.7rem',
-                      height: 10,
-                      borderColor: alpha('#667eea', 0.3),
-                      color: 'text.secondary'
-                    }}
-                  />
-                </Box>
-                
-                <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
-                  <Tooltip title="Save changes (Enter)" arrow>
-                    <StyledButton
-                      onClick={handleDescriptionSave}
-                      startIcon={<Check />}
-                      sx={{
-                        flex: 1,
-                        fontSize: '0.875rem',
-                        height: '35px',
-                        fontWeight: '400',
-                        borderRadius: '12px',
-                        background: '#ffffff',
-                        color: '#2563eb',
-                        boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-                        '&:hover': {
-                          background: '#f0f4ff',
-                          boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
-                          transform: 'translateY(-2px)',
-                        },
-                        '&:active': {
-                          background: '#e0eaff',
-                          boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-                          transform: 'translateY(0)',
-                        },
-                      }}
-                    >
-                      Save
-                    </StyledButton>
-                  </Tooltip>
+                {/* Show additional controls only when hovered while editing */}
+                {isHovered && (
+                  <>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      mb: 2,
+                      opacity: isHovered ? 1 : 0,
+                      transform: isHovered ? 'translateY(0)' : 'translateY(-10px)',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <Typography variant="caption" color="text.secondary">
+                        {editedDescription.length} characters
+                      </Typography>
+                      <Chip
+                        label="Enter to save • Esc to cancel"
+                        size="small"
+                        variant="filled"
+                        sx={{
+                          fontSize: '0.7rem',
+                          height: 10,
+                          borderColor: alpha('#667eea', 0.3),
+                          color: 'text.secondary'
+                        }}
+                      />
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                      <Tooltip title="Save changes (Enter)" arrow>
+                        <StyledButton
+                          onClick={handleDescriptionSave}
+                          startIcon={<Check />}
+                          sx={{
+                            flex: 1,
+                            fontSize: '0.875rem',
+                            height: '35px',
+                            fontWeight: '400',
+                            borderRadius: '12px',
+                            background: '#ffffff',
+                            color: '#2563eb',
+                            boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                            '&:hover': {
+                              background: '#f0f4ff',
+                              boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
+                              transform: 'translateY(-2px)',
+                            },
+                            '&:active': {
+                              background: '#e0eaff',
+                              boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                              transform: 'translateY(0)',
+                            },
+                          }}
+                        >
+                          Save
+                        </StyledButton>
+                      </Tooltip>
 
-                  <Tooltip title="Cancel editing (Esc)" arrow>
-                    <StyledButton
-                      onClick={handleDescriptionCancel}
-                      startIcon={<Close />}
-                      sx={{
-                        flex: 1,
-                        fontSize: '0.875rem',
-                        height: '35px',
-                        fontWeight: '400',
-                        borderRadius: '12px',
-                        background: '#ffffff',
-                        color: '#b91c1c',
-                        boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-                        '&:hover': {
-                          background: '#fef2f2',
-                          boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
-                          transform: 'translateY(-2px)',
-                        },
-                        '&:active': {
-                          background: '#fee2e2',
-                          boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-                          transform: 'translateY(0)',
-                        },
-                      }}
-                    >
-                      Cancel
-                    </StyledButton>
-                  </Tooltip>
-                </Box>
+                      <Tooltip title="Cancel editing (Esc)" arrow>
+                        <StyledButton
+                          onClick={handleDescriptionCancel}
+                          startIcon={<Close />}
+                          sx={{
+                            flex: 1,
+                            fontSize: '0.875rem',
+                            height: '35px',
+                            fontWeight: '400',
+                            borderRadius: '12px',
+                            background: '#ffffff',
+                            color: '#b91c1c',
+                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                            '&:hover': {
+                              background: '#fef2f2',
+                              boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
+                              transform: 'translateY(-2px)',
+                            },
+                            '&:active': {
+                              background: '#fee2e2',
+                              boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                              transform: 'translateY(0)',
+                            },
+                          }}
+                        >
+                          Cancel
+                        </StyledButton>
+                      </Tooltip>
+                    </Box>
+                  </>
+                )}
               </Box>
             </Grow>
           ) : (
@@ -715,6 +780,9 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'all 0.3s ease',
+                  // Limit height when not editing to prevent overflow
+                  maxHeight: isHovered ? '100px' : '60px',
+                  minHeight: '60px',
                   '&:hover .edit-indicator': {
                     opacity: 1,
                     transform: 'scale(1)'
@@ -732,7 +800,13 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     lineHeight: 1.6,
                     color: 'text.primary',
                     pr: 8,
-                    transition: 'opacity 0.3s ease'
+                    transition: 'opacity 0.3s ease',
+                    // Truncate text when not editing
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: isHovered ? 3 : 2,
+                    WebkitBoxOrient: 'vertical',
                   }}
                 >
                   {product.description}
