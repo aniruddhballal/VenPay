@@ -187,19 +187,19 @@ export default function Product() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+          background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
         }}
       >
         <Box sx={{ textAlign: "center" }}>
           <CircularProgress 
             size={60} 
             sx={{ 
-              color: "#60a5fa",
+              color: "#3b82f6",
               mb: 2,
-              filter: "drop-shadow(0 4px 20px rgba(96, 165, 250, 0.4))"
+              filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.3))"
             }} 
           />
-          <Typography sx={{ color: "rgba(255,255,255,0.8)", fontSize: "1.1rem" }}>
+          <Typography sx={{ color: "#475569", fontSize: "1.1rem" }}>
             Loading product...
           </Typography>
         </Box>
@@ -216,7 +216,7 @@ export default function Product() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+          background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
           px: 2,
         }}
       >
@@ -225,10 +225,10 @@ export default function Product() {
           sx={{
             p: 4,
             borderRadius: 4,
-            background: "rgba(30, 30, 46, 0.95)",
+            background: "rgba(255, 255, 255, 0.95)",
             backdropFilter: "blur(30px)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "0 32px 64px -12px rgba(0,0,0,0.4)",
+            border: "1px solid rgba(0,0,0,0.1)",
+            boxShadow: "0 32px 64px -12px rgba(0,0,0,0.15)",
             textAlign: "center",
             maxWidth: 400,
           }}
@@ -236,14 +236,14 @@ export default function Product() {
           <Typography
             variant="h5"
             sx={{
-              color: "#f87171",
+              color: "#dc2626",
               mb: 2,
               fontWeight: 600,
             }}
           >
             {error || "Authentication Required"}
           </Typography>
-          <Typography sx={{ color: "rgba(255,255,255,0.7)" }}>
+          <Typography sx={{ color: "#64748b" }}>
             Please log in to view product details.
           </Typography>
         </Paper>
@@ -259,10 +259,10 @@ export default function Product() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+          background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
         }}
       >
-        <Typography sx={{ color: "rgba(255,255,255,0.8)", fontSize: "1.2rem" }}>
+        <Typography sx={{ color: "#475569", fontSize: "1.2rem" }}>
           Product not found.
         </Typography>
       </Box>
@@ -273,7 +273,7 @@ export default function Product() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+        background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
         py: 4,
       }}
     >
@@ -288,10 +288,10 @@ export default function Product() {
                   flex: { xs: "none", lg: "0 0 400px" },
                   height: { xs: 300, lg: 400 },
                   borderRadius: 4,
-                  background: "rgba(30, 30, 46, 0.95)",
+                  background: "rgba(255, 255, 255, 0.95)",
                   backdropFilter: "blur(30px)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  boxShadow: "0 32px 64px -12px rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(0,0,0,0.1)",
+                  boxShadow: "0 32px 64px -12px rgba(0,0,0,0.15)",
                   overflow: "hidden",
                   position: "relative",
                   "&::before": {
@@ -334,7 +334,7 @@ export default function Product() {
                     <ShoppingBag 
                       sx={{ 
                         fontSize: 80, 
-                        color: "rgba(255,255,255,0.3)",
+                        color: "#64748b",
                         filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.2))"
                       }} 
                     />
@@ -351,10 +351,10 @@ export default function Product() {
                   flex: 1,
                   p: { xs: 3, sm: 4 },
                   borderRadius: 4,
-                  background: "rgba(30, 30, 46, 0.95)",
+                  background: "rgba(255, 255, 255, 0.95)",
                   backdropFilter: "blur(30px)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  boxShadow: "0 32px 64px -12px rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(0,0,0,0.1)",
+                  boxShadow: "0 32px 64px -12px rgba(0,0,0,0.15)",
                   position: "relative",
                   "&::before": {
                     content: '""',
@@ -373,7 +373,7 @@ export default function Product() {
                   variant="h3"
                   sx={{
                     fontWeight: 700,
-                    background: "linear-gradient(135deg, #60a5fa, #a78bfa)",
+                    background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -390,10 +390,10 @@ export default function Product() {
                   <Typography
                     variant="h4"
                     sx={{
-                      color: "#10b981",
+                      color: "#059669",
                       fontWeight: 700,
                       fontSize: { xs: "1.8rem", sm: "2.2rem" },
-                      filter: "drop-shadow(0 2px 10px rgba(16, 185, 129, 0.3))"
+                      filter: "drop-shadow(0 2px 10px rgba(5, 150, 105, 0.3))"
                     }}
                   >
                     ₹{product.price.toFixed(2)}
@@ -405,7 +405,7 @@ export default function Product() {
                   <Typography
                     variant="h6"
                     sx={{
-                      color: "#60a5fa",
+                      color: "#3b82f6",
                       fontWeight: 600,
                       mb: 2,
                       display: "flex",
@@ -418,7 +418,7 @@ export default function Product() {
                   </Typography>
                   <Typography
                     sx={{
-                      color: "rgba(255,255,255,0.8)",
+                      color: "#475569",
                       lineHeight: 1.7,
                       fontSize: "1.1rem"
                     }}
@@ -432,7 +432,7 @@ export default function Product() {
                   <Typography
                     variant="h6"
                     sx={{
-                      color: "#60a5fa",
+                      color: "#3b82f6",
                       fontWeight: 600,
                       mb: 2,
                       display: "flex",
@@ -447,11 +447,11 @@ export default function Product() {
                     sx={{
                       p: 3,
                       borderRadius: 3,
-                      background: "rgba(255, 255, 255, 0.05)",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      background: "rgba(59, 130, 246, 0.05)",
+                      border: "1px solid rgba(59, 130, 246, 0.2)",
                       transition: "all 0.3s ease",
                       "&:hover": {
-                        background: "rgba(255, 255, 255, 0.08)",
+                        background: "rgba(59, 130, 246, 0.08)",
                         transform: "translateY(-2px)",
                         boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)"
                       }
@@ -460,7 +460,7 @@ export default function Product() {
                     <Typography
                       variant="h6"
                       sx={{
-                        color: "white",
+                        color: "#1e293b",
                         fontWeight: 600,
                         mb: 1
                       }}
@@ -468,15 +468,15 @@ export default function Product() {
                       {product.vendorId.name}
                     </Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <Email sx={{ fontSize: 16, color: "#60a5fa" }} />
+                      <Email sx={{ fontSize: 16, color: "#3b82f6" }} />
                       <Typography
                         component="a"
                         href={`mailto:${product.vendorId.email}`}
                         sx={{
-                          color: "#60a5fa",
+                          color: "#3b82f6",
                           textDecoration: "none",
                           "&:hover": {
-                            color: "#93c5fd",
+                            color: "#1d4ed8",
                             textDecoration: "underline"
                           }
                         }}
@@ -500,10 +500,10 @@ export default function Product() {
                 mt: 4,
                 p: { xs: 3, sm: 4 },
                 borderRadius: 4,
-                background: "rgba(30, 30, 46, 0.95)",
+                background: "rgba(255, 255, 255, 0.95)",
                 backdropFilter: "blur(30px)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                boxShadow: "0 32px 64px -12px rgba(0,0,0,0.4)",
+                border: "1px solid rgba(0,0,0,0.1)",
+                boxShadow: "0 32px 64px -12px rgba(0,0,0,0.15)",
                 position: "relative",
                 "&::before": {
                   content: '""',
@@ -521,7 +521,7 @@ export default function Product() {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  background: "linear-gradient(135deg, #60a5fa, #a78bfa)",
+                  background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -531,14 +531,14 @@ export default function Product() {
                   gap: 2
                 }}
               >
-                <Star sx={{ color: "#fbbf24" }} />
+                <Star sx={{ color: "#f59e0b" }} />
                 Product Reviews
               </Typography>
 
               {ratingsLoading && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
-                  <CircularProgress size={24} sx={{ color: "#60a5fa" }} />
-                  <Typography sx={{ color: "rgba(255,255,255,0.7)" }}>
+                  <CircularProgress size={24} sx={{ color: "#3b82f6" }} />
+                  <Typography sx={{ color: "#64748b" }}>
                     Loading reviews...
                   </Typography>
                 </Box>
@@ -554,7 +554,7 @@ export default function Product() {
                         p: 3,
                         borderRadius: 3,
                         background: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1))",
-                        border: "1px solid rgba(255,255,255,0.1)",
+                        border: "1px solid rgba(59, 130, 246, 0.2)",
                         display: "flex",
                         alignItems: "center",
                         gap: 3,
@@ -564,7 +564,7 @@ export default function Product() {
                       <Typography
                         variant="h3"
                         sx={{
-                          color: "#fbbf24",
+                          color: "#f59e0b",
                           fontWeight: 700,
                         }}
                       >
@@ -577,12 +577,12 @@ export default function Product() {
                           precision={0.1}
                           sx={{
                             "& .MuiRating-iconFilled": {
-                              color: "#fbbf24",
+                              color: "#f59e0b",
                             },
                             mb: 0.5
                           }}
                         />
-                        <Typography sx={{ color: "rgba(255,255,255,0.7)" }}>
+                        <Typography sx={{ color: "#64748b" }}>
                           {ratings.totalRatings} reviews
                         </Typography>
                       </Box>
@@ -597,33 +597,33 @@ export default function Product() {
                         sx={{
                           "& .MuiOutlinedInput-root": {
                             borderRadius: 3,
-                            backgroundColor: "rgba(255, 255, 255, 0.05)",
-                            color: "white",
+                            backgroundColor: "rgba(255, 255, 255, 0.8)",
+                            color: "#1e293b",
                             "&:hover": {
-                              backgroundColor: "rgba(255, 255, 255, 0.08)",
+                              backgroundColor: "rgba(255, 255, 255, 0.9)",
                             },
                             "&.Mui-focused": {
-                              backgroundColor: "rgba(255, 255, 255, 0.08)",
+                              backgroundColor: "rgba(255, 255, 255, 0.9)",
                               boxShadow: "0 8px 25px rgba(59, 130, 246, 0.2)",
                             },
                             "& fieldset": {
-                              borderColor: "rgba(255, 255, 255, 0.2)",
+                              borderColor: "rgba(0, 0, 0, 0.2)",
                             },
                             "&:hover fieldset": {
-                              borderColor: "rgba(255, 255, 255, 0.3)",
+                              borderColor: "rgba(0, 0, 0, 0.3)",
                             },
                             "&.Mui-focused fieldset": {
                               borderColor: "#3b82f6",
                             }
                           },
                           "& .MuiInputLabel-root": {
-                            color: "rgba(255, 255, 255, 0.7)",
+                            color: "#64748b",
                             "&.Mui-focused": {
-                              color: "#60a5fa",
+                              color: "#3b82f6",
                             }
                           },
                           "& .MuiSelect-icon": {
-                            color: "rgba(255, 255, 255, 0.7)",
+                            color: "#64748b",
                           }
                         }}
                       >
@@ -635,16 +635,16 @@ export default function Product() {
                           MenuProps={{
                             PaperProps: {
                               sx: {
-                                background: "rgba(30, 30, 46, 0.95)",
+                                background: "rgba(255, 255, 255, 0.95)",
                                 backdropFilter: "blur(30px)",
-                                border: "1px solid rgba(255,255,255,0.1)",
+                                border: "1px solid rgba(0,0,0,0.1)",
                                 "& .MuiMenuItem-root": {
-                                  color: "rgba(255,255,255,0.8)",
+                                  color: "#1e293b",
                                   "&:hover": {
-                                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                    backgroundColor: "rgba(59, 130, 246, 0.08)",
                                   },
                                   "&.Mui-selected": {
-                                    backgroundColor: "rgba(59, 130, 246, 0.2)",
+                                    backgroundColor: "rgba(59, 130, 246, 0.15)",
                                   }
                                 }
                               }
@@ -677,13 +677,13 @@ export default function Product() {
                           key={rating._id}
                           elevation={8}
                           sx={{
-                            background: "rgba(255, 255, 255, 0.05)",
+                            background: "rgba(255, 255, 255, 0.8)",
                             backdropFilter: "blur(10px)",
-                            border: "1px solid rgba(255,255,255,0.1)",
+                            border: "1px solid rgba(0,0,0,0.1)",
                             borderRadius: 3,
                             transition: "all 0.3s ease",
                             "&:hover": {
-                              background: "rgba(255, 255, 255, 0.08)",
+                              background: "rgba(255, 255, 255, 0.9)",
                               transform: "translateY(-2px)",
                               boxShadow: "0 12px 30px rgba(59, 130, 246, 0.15)"
                             }
@@ -695,7 +695,7 @@ export default function Product() {
                                 <Typography
                                   variant="h6"
                                   sx={{
-                                    color: "white",
+                                    color: "#1e293b",
                                     fontWeight: 600,
                                     mb: 0.5
                                   }}
@@ -704,7 +704,7 @@ export default function Product() {
                                 </Typography>
                                 <Typography
                                   sx={{
-                                    color: "#60a5fa",
+                                    color: "#3b82f6",
                                     fontSize: "0.9rem"
                                   }}
                                 >
@@ -718,14 +718,14 @@ export default function Product() {
                                   size="small"
                                   sx={{
                                     "& .MuiRating-iconFilled": {
-                                      color: "#fbbf24",
+                                      color: "#f59e0b",
                                     },
                                     mb: 0.5
                                   }}
                                 />
                                 <Typography
                                   sx={{
-                                    color: "rgba(255,255,255,0.6)",
+                                    color: "#64748b",
                                     fontSize: "0.8rem"
                                   }}
                                 >
@@ -737,7 +737,7 @@ export default function Product() {
                             {rating.review && (
                               <Typography
                                 sx={{
-                                  color: "rgba(255,255,255,0.8)",
+                                  color: "#475569",
                                   mb: 2,
                                   lineHeight: 1.6,
                                   fontStyle: "italic"
@@ -752,8 +752,8 @@ export default function Product() {
                                 label={`Quantity: ${rating.productRequestId.quantity}`}
                                 size="small"
                                 sx={{
-                                  background: "rgba(59, 130, 246, 0.2)",
-                                  color: "#60a5fa",
+                                  background: "rgba(59, 130, 246, 0.1)",
+                                  color: "#3b82f6",
                                   border: "1px solid rgba(59, 130, 246, 0.3)"
                                 }}
                               />
@@ -762,9 +762,9 @@ export default function Product() {
                                   label={`Total: ₹${rating.productRequestId.totalPrice.toFixed(2)}`}
                                   size="small"
                                   sx={{
-                                    background: "rgba(16, 185, 129, 0.2)",
-                                    color: "#10b981",
-                                    border: "1px solid rgba(16, 185, 129, 0.3)"
+                                    background: "rgba(5, 150, 105, 0.1)",
+                                    color: "#059669",
+                                    border: "1px solid rgba(5, 150, 105, 0.3)"
                                   }}
                                 />
                               )}
@@ -777,7 +777,7 @@ export default function Product() {
                         sx={{
                           textAlign: "center",
                           py: 6,
-                          color: "rgba(255,255,255,0.6)"
+                          color: "#64748b"
                         }}
                       >
                         <Star sx={{ fontSize: 60, mb: 2, opacity: 0.3 }} />
@@ -797,7 +797,7 @@ export default function Product() {
                   sx={{
                     textAlign: "center",
                     py: 6,
-                    color: "rgba(255,255,255,0.6)"
+                    color: "#64748b"
                   }}
                 >
                   <Star sx={{ fontSize: 60, mb: 2, opacity: 0.3 }} />
