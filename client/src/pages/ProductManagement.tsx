@@ -6,6 +6,9 @@ import { confirmAlert } from "react-confirm-alert";
 // Add this import at the top of your component file
 import { useNavigate } from "react-router-dom";
 
+// 1. Add a constant at the top of your file for the character limit
+const MAX_DESCRIPTION_LENGTH = 96; // Or whatever limit you want
+
 // IMPORT THESE MUI COMPONENTS AT THE TOP OF YOUR FILE:
 import {
   Box,
@@ -636,6 +639,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           {isEditingDescription ? (
             <Grow in={isEditingDescription} timeout={300}>
               <Box>
+              {/* 3. In the ExpandCard component, modify the TextField for description editing:*/}
                 <TextField
                   inputRef={descriptionInputRef}
                   fullWidth
@@ -647,6 +651,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   autoFocus
                   variant="outlined"
                   placeholder="Enter product description..."
+                  inputProps={{ maxLength: MAX_DESCRIPTION_LENGTH }} // Add this line
                   sx={{
                     mb: 2,
                     '& .MuiOutlinedInput-root': {
@@ -687,8 +692,9 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       transform: isHovered ? 'translateY(0)' : 'translateY(-10px)',
                       transition: 'all 0.3s ease'
                     }}>
+                      {/* 4. Update the character counter in ExpandCard to show the limit:*/}
                       <Typography variant="caption" color="text.secondary">
-                        {editedDescription.length} characters
+                        {editedDescription.length}/{MAX_DESCRIPTION_LENGTH} characters
                       </Typography>
                       <Chip
                         label="Enter to save • Esc to cancel"
@@ -799,7 +805,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     fontSize: '1.1rem',
                     lineHeight: 1.6,
                     color: 'text.primary',
-                    pr: 8,
+                    pr: 0,
                     transition: 'opacity 0.3s ease',
                     // Truncate text when not editing
                     overflow: 'hidden',
@@ -1000,6 +1006,7 @@ const AddProductCard = ({
           </div>
           
           <div className="details" style={{ flex: 1, marginBottom: '12px' }}>
+            {/* 2. In the AddProductCard component, modify the textarea:*/}
             <textarea
               name="description"
               placeholder="Product Description"
@@ -1008,6 +1015,7 @@ const AddProductCard = ({
               required
               disabled={isSubmitting}
               rows={3}
+              maxLength={MAX_DESCRIPTION_LENGTH} // Add this line
               style={{
                 width: '100%',
                 border: '1px solid #ddd',
@@ -1017,8 +1025,16 @@ const AddProductCard = ({
                 maxHeight: '70px',
               }}
             />
+          {/*Add character counter below the textarea in AddProductCard:*/}
+            <div style={{ 
+              fontSize: '12px', 
+              color: form.description.length > MAX_DESCRIPTION_LENGTH * 0.9 ? '#dc2626' : '#666',
+              textAlign: 'right',
+              marginTop: '4px'
+            }}>
+              {form.description.length}/{MAX_DESCRIPTION_LENGTH}
+            </div>
           </div>
-          
           <div className="actions">
             <button 
               type="submit" 
@@ -1105,8 +1121,16 @@ const ProductManagement = () => {
     setPreviewUrl("");
   };
 
+  // 5. Add validation in the handleChange function for the form:
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    
+    // If it's the description field, enforce character limit
+    if (name === 'description' && value.length > MAX_DESCRIPTION_LENGTH) {
+      return; // Don't update if exceeding limit
+    }
+    
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1170,8 +1194,16 @@ const ProductManagement = () => {
     }
   };
 
+  // 6. Optional: Add validation before form submission:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+  // Validate description length
+  if (form.description.length > MAX_DESCRIPTION_LENGTH) {
+    toast.error(`Description must be ${MAX_DESCRIPTION_LENGTH} characters or less.`);
+    return;
+  }
+
     setIsSubmitting(true);
   
     const productData = {
