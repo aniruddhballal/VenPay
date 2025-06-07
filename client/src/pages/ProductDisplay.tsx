@@ -8,14 +8,11 @@ import {
   Paper,
   CircularProgress,
   Rating,
-  /*Button,*/
   Select,
   MenuItem,
   FormControl,
   InputLabel,
   Chip,
-  /*Avatar,*/
-  /*Divider,*/
   Card,
   CardContent,
   Fade,
@@ -27,7 +24,6 @@ import {
   Store,
   Email,
   Star,
-  /*FilterList,*/
 } from "@mui/icons-material";
 
 import InventoryIcon from '@mui/icons-material/Inventory';
