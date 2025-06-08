@@ -177,3 +177,16 @@ HMM, or MUI-fy the sub contents of the dashboard page, let'see - the dark theme 
 gotta match the details/delete button for all the products with the green, purple thingy.
 
 add go back to dashboard button after visiting the product page
+
+umm here's a small summary of all the updates on the productmanagement page:
+1. inline editing UI is just too good now (except for image editing - will get back to this)
+2. double expandable hover cards are now multi-level expandable (depends on what fields of the product details you are editing)
+3. auto-saving of product details when mouse leaves/stops hovering over the product card
+4. MUI-fied CSS obviously
+5. a lot of other small bugs, debugs wtv
+TO SUMMARISE, crazy updation of the "updation process" lol
+.
+YET TO Implement: features from ExpandProductCard onto AddProductCard
+
+
+NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
