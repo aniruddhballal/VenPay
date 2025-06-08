@@ -465,21 +465,20 @@ Merged ProductList and ProductManagement up next
 
 /* Product Management Expand Card (Compact) */
 .expand-card-compact {
-  background: white;
+  height: 320px;
+  transition: height 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  height: 300px;
   width: 100%;
   max-width: 300px;
 }
 
-.expand-card-compact:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  height: 480px;
+.expand-card-compact:hover:not(.editing) {
+  height: 480px; /* smaller grow */
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* ============================================
