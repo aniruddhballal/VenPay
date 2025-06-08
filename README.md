@@ -199,3 +199,5 @@ note ps:
 6. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
 7. add back to dashboard button on the productdetails page
 8. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects
+9. poem on cycle
+10. organise all the word docs into Incessantly.docx
