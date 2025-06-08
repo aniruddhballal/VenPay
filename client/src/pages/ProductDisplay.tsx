@@ -488,7 +488,9 @@ export default function Product() {
         </Fade>
 
         {/* Reviews Section - Only show for vendors */}
-        {currentUser?.user?.userType === "vendor" && (
+        {/*currentUser?.user?.userType === "vendor" && (*/}
+        {/* Reviews Section - Show for any logged-in user */}
+        {currentUser?.user && (
           <Fade in timeout={1400}>
             <Paper
               elevation={24}
