@@ -188,5 +188,14 @@ TO SUMMARISE, crazy updation of the "updation process" lol
 .
 YET TO Implement: features from ExpandProductCard onto AddProductCard
 
-
 NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
+
+note ps:
+1. a lot of dev happened on vendor side, nothing much on company side.
+2. issues with the calendar (on non-net30 payments)
+3. add new product card - edit features
+4. update image - better the ui
+5. cut stuff from reminaing.css that have no usage in any tsx file
+6. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
+7. add back to dashboard button on the productdetails page
+8. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects
