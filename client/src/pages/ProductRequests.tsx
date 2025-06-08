@@ -312,17 +312,29 @@ export default function ProductRequests() {
             : null;
 
           const timeLeft = req.paymentDeadline ? formatTimeLeft(req.paymentDeadline) : null;
+                    
+          if (!req.productId) {
+            return (
+              <div key={req._id} className={`request-card status-${req.status}`}>
+                <p>This product has been deleted.</p>
+              </div>
+            );
+          }
 
           return (
             <div key={req._id} className={`request-card status-${req.status}`}>
               <div className="request-info">
-                {req.productId.image && (
+                {req.productId?.image && (
                   <img
                     src={req.productId.image}
-                    alt={req.productId.name}
+                    alt={req.productId.name || "Product"}
                     className="productRequestImage"
                   />
                 )}
+
+                <p>
+                  <strong>Product:</strong> {req.productId?.name || "Deleted product"}
+                </p>
 
                 <p>
                   <strong>Product:</strong> {req.productId.name}
