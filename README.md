@@ -191,7 +191,7 @@ YET TO Implement: features from ExpandProductCard onto AddProductCard
 NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
 
 note ps:
-1. a lot of dev happened on vendor side, nothing much on company side.
+1. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
 2. issues with the calendar (on non-net30 payments)
 3. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 4. update image - better the ui
