@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 // 1. Add a constant at the top of your file for the character limit
 const MAX_DESCRIPTION_LENGTH = 96; // Or whatever limit you want
+const MAX_NAME_LENGTH = 18; // Add this
 
 // IMPORT THESE MUI COMPONENTS AT THE TOP OF YOUR FILE:
 import {
@@ -182,52 +183,25 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
 
   // Calculate the appropriate height and styling based on states
   const getCardStyles = () => {
-    if (isEditingDescription) {
-      // When editing description
-      if (isHovered) {
-        // Full expansion when editing + hovering
-        return {
-          height: 'auto',
-          minHeight: '650px',
-          maxHeight: 'none',
-          transform: 'scale(1.02)',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
-          zIndex: 10,
-        };
-      } else {
-        // Compact when editing but not hovering
-        return {
-          height: 'auto',
-          minHeight: '320px', // Smaller than full expansion
-          maxHeight: '320px',
-          transform: 'scale(1)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-          zIndex: 1,
-        };
-      }
+    if (isHovered) {      // removed the isEditing condition because new saveAllWhenNotHovering() is there now
+      // Full expansion when hovering
+      return {
+        height: 'auto',
+        minHeight: '480px',
+        maxHeight: 'none',
+        transform: 'scale(1.02)',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+        zIndex: 10,
+      };
     } else {
-      // When not editing description
-      if (isHovered) {
-        // Partial expansion on normal hover
-        return {
-          height: 'auto',
-          minHeight: '500px', // Partial expansion
-          maxHeight: '500px',
-          transform: 'scale(1.01)',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-          zIndex: 5,
-        };
-      } else {
-        // Default compact size
-        return {
-          height: 'auto',
-          minHeight: '320px',
-          maxHeight: '320px',
-          transform: 'scale(1)',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-          zIndex: 1,
-        };
-      }
+      return {
+        height: 'auto',
+        minHeight: '320px',
+        maxHeight: '320px',
+        transform: 'scale(1)',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+        zIndex: 1,
+      };
     }
   };
 
@@ -397,6 +371,21 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     setIsEditingImage(false);
   };
 
+  const saveAllEdits = async () => {
+    if (isEditingName) {
+      await handleNameSave();
+    }
+    if (isEditingPrice) {
+      await handlePriceSave();
+    }
+    if (isEditingDescription) {
+      await handleDescriptionSave();
+    }
+    /*if (isEditingImage) {
+      await handleImageSave();
+    }*/
+  };
+
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -411,7 +400,10 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     <div 
       className="expand-card-compact"
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        setIsHovered(false)
+        saveAllEdits();
+      }} 
       style={{
         ...cardStyles,
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -549,89 +541,486 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
       </div>
       
       <div className="content">
-        <div className="basic-info">
-          {isEditingName ? (
-            <div className="name-edit-container">
-              <input
-                type="text"
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                onKeyDown={handleNameKeyPress}
-                onBlur={handleNameSave}
-                autoFocus
-                className="name-edit-input"
-              />
-              <div className="name-edit-buttons">
-                <button 
-                  className="btn-save-name"
-                  onClick={handleNameSave}
+        <div 
+          className="basic-info" 
+          style={{ 
+            marginBottom: '0px', 
+            display: 'flex', 
+            flexDirection: 'column',
+            alignItems: 'flex-start' // optional: aligns left
+          }}
+        >
+          <Box 
+            className="name-section" 
+            sx={{
+              width: '100%',
+              position: 'relative',
+              mb: 0,
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
+            {isEditingName ? (
+              <Grow in={isEditingName} timeout={300}>
+                <Box>
+                  <TextField
+                    fullWidth
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    onKeyDown={handleNameKeyPress}
+                    autoFocus
+                    variant="outlined"
+                    placeholder="Enter product name..."
+                    inputProps={{ maxLength: MAX_NAME_LENGTH }}
+                    sx={{
+                      mb: 1,
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: 3,
+                        background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
+                        fontSize: '1.3rem',
+                        fontWeight: '600',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          background: 'rgba(102, 126, 234, 0.04)',
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#667eea',
+                            borderWidth: 2
+                          }
+                        },
+                        '&.Mui-focused': {
+                          background: '#ffffff',
+                          boxShadow: '0 0 0 4px rgba(102, 126, 234, 0.1)',
+                          transform: 'translateY(-2px)',
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#667eea',
+                            borderWidth: 2
+                          }
+                        }
+                      }
+                    }}
+                  />
+                  
+                  {/* Show additional controls when editing name */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    mb: 1,
+                    opacity: 1,
+                    transform: 'translateY(0)',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <Typography variant="caption" color="text.secondary">
+                      {editedName.length}/{MAX_NAME_LENGTH} characters
+                    </Typography>
+                    <Chip
+                      label="Enter to save • Esc to cancel"
+                      size="small"
+                      variant="filled"
+                      sx={{
+                        fontSize: '0.7rem',
+                        height: 24,
+                        borderColor: alpha('#667eea', 0.3),
+                        color: 'text.secondary'
+                      }}
+                    />
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Tooltip title="Save changes (Enter)" arrow>
+                      <StyledButton
+                        onClick={handleNameSave}
+                        startIcon={<Check />}
+                        sx={{
+                          flex: 1,
+                          mb: 2,
+                          fontSize: '0.875rem',
+                          height: '35px',
+                          fontWeight: '400',
+                          borderRadius: '12px',
+                          background: '#ffffff',
+                          color: '#2563eb',
+                          boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                          '&:hover': {
+                            background: '#f0f4ff',
+                            boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
+                            transform: 'translateY(-2px)',
+                          },
+                          '&:active': {
+                            background: '#e0eaff',
+                            boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                            transform: 'translateY(0)',
+                          },
+                        }}
+                      >
+                        Save
+                      </StyledButton>
+                    </Tooltip>
+
+                    <Tooltip title="Cancel editing (Esc)" arrow>
+                      <StyledButton
+                        onClick={handleNameCancel}
+                        startIcon={<Close />}
+                        sx={{
+                          flex: 1,
+                          mb: 2,
+                          fontSize: '0.875rem',
+                          height: '35px',
+                          fontWeight: '400',
+                          borderRadius: '12px',
+                          background: '#ffffff',
+                          color: '#b91c1c',
+                          boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                          '&:hover': {
+                            background: '#fef2f2',
+                            boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
+                            transform: 'translateY(-2px)',
+                          },
+                          '&:active': {
+                            background: '#fee2e2',
+                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                            transform: 'translateY(0)',
+                          },
+                        }}
+                      >
+                        Cancel
+                      </StyledButton>
+                    </Tooltip>
+                  </Box>
+                </Box>
+              </Grow>
+            ) : (
+              <Fade in={!isEditingName} timeout={200}>
+                <Paper
+                  onClick={handleNameClick}
+                  elevation={0}
+                  sx={{
+                    p: 0,
+                    cursor: 'pointer',
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
+                    border: '2px solid transparent',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    minHeight: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center', // Add this line
+                    '&:hover .edit-indicator': {
+                      opacity: 1,
+                      transform: 'scale(1)'
+                    },
+                    '&:hover .name-text': {
+                      opacity: 0
+                    }
+                  }}
                 >
-                  ✓
-                </button>
-                <button 
-                  className="btn-cancel-name"
-                  onClick={handleNameCancel}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ) : (
-            <h3 
-              className="product-name-editable"
-              onClick={handleNameClick}
-              title="Click to edit"
-            >
-              {product.name}
-            </h3>
-          )}
+                  <Typography
+                    variant="h6"
+                    className="name-text"
+                    sx={{
+                      fontSize: '1.3rem',
+                      fontWeight: '600',
+                      lineHeight: 1.4,
+                      color: 'text.primary',
+                      transition: 'opacity 0.3s ease',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      width: '100%',
+                      textAlign: 'center' // Add this line
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  <Box
+                    className="edit-indicator"
+                    sx={{
+                      position: 'absolute',
+                      inset: 0,
+                      zIndex: 2,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      gap: 1,
+                      background: alpha('#667eea', 0.08),
+                      backdropFilter: 'blur(4px)',
+                      borderRadius: 3,
+                      opacity: 0,
+                      transform: 'scale(0.98)',
+                      transition: 'all 0.3s ease',
+                      pointerEvents: 'none'
+                    }}
+                  >
+                    <Edit
+                      sx={{
+                        fontSize: 20,
+                        color: '#667eea',
+                        animation: 'pulse 2s infinite',
+                        '@keyframes pulse': {
+                          '0%, 100%': { transform: 'scale(1)' },
+                          '50%': { transform: 'scale(1.1)' }
+                        }
+                      }}
+                    />
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: '#667eea',
+                        fontWeight: 700,
+                        fontSize: '0.75rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: 1
+                      }}
+                    >
+                      Click to edit name
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Fade>
+            )}
+          </Box>
+          
+          {/*Replace the existing price editing section (lines ~498-540) with this:*/}
+
           {isEditingPrice ? (
-            <div className="price-edit-container">
-              <input
-                type="number"
-                step="1"
-                min="0"
-                value={editedPrice}
-                onChange={(e) => setEditedPrice(e.target.value)}
-                onKeyDown={handlePriceKeyPress}
-                onBlur={handlePriceSave}
-                autoFocus
-                className="price-edit-input"
-              />
-              <div className="price-edit-buttons">
-                <button 
-                  className="btn-save-price"
-                  onClick={handlePriceSave}
-                >
-                  ✓
-                </button>
-                <button 
-                  className="btn-cancel-price"
-                  onClick={handlePriceCancel}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
+            <Grow in={isEditingPrice} timeout={300}>
+              <Box>
+                <TextField
+                  fullWidth
+                  type="number"
+                  inputProps={{
+                    step: "0.01",
+                    min: "0"
+                  }}
+                  value={editedPrice}
+                  onChange={(e) => setEditedPrice(e.target.value)}
+                  onKeyDown={handlePriceKeyPress}
+                  autoFocus
+                  variant="outlined"
+                  placeholder="Enter product price..."
+                  sx={{
+                    mb: 1,
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 3,
+                      background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
+                      fontSize: '1.3rem',
+                      fontWeight: '600',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:hover': {
+                        background: 'rgba(102, 126, 234, 0.04)',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#667eea',
+                          borderWidth: 2
+                        }
+                      },
+                      '&.Mui-focused': {
+                        background: '#ffffff',
+                        boxShadow: '0 0 0 4px rgba(102, 126, 234, 0.1)',
+                        transform: 'translateY(-2px)',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#667eea',
+                          borderWidth: 2
+                        }
+                      }
+                    },
+                    '& input': {
+                      textAlign: 'center'
+                    }
+                  }}
+                />
+                
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  mb: 1,
+                  opacity: 1,
+                  transform: 'translateY(0)',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Price in ₹ (minimum: 0)
+                  </Typography>
+                  <Chip
+                    label="Enter to save • Esc to cancel"
+                    size="small"
+                    variant="filled"
+                    sx={{
+                      fontSize: '0.7rem',
+                      height: 24,
+                      borderColor: alpha('#667eea', 0.3),
+                      color: 'text.secondary'
+                    }}
+                  />
+                </Box>
+                
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Tooltip title="Save changes (Enter)" arrow>
+                    <StyledButton
+                      onClick={handlePriceSave}
+                      startIcon={<Check />}
+                      sx={{
+                        flex: 1,
+                        mb: 2,
+                        fontSize: '0.875rem',
+                        height: '35px',
+                        fontWeight: '400',
+                        borderRadius: '12px',
+                        background: '#ffffff',
+                        color: '#2563eb',
+                        boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                        '&:hover': {
+                          background: '#f0f4ff',
+                          boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
+                          transform: 'translateY(-2px)',
+                        },
+                        '&:active': {
+                          background: '#e0eaff',
+                          boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                          transform: 'translateY(0)',
+                        },
+                      }}
+                    >
+                      Save
+                    </StyledButton>
+                  </Tooltip>
+
+                  <Tooltip title="Cancel editing (Esc)" arrow>
+                    <StyledButton
+                      onClick={handlePriceCancel}
+                      startIcon={<Close />}
+                      sx={{
+                        flex: 1,
+                        mb: 2,
+                        fontSize: '0.875rem',
+                        height: '35px',
+                        fontWeight: '400',
+                        borderRadius: '12px',
+                        background: '#ffffff',
+                        color: '#b91c1c',
+                        boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                        '&:hover': {
+                          background: '#fef2f2',
+                          boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
+                          transform: 'translateY(-2px)',
+                        },
+                        '&:active': {
+                          background: '#fee2e2',
+                          boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                          transform: 'translateY(0)',
+                        },
+                      }}
+                    >
+                      Cancel
+                    </StyledButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Grow>
           ) : (
-            <div 
-              className="price product-price-editable"
-              onClick={handlePriceClick}
-              title="Click to edit"
-            >
-              ₹{product.price.toFixed(2)}
-            </div>
+            <Fade in={!isEditingPrice} timeout={200}>
+              <Paper
+                onClick={handlePriceClick}
+                elevation={0}
+                sx={{
+                  p: 0,
+                  cursor: 'pointer',
+                  borderRadius: 3,
+                  background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
+                  border: '2px solid transparent',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                  minHeight: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mb: 0, // Add margin bottom for spacing
+                  '&:hover .edit-indicator': {
+                    opacity: 1,
+                    transform: 'scale(1)'
+                  },
+                  '&:hover .price-text': {
+                    opacity: 0
+                  },
+                  width: '100%'
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  className="price-text"
+                  sx={{
+                    fontSize: '1.4rem',
+                    fontWeight: '700',
+                    lineHeight: 1.4,
+                    color: '#2563eb',
+                    transition: 'opacity 0.3s ease',
+                    textAlign: 'center'
+                  }}
+                >
+                  ₹{product.price.toFixed(2)}
+                </Typography>
+                <Box
+                  className="edit-indicator"
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    zIndex: 2,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    gap: 1,
+                    background: alpha('#667eea', 0.08),
+                    backdropFilter: 'blur(4px)',
+                    borderRadius: 3,
+                    opacity: 0,
+                    transform: 'scale(0.98)',
+                    transition: 'all 0.3s ease',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <Edit
+                    sx={{
+                      fontSize: 20,
+                      color: '#667eea',
+                      animation: 'pulse 2s infinite',
+                      '@keyframes pulse': {
+                        '0%, 100%': { transform: 'scale(1)' },
+                        '50%': { transform: 'scale(1.1)' }
+                      }
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: '#667eea',
+                      fontWeight: 700,
+                      fontSize: '0.75rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: 1
+                    }}
+                  >
+                    Click to edit price
+                  </Typography>
+                </Box>
+              </Paper>
+            </Fade>
           )}
+
         </div>
 
         <Box 
           className="details" 
           sx={{
             position: 'relative',
-            my: 3,
+            mt: 0,
+            mb: 0,
             // Dynamic height based on editing and hover states
-            minHeight: isEditingDescription ? (isHovered ? '300px' : '200px') : (isHovered ? '100px' : '80px'),
-            maxHeight: isEditingDescription ? (isHovered ? 'none' : '200px') : (isHovered ? '100px' : '80px'),
+            //minHeight: isEditingDescription ? (isHovered ? '300px' : '100px') : (isHovered ? '100px' : '60px'),
+            //maxHeight: isEditingDescription ? (isHovered ? 'none' : '100px') : (isHovered ? '100px' : '60px'),
             overflow: isEditingDescription && !isHovered ? 'hidden' : 'visible',
             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
@@ -644,7 +1033,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   inputRef={descriptionInputRef}
                   fullWidth
                   multiline
-                  rows={isHovered ? 8 : 4} // More rows when hovered while editing
+                  rows={4} // More rows when hovered while editing
                   value={editedDescription}
                   onChange={(e) => setEditedDescription(e.target.value)}
                   onKeyDown={handleDescriptionKeyPress}
@@ -653,7 +1042,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   placeholder="Enter product description..."
                   inputProps={{ maxLength: MAX_DESCRIPTION_LENGTH }} // Add this line
                   sx={{
-                    mb: 2,
+                    mb: 0,
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 3,
                       background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
@@ -687,7 +1076,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       display: 'flex', 
                       justifyContent: 'space-between', 
                       alignItems: 'center',
-                      mb: 2,
+                      mb: 0,
                       opacity: isHovered ? 1 : 0,
                       transform: isHovered ? 'translateY(0)' : 'translateY(-10px)',
                       transition: 'all 0.3s ease'
@@ -702,14 +1091,14 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                         variant="filled"
                         sx={{
                           fontSize: '0.7rem',
-                          height: 10,
+                          height: 24,
                           borderColor: alpha('#667eea', 0.3),
                           color: 'text.secondary'
                         }}
                       />
                     </Box>
                     
-                    <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                    <Box sx={{ display: 'flex', gap: 2, mt: 0 }}>
                       <Tooltip title="Save changes (Enter)" arrow>
                         <StyledButton
                           onClick={handleDescriptionSave}
@@ -745,6 +1134,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                           startIcon={<Close />}
                           sx={{
                             flex: 1,
+                            mb: 2,
                             fontSize: '0.875rem',
                             height: '35px',
                             fontWeight: '400',
@@ -778,7 +1168,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                 onClick={handleDescriptionClick}
                 elevation={0}
                 sx={{
-                  p: 3,
+                  p: 0,
                   cursor: 'pointer',
                   borderRadius: 3,
                   background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
@@ -866,7 +1256,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           )}
         </Box>
 
-        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'rem' }}>
           <StyledButton2
             variantType="primary"
             onClick={handleVisitProduct}
@@ -976,6 +1366,7 @@ const AddProductCard = ({
               onChange={onFormChange}
               required
               disabled={isSubmitting}
+              maxLength={MAX_NAME_LENGTH} // Add this
               style={{
                 width: '80%',
                 padding: '8px 10px',
@@ -985,6 +1376,15 @@ const AddProductCard = ({
                 fontWeight: 'bold',
               }}
             />
+            {/*Add character counter for name in AddProductCard:*/}
+            <div style={{ 
+              fontSize: '12px', 
+              color: form.name.length > MAX_NAME_LENGTH * 0.9 ? '#dc2626' : '#666',
+              textAlign: 'left',
+              marginTop: '4px'
+            }}>
+              Name: {form.name.length}/{MAX_NAME_LENGTH}
+            </div>
             <input
               name="price"
               placeholder="Price (₹)"
@@ -1121,13 +1521,18 @@ const ProductManagement = () => {
     setPreviewUrl("");
   };
 
-  // 5. Add validation in the handleChange function for the form:
+  // Step 5: Add validation in handleChange function for name length
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     // If it's the description field, enforce character limit
     if (name === 'description' && value.length > MAX_DESCRIPTION_LENGTH) {
-      return; // Don't update if exceeding limit
+      return;
+    }
+    
+    // If it's the name field, enforce character limit
+    if (name === 'name' && value.length > MAX_NAME_LENGTH) {
+      return;
     }
     
     setForm((prev) => ({ ...prev, [name]: value }));
