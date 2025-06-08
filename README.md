@@ -193,7 +193,7 @@ NOTE TO SELF: read this readme file - find out what are the old/new to-do's - ma
 note ps:
 1. a lot of dev happened on vendor side, nothing much on company side.
 2. issues with the calendar (on non-net30 payments)
-3. add new product card - edit features
+3. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 4. update image - better the ui
 5. cut stuff from reminaing.css that have no usage in any tsx file
 6. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
