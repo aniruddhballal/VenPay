@@ -782,16 +782,14 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             )}
           </Box>
           
-          {/*Replace the existing price editing section (lines ~498-540) with this:*/}
-
           {isEditingPrice ? (
             <Grow in={isEditingPrice} timeout={300}>
-              <Box>
+              <Box sx={{ px: { xs: 0, sm: 0 }, width: '100%'  }}> {/* Added responsive padding */}
                 <TextField
                   fullWidth
                   type="number"
                   inputProps={{
-                    step: "0.01",
+                    step: "1",
                     min: "0"
                   }}
                   value={editedPrice}
@@ -802,10 +800,12 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   placeholder="Enter product price..."
                   sx={{
                     mb: 1,
+                    width: '100%', // Ensure it takes full available width
+                    minWidth: 0, // Allow shrinking below default min-width
                     '& .MuiOutlinedInput-root': {
                       borderRadius: 3,
                       background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
-                      fontSize: '1.3rem',
+                      fontSize: { xs: '1.1rem', sm: '1.3rem' }, // Responsive font size
                       fontWeight: '600',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                       '&:hover': {
@@ -818,7 +818,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       '&.Mui-focused': {
                         background: '#ffffff',
                         boxShadow: '0 0 0 4px rgba(102, 126, 234, 0.1)',
-                        transform: 'translateY(-2px)',
+                        transform: { xs: 'none', sm: 'translateY(-2px)' }, // Disable transform on mobile
                         '& .MuiOutlinedInput-notchedOutline': {
                           borderColor: '#667eea',
                           borderWidth: 2
@@ -826,21 +826,31 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       }
                     },
                     '& input': {
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      px: { xs: 1, sm: 2 } // Responsive input padding
                     }
                   }}
                 />
                 
                 <Box sx={{ 
                   display: 'flex', 
+                  flexDirection: { xs: 'column', sm: 'row' }, // Stack on mobile
                   justifyContent: 'space-between', 
-                  alignItems: 'center',
+                  alignItems: { xs: 'stretch', sm: 'center' },
+                  gap: { xs: 1, sm: 0 }, // Add gap on mobile
                   mb: 1,
                   opacity: 1,
                   transform: 'translateY(0)',
                   transition: 'all 0.3s ease'
                 }}>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography 
+                    variant="caption" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                      textAlign: { xs: 'center', sm: 'left' }
+                    }}
+                  >
                     Price in ₹ (minimum: 0)
                   </Typography>
                   <Chip
@@ -848,15 +858,23 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     size="small"
                     variant="filled"
                     sx={{
-                      fontSize: '0.7rem',
-                      height: 24,
+                      fontSize: { xs: '0.6rem', sm: '0.7rem' }, // Smaller on mobile
+                      height: { xs: 20, sm: 24 },
                       borderColor: alpha('#667eea', 0.3),
-                      color: 'text.secondary'
+                      color: 'text.secondary',
+                      alignSelf: { xs: 'center', sm: 'auto' }
                     }}
                   />
                 </Box>
                 
-                <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: { xs: 1, sm: 2 }, // Reduced gap on mobile
+                  flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on very small screens
+                  '& > *': {
+                    minWidth: 0 // Allow buttons to shrink
+                  }
+                }}>
                   <Tooltip title="Save changes (Enter)" arrow>
                     <StyledButton
                       onClick={handlePriceSave}
@@ -864,17 +882,18 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       sx={{
                         flex: 1,
                         mb: 2,
-                        fontSize: '0.875rem',
-                        height: '35px',
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' },
+                        height: { xs: '32px', sm: '35px' }, // Smaller height on mobile
                         fontWeight: '400',
                         borderRadius: '12px',
                         background: '#ffffff',
                         color: '#2563eb',
                         boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                        minWidth: { xs: '80px', sm: 'auto' }, // Ensure minimum width
                         '&:hover': {
                           background: '#f0f4ff',
                           boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
-                          transform: 'translateY(-2px)',
+                          transform: { xs: 'none', sm: 'translateY(-2px)' }, // Disable transform on mobile
                         },
                         '&:active': {
                           background: '#e0eaff',
@@ -894,17 +913,18 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       sx={{
                         flex: 1,
                         mb: 2,
-                        fontSize: '0.875rem',
-                        height: '35px',
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' },
+                        height: { xs: '32px', sm: '35px' }, // Smaller height on mobile
                         fontWeight: '400',
                         borderRadius: '12px',
                         background: '#ffffff',
                         color: '#b91c1c',
                         boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                        minWidth: { xs: '80px', sm: 'auto' }, // Ensure minimum width
                         '&:hover': {
                           background: '#fef2f2',
                           boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
-                          transform: 'translateY(-2px)',
+                          transform: { xs: 'none', sm: 'translateY(-2px)' }, // Disable transform on mobile
                         },
                         '&:active': {
                           background: '#fee2e2',
@@ -925,7 +945,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                 onClick={handlePriceClick}
                 elevation={0}
                 sx={{
-                  p: 0,
+                  p: { xs: 1, sm: 0 }, // Add padding on mobile
                   cursor: 'pointer',
                   borderRadius: 3,
                   background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
@@ -933,31 +953,34 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'all 0.3s ease',
-                  minHeight: '40px',
+                  minHeight: { xs: '35px', sm: '40px' }, // Responsive height
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mb: 0, // Add margin bottom for spacing
+                  mb: 0,
+                  width: '100%',
+                  minWidth: 0, // Allow shrinking
                   '&:hover .edit-indicator': {
                     opacity: 1,
                     transform: 'scale(1)'
                   },
                   '&:hover .price-text': {
                     opacity: 0
-                  },
-                  width: '100%'
+                  }
                 }}
               >
                 <Typography
                   variant="h6"
                   className="price-text"
                   sx={{
-                    fontSize: '1.4rem',
+                    fontSize: { xs: '1.2rem', sm: '1.4rem' }, // Responsive font size
                     fontWeight: '700',
                     lineHeight: 1.4,
                     color: '#2563eb',
                     transition: 'opacity 0.3s ease',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    wordBreak: 'break-all', // Prevent overflow of long numbers
+                    px: 1 // Add some padding to prevent edge touching
                   }}
                 >
                   ₹{product.price.toFixed(2)}
@@ -971,20 +994,21 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    flexDirection: 'row',
-                    gap: 1,
+                    flexDirection: { xs: 'column', sm: 'row' }, // Stack on mobile
+                    gap: { xs: 0.5, sm: 1 },
                     background: alpha('#667eea', 0.08),
                     backdropFilter: 'blur(4px)',
                     borderRadius: 3,
                     opacity: 0,
                     transform: 'scale(0.98)',
                     transition: 'all 0.3s ease',
-                    pointerEvents: 'none'
+                    pointerEvents: 'none',
+                    px: 1 // Add padding to prevent edge overflow
                   }}
                 >
                   <Edit
                     sx={{
-                      fontSize: 20,
+                      fontSize: { xs: 16, sm: 20 }, // Smaller icon on mobile
                       color: '#667eea',
                       animation: 'pulse 2s infinite',
                       '@keyframes pulse': {
@@ -998,12 +1022,20 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     sx={{
                       color: '#667eea',
                       fontWeight: 700,
-                      fontSize: '0.75rem',
+                      fontSize: { xs: '0.65rem', sm: '0.75rem' }, // Smaller text on mobile
                       textTransform: 'uppercase',
-                      letterSpacing: 1
+                      letterSpacing: { xs: 0.5, sm: 1 },
+                      textAlign: 'center',
+                      lineHeight: 1.2
                     }}
                   >
-                    Click to edit price
+                    {/* Shorter text on mobile */}
+                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                      Click to edit price
+                    </Box>
+                    <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                      Tap to edit
+                    </Box>
                   </Typography>
                 </Box>
               </Paper>
