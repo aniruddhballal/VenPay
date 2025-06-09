@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api"; // Updated import
 import { useNavigate } from "react-router-dom";
 import ProductManagement from "./ProductManagement";
 import ProductList from "./ProductList";
@@ -21,11 +21,10 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/auth/me", { withCredentials: true })
+    api
+      .get("/auth/me") // Updated endpoint (baseURL already includes /api)
       .then(res => {
         const fetchedUser = res.data.user;
-
         if (
           fetchedUser?._id &&
           fetchedUser?.email &&
@@ -48,7 +47,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+      await api.post("/auth/logout"); // Updated to use api and simplified endpoint
       navigate("/login");
     } catch (err: any) {
       console.error("Logout failed:", err);
@@ -83,7 +82,6 @@ export default function Dashboard() {
           <section style={{ marginBottom: "3rem" }}>
             <ProductManagement />
           </section>
-
           <section>
             <ProductRequests />
           </section>
