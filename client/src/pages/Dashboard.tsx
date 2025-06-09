@@ -1,53 +1,73 @@
-import { useEffect, useState } from "react";
-import api from "../api"; // Updated import
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 import ProductManagement from "./ProductManagement";
 import ProductList from "./ProductList";
 import ProductRequests from "./ProductRequests";
 import PaymentRequests from "./PaymentRequests";
 import { toast } from "react-toastify";
-import styles from "../styles/Dashboard.module.css"; // 👈 CSS Module import
+import { setUser, logout, setLoading, setInitialized } from "../store/authSlice";
+import styles from "../styles/Dashboard.module.css";
 
-type User = {
-  _id: string;
-  email: string;
-  name: string;
-  userType: "vendor" | "company";
-};
+// Define RootState type for useSelector
+interface RootState {
+  auth: {
+    user: {
+      _id: string;
+      email: string;
+      name: string;
+      userType: "vendor" | "company";
+    } | null;
+    isLoading: boolean;
+    isInitialized: boolean;
+  };
+}
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading, isInitialized } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    api
-      .get("/auth/me") // Updated endpoint (baseURL already includes /api)
-      .then(res => {
-        const fetchedUser = res.data.user;
-        if (
-          fetchedUser?._id &&
-          fetchedUser?.email &&
-          (fetchedUser.userType === "vendor" || fetchedUser.userType === "company")
-        ) {
-          setUser(fetchedUser);
-        } else {
-          console.warn("User data incomplete or invalid:", fetchedUser);
-          toast.error("Invalid user session. Please log in again.");
+    // Only fetch user data if not already initialized
+    if (!isInitialized) {
+      dispatch(setLoading(true));
+      
+      api
+        .get("/auth/me")
+        .then(res => {
+          const fetchedUser = res.data.user;
+          if (
+            fetchedUser?._id &&
+            fetchedUser?.email &&
+            (fetchedUser.userType === "vendor" || fetchedUser.userType === "company")
+          ) {
+            dispatch(setUser(fetchedUser));
+          } else {
+            console.warn("User data incomplete or invalid:", fetchedUser);
+            toast.error("Invalid user session. Please log in again.");
+            dispatch(setUser(null));
+            navigate("/login");
+          }
+        })
+        .catch(err => {
+          console.error("Auth check failed:", err);
+          toast.error(err.response?.data?.error || "Authentication failed. Please log in again.");
+          dispatch(setUser(null));
           navigate("/login");
-        }
-      })
-      .catch(err => {
-        console.error("Auth check failed:", err);
-        toast.error(err.response?.data?.error || "Authentication failed. Please log in again.");
-        navigate("/login");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+          dispatch(setInitialized());
+        });
+    }
+  }, [dispatch, navigate, isInitialized]);
 
   const handleLogout = async () => {
     try {
-      await api.post("/auth/logout"); // Updated to use api and simplified endpoint
+      await api.post("/auth/logout");
+      dispatch(logout());
       navigate("/login");
     } catch (err: any) {
       console.error("Logout failed:", err);
@@ -61,7 +81,7 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) return <div className={styles["loading"]}>Loading user data...</div>;
+  if (isLoading) return <div className={styles["loading"]}>Loading user data...</div>;
   if (!user) return <div className={styles["unauthorized"]}>Not authorized</div>;
 
   return (
