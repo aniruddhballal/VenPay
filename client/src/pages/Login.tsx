@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Box, Typography, Paper, TextField, Button, Fade, Grow } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/authSlice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +12,7 @@ export default function Login() {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +33,8 @@ export default function Login() {
         withCredentials: true,
       });
 
-      localStorage.setItem("user", JSON.stringify(userRes.data.user));
+      // Dispatch Redux action to store user info
+      dispatch(setUser(userRes.data.user));
       setMessage(msg);
       navigate("/dashboard");
     } catch (err: any) {
@@ -70,29 +74,29 @@ export default function Login() {
               component="img"
               src="/images/venpay-logo.png"
               alt="VenPay Logo"
-              sx={{ 
-                height: { xs: 70, sm: 95 }, 
+              sx={{
+                height: { xs: 70, sm: 95 },
                 width: { xs: 77, sm: 105 },
-                filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.4))"
+                filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.4))",
               }}
             />
             <Box
               component="img"
               src="/images/venpay-text.png"
               alt="VenPay Text"
-              sx={{ 
-                height: { xs: 70, sm: 95 }, 
+              sx={{
+                height: { xs: 70, sm: 95 },
                 width: "auto",
-                filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.4))"
+                filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.4))",
               }}
             />
           </Box>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              color: "rgba(255,255,255,0.8)", 
+          <Typography
+            variant="h6"
+            sx={{
+              color: "rgba(255,255,255,0.8)",
               fontWeight: 300,
-              letterSpacing: 2
+              letterSpacing: 2,
             }}
           >
             Welcome Back
@@ -122,7 +126,7 @@ export default function Login() {
               height: "4px",
               background: "linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899)",
               borderRadius: "16px 16px 0 0",
-            }
+            },
           }}
         >
           <Typography
@@ -135,7 +139,7 @@ export default function Login() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               mb: 4,
-              letterSpacing: -0.5
+              letterSpacing: -0.5,
             }}
           >
             Sign In
@@ -153,7 +157,7 @@ export default function Login() {
                   background: "rgba(239, 68, 68, 0.1)",
                   borderRadius: 3,
                   border: "1px solid rgba(239, 68, 68, 0.2)",
-                  fontSize: "0.9rem"
+                  fontSize: "0.9rem",
                 }}
               >
                 {message}
@@ -161,9 +165,9 @@ export default function Login() {
             </Fade>
           )}
 
-          <Box 
-            component="form" 
-            onSubmit={handleSubmit} 
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
             sx={{ display: "flex", flexDirection: "column", gap: 3.5 }}
           >
             <TextField
@@ -197,17 +201,17 @@ export default function Login() {
                   },
                   "&.Mui-focused fieldset": {
                     borderColor: "#3b82f6",
-                  }
+                  },
                 },
                 "& .MuiInputLabel-root": {
                   color: "rgba(255, 255, 255, 0.7)",
                   "&.Mui-focused": {
                     color: "#60a5fa",
-                  }
-                }
+                  },
+                },
               }}
             />
-            
+
             <TextField
               type="password"
               label="Password"
@@ -239,14 +243,14 @@ export default function Login() {
                   },
                   "&.Mui-focused fieldset": {
                     borderColor: "#3b82f6",
-                  }
+                  },
                 },
                 "& .MuiInputLabel-root": {
                   color: "rgba(255, 255, 255, 0.7)",
                   "&.Mui-focused": {
                     color: "#60a5fa",
-                  }
-                }
+                  },
+                },
               }}
             />
 
@@ -272,9 +276,10 @@ export default function Login() {
                   position: "absolute",
                   top: 0,
                   left: "-100%",
-                  width: "100%", 
+                  width: "100%",
                   height: "100%",
-                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
                   transition: "left 0.5s",
                 },
                 "&:hover": {
@@ -283,7 +288,7 @@ export default function Login() {
                   boxShadow: "0 12px 40px rgba(59, 130, 246, 0.4)",
                   "&::before": {
                     left: "100%",
-                  }
+                  },
                 },
                 "&:active": {
                   transform: "translateY(-1px)",
@@ -292,18 +297,18 @@ export default function Login() {
                   background: "#64748b",
                   color: "rgba(255,255,255,0.7)",
                   opacity: 0.7,
-                }
+                },
               }}
             >
               {loading ? "Signing In..." : "Sign In"}
             </Button>
           </Box>
 
-          <Typography 
-            variant="body2" 
-            align="center" 
-            sx={{ 
-              mt: 4, 
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{
+              mt: 4,
               color: "rgba(255,255,255,0.6)",
               "& a": {
                 color: "#60a5fa",
@@ -312,9 +317,9 @@ export default function Login() {
                 transition: "color 0.2s",
                 "&:hover": {
                   color: "#93c5fd",
-                  textDecoration: "underline"
-                }
-              }
+                  textDecoration: "underline",
+                },
+              },
             }}
           >
             Don't have an account? <Link to="/register">Create one</Link>
