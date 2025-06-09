@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   Box,
@@ -461,7 +462,9 @@ export default function Product() {
                         mb: 1
                       }}
                     >
+                    <Link to={`/user/${product.vendorId._id}`}>
                       {product.vendorId.name}
+                    </Link>
                     </Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Email sx={{ fontSize: 16, color: "#3b82f6" }} />
