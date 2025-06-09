@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify'; // or whatever toast library you're using
+import { fetchUserById } from '../store/userSlice';
+import type { RootState, AppDispatch } from '../store'
 import {
   Box,
   Card,
@@ -28,13 +30,6 @@ import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
 
 import type { TypographyProps } from '@mui/material';
-
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  userType: "company" | "vendor";
-}
 
 // Keeping all your beautiful styling but making it more spacious and responsive
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -484,26 +479,30 @@ const ErrorContainer = styled(Alert)(({ theme }) => ({
 export default function UserDisplay() {
   const { id: userId } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const loggedInUser: User | null = JSON.parse(localStorage.getItem("user") || "null");
-
+  const dispatch = useDispatch<AppDispatch>();
+  
+  // Get data from Redux store instead of local state
+  const { currentUser: user, loading, error } = useSelector((state: RootState) => state.user);
+  
+  // Get logged-in user from Redux store instead of localStorage
+  const loggedInUser = useSelector((state: RootState) => state.auth.user);
+  
   useEffect(() => {
     if (!userId) {
       toast.error("User ID not provided.");
-      setLoading(false);
       return;
     }
-    
-    axios
-      .get(`http://localhost:5000/api/users/${userId}`, { withCredentials: true })
-      .then((res) => setUser(res.data))
-      .catch((err) => {
-        console.error(err);
-        toast.error("Failed to fetch user.");
-      })
-      .finally(() => setLoading(false));
-  }, [userId]);
+   
+    // Dispatch Redux action instead of manual axios call
+    dispatch(fetchUserById(userId));
+  }, [userId, dispatch]);
+
+  // Handle error state
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to fetch user.");
+    }
+  }, [error]);
 
   if (!userId) {
     return (
