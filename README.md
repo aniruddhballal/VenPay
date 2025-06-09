@@ -202,6 +202,9 @@ note ps:
 9. poem on cycle
 10. organise all the word docs into Incessantly.docx
 11. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
-12. on minimised screen, the price overflows out of the box - but name and desc dont.
-13. on user details page - add a mailto link
-14. user account deletion logic (cascaded) - lol, cru of user was there, no d until now eh
+12. on minimised screen, the price overflows out of the box - but name and desc dont. - DONE
+13. on user details page - add a mailto link - DONE
+14. user account deletion logic (cascaded) - lol, cru of user was there, no d until now eh4
+15. move the star rating to under the product image
+16. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
+17. global home button
