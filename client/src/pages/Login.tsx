@@ -14,29 +14,30 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage(null);
-    setLoading(true);
-
-    try {
-      const res = await api.post("/auth/login", { email, password });
-      const msg = res.data.message || "Logged in!";
-      toast.success(msg);
-
-      const userRes = await api.get("/auth/me");
-      dispatch(setUser(userRes.data.user));
-
-      setMessage(msg);
-      navigate("/dashboard");
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.error || "Login failed";
-      toast.error(errorMsg);
-      setMessage(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
+// Remove the extra API call since AuthProvider will handle it
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setMessage(null);
+  setLoading(true);
+  try {
+    const res = await api.post("/auth/login", { email, password });
+    const msg = res.data.message || "Logged in!";
+    toast.success(msg);
+    
+    // The login endpoint should set the JWT cookie
+    // Then fetch user data
+    const userRes = await api.get("/auth/me");
+    dispatch(setUser(userRes.data.user));
+    
+    navigate("/dashboard");
+  } catch (err: any) {
+    const errorMsg = err.response?.data?.error || "Login failed";
+    toast.error(errorMsg);
+    setMessage(errorMsg);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Box
