@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { Calendar, X, Check } from "lucide-react";
+import DatePickerModal from "./DatePickerModal"; // Import the separate component
 
 interface Transaction {
   _id: string;
@@ -27,132 +27,6 @@ interface Request {
   quantity?: number;
   unitPrice?: number;
   totalPrice?: number;
-}
-
-interface DatePickerModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (date: string) => void;
-  title: string;
-}
-
-function DatePickerModal({ isOpen, onClose, onConfirm, title }: DatePickerModalProps) {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (isOpen) {
-      // Set minimum date to tomorrow
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const minDate = tomorrow.toISOString().split('T')[0];
-      setSelectedDate(minDate);
-      setError("");
-    }
-  }, [isOpen]);
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = e.target.value;
-    setSelectedDate(date);
-    
-    const selectedDateObj = new Date(date);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    
-    if (selectedDateObj <= now) {
-      setError("Please select a future date");
-    } else {
-      setError("");
-    }
-  };
-
-  const handleConfirm = () => {
-    if (!selectedDate) {
-      setError("Please select a date");
-      return;
-    }
-    
-    const selectedDateObj = new Date(selectedDate);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    
-    if (selectedDateObj <= now) {
-      setError("Please select a future date");
-      return;
-    }
-    
-    onConfirm(selectedDate);
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const minDate = tomorrow.toISOString().split('T')[0];
-  const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
-  return (
-    <div className="modal-overlay">
-      <div className="modal-container">
-        <div className="modal-header">
-          <div className="modal-title-container">
-            <Calendar className="modal-icon" />
-            <h3 className="modal-title">{title}</h3>
-          </div>
-          <button onClick={onClose} className="modal-close-btn">
-            <X size={20} />
-          </button>
-        </div>
-        
-        <div className="modal-content">
-          <div className="date-input-container">
-            <label htmlFor="payment-deadline" className="date-label">
-              Payment Deadline
-            </label>
-            <input
-              id="payment-deadline"
-              type="date"
-              value={selectedDate}
-              onChange={handleDateChange}
-              min={minDate}
-              max={maxDate}
-              className={`date-input ${error ? 'error' : ''}`}
-            />
-            {error && <span className="error-message">{error}</span>}
-          </div>
-          
-          {selectedDate && !error && (
-            <div className="date-preview">
-              <p className="preview-label">Selected deadline:</p>
-              <p className="preview-date">
-                {new Date(selectedDate + 'T23:59:59').toLocaleDateString('en-IN', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </p>
-            </div>
-          )}
-        </div>
-        
-        <div className="modal-actions">
-          <button onClick={onClose} className="cancel-btn">
-            Cancel
-          </button>
-          <button 
-            onClick={handleConfirm} 
-            className="btn btn-confirm"
-            disabled={!selectedDate || !!error}
-          >
-            <Check size={16} />
-            Set Deadline
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function ProductRequests() {
