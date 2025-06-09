@@ -3,6 +3,9 @@ import Product from "../models/Product";
 import { protect } from "../middleware/authMiddleware";
 import { IUser } from "../models/User";
 import upload from "../middleware/upload"; // import this at the top
+import PaymentRequest from '../models/PaymentRequest';
+import ProductRating from '../models/ProductRating';
+import ProductRequest from '../models/ProductRequest';
 
 const router = express.Router();
 
@@ -82,13 +85,28 @@ router.delete("/:id", protect, async (req: AuthenticatedRequest, res: Response):
     res.status(404).json({ error: "Product not found" });
     return;
   }
+
   if (product.vendorId.toString() !== req.user._id.toString()) {
     res.status(403).json({ error: "Not authorized" });
     return;
   }
 
+  // Cascaded deletion - delete all related records first
+  const productId = req.params.id;
+  
+  // Delete all payment requests for this product
+  await PaymentRequest.deleteMany({ productId });
+  
+  // Delete all product ratings for this product
+  await ProductRating.deleteMany({ productId });
+  
+  // Delete all product requests for this product
+  await ProductRequest.deleteMany({ productId });
+  
+  // Finally delete the product itself
   await product.deleteOne();
-  res.json({ message: "Product deleted" });
+  
+  res.json({ message: "Product and all related records deleted successfully" });
 });
 
 router.get("/:id", async (req: Request<{ id: string }>, res: Response): Promise<void> => {
