@@ -590,10 +590,12 @@ export default function UserDisplay() {
                   Email Address
                 </InfoLabel>
                 <InfoValue className="info-value">
-                  {user.email}
+                  <a href={`mailto:${user.email}`} style={{ textDecoration: "none", color: "inherit" }}>
+                    {user.email}
+                  </a>
                 </InfoValue>
               </InfoRow>
-
+              
               <InfoRow>
                 <InfoLabel className="info-label">
                   <AccountCircleIcon fontSize="small" className="info-icon" />
