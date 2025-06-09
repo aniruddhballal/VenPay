@@ -1,32 +1,45 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Box, Typography, Paper, TextField, Button, MenuItem, Fade, Grow } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/authSlice";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("vendor");
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage(null);
     setLoading(true);
-
+    
     try {
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { email, name, password, userType },
-        { withCredentials: true }
-      );
-      toast.success("Registration successful!");
+      const res = await api.post("/auth/register", { 
+        email, 
+        name, 
+        password, 
+        userType 
+      });
+      const msg = res.data.message || "Registration successful!";
+      toast.success(msg);
+      
+      // After successful registration, fetch user data and update Redux store
+      const userRes = await api.get("/auth/me");
+      dispatch(setUser(userRes.data.user));
+      
       navigate("/dashboard");
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || "Registration failed";
-      toast.error(errorMessage);
+      const errorMsg = err.response?.data?.error || "Registration failed";
+      toast.error(errorMsg);
+      setMessage(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -130,6 +143,26 @@ export default function Register() {
           >
             Create Account
           </Typography>
+
+          {message && (
+            <Fade in>
+              <Box
+                sx={{
+                  color: "#f87171",
+                  textAlign: "center",
+                  mb: 3,
+                  fontWeight: 500,
+                  p: 2.5,
+                  background: "rgba(239, 68, 68, 0.1)",
+                  borderRadius: 3,
+                  border: "1px solid rgba(239, 68, 68, 0.2)",
+                  fontSize: "0.9rem",
+                }}
+              >
+                {message}
+              </Box>
+            </Fade>
+          )}
 
           <Box 
             component="form" 
