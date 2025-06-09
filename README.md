@@ -197,7 +197,9 @@ note ps:
 4. update image - better the ui
 5. cut stuff from reminaing.css that have no usage in any tsx file
 6. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
-7. add back to dashboard button on the productdetails page
+7. add back to dashboard button on the productdetails page - add link to visit vendor profile from product details page
 8. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects
 9. poem on cycle
 10. organise all the word docs into Incessantly.docx
+11. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
+12. on minimised screen, the price overflows out of the box - but name and desc dont.
