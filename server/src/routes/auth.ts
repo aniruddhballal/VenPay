@@ -9,5 +9,4 @@ router.post("/register", register);
 router.get("/me", protect, getUser);
 router.post("/logout", logout);
 
-
 export default router;
