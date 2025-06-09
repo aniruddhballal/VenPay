@@ -59,9 +59,9 @@ const ProductListExpandCard = ({
         </div>
         <div className="details">
           <p className="product-description">{product.description}</p>
-          <Link to={`/user/${product.vendorId._id}`} target="_blank" rel="noopener noreferrer">
+          <Link to={`/user/${product.vendorId._id}`}>
             By {product.vendorId.name} ({product.vendorId.email})
-          </Link>          
+          </Link>
           <div className="product-inputs">
             <input
               type="number"
