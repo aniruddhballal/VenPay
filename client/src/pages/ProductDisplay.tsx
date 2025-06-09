@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -28,6 +28,75 @@ import {
 } from "@mui/icons-material";
 
 import InventoryIcon from '@mui/icons-material/Inventory';
+import { styled } from '@mui/material/styles';
+import { Dashboard as DashboardIcon } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
+
+const SecondaryButton = styled(LoadingButton)(({ theme }) => ({
+  padding: '1.25rem 2rem',
+  borderRadius: '12px',
+  fontWeight: 600,
+  fontSize: '1.1rem',
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
+  minHeight: '56px',
+  position: 'relative',
+  overflow: 'hidden',
+  transition: 'all 0.3s ease',
+
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+    transition: 'left 0.6s ease',
+
+    '@media (prefers-reduced-motion: reduce)': {
+      display: 'none',
+    },
+  },
+
+  '&:hover::before': {
+    left: '100%',
+  },
+
+  '&:not(:disabled)': {
+    background: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
+    color: 'white',
+    boxShadow: '0 4px 15px rgba(124, 58, 237, 0.4)',
+
+    '&:hover': {
+      background: 'linear-gradient(135deg, #5b21b6, #4c1d95)',
+      boxShadow: '0 8px 25px rgba(124, 58, 237, 0.5)',
+      transform: 'translateY(-2px)',
+    },
+
+    '&:active': {
+      transform: 'translateY(0)',
+      boxShadow: '0 4px 15px rgba(124, 58, 237, 0.4)',
+    },
+  },
+
+  [theme.breakpoints.down('md')]: {
+    padding: '1rem 2rem',
+    fontSize: '1rem',
+  },
+
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+
+    '&:hover': {
+      transform: 'none',
+    },
+
+    '&:active': {
+      transform: 'none',
+    },
+  },
+}));
 
 interface Product {
   _id: string;
@@ -80,6 +149,7 @@ export default function Product() {
   const [selectedCompany, setSelectedCompany] = useState<string>("all");
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [authErrorShown, setAuthErrorShown] = useState(false);
+  const navigate = useNavigate();
 
   // Get unique companies from ratings
   const getUniqueCompanies = () => {
@@ -484,6 +554,13 @@ export default function Product() {
                       </Typography>
                     </Box>
                   </Box>
+                    <SecondaryButton
+                      startIcon={<DashboardIcon />}
+                      onClick={() => navigate(-1)}
+                      sx={{ flex: 1, mt: 3, width: '100%'}}
+                    >
+                      Go Back
+                    </SecondaryButton>
                 </Box>
               </Paper>
             </Grow>
