@@ -530,7 +530,7 @@ export default function EditProfile() {
         { withCredentials: true }
       );
       toast.success("Profile updated successfully!");
-      navigate(`/user/${id}`);
+      navigate(`/dashboard`);
     } catch (err) {
       console.error(err);
       toast.error("Failed to update profile.");
