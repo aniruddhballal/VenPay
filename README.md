@@ -208,3 +208,4 @@ note ps:
 15. move the star rating to under the product image
 16. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
 17. global home button
+18. MUI-fy the datepickermodal.module.css
