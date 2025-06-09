@@ -337,9 +337,6 @@ export default function ProductRequests() {
                 </p>
 
                 <p>
-                  <strong>Product:</strong> {req.productId.name}
-                </p>
-                <p>
                   <strong>From:</strong>{" "}
                   <Link to={`/user/${req.companyId._id}`}>
                     {req.companyId.name} ({req.companyId.email})
