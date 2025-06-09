@@ -624,7 +624,7 @@ export default function UserDisplay() {
               
               <SecondaryButton
                 startIcon={<DashboardIcon />}
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(-1)}
                 sx={{ flex: 1 }}
               >
                 Go Back
