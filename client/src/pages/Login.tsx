@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Box, Typography, Paper, TextField, Button, Fade, Grow } from "@mui/material";
@@ -20,21 +20,13 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password },
-        { withCredentials: true }
-      );
-
+      const res = await api.post("/auth/login", { email, password });
       const msg = res.data.message || "Logged in!";
       toast.success(msg);
 
-      const userRes = await axios.get("http://localhost:5000/api/auth/me", {
-        withCredentials: true,
-      });
-
-      // Dispatch Redux action to store user info
+      const userRes = await api.get("/auth/me");
       dispatch(setUser(userRes.data.user));
+
       setMessage(msg);
       navigate("/dashboard");
     } catch (err: any) {
