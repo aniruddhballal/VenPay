@@ -1280,7 +1280,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       letterSpacing: 1
                     }}
                   >
-                    Click to edit
+                    Click to edit description
                   </Typography>
                 </Box>
               </Paper>
