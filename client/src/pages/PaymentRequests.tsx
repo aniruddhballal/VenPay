@@ -272,11 +272,11 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         const hasExistingRating = existingRatings[req._id];
 
         return (
-                    <div key={req._id} className={`request-card status-${req.status}`}>
+          <div key={req._id} className={`request-card status-${req.status}`}>
             <div className="request-info">
               <p>
-                <strong>Product:</strong> {req.productId.name}
-              </p>
+                <strong>Product:</strong> {req.productId?.name || "Deleted product"} {/*IS THE PRODUCT DELETION LOGIC NOT RIGHT?*/}
+              </p>                      {/*I think cascaded deletion doesnt exist rn, thats why these errors/issues keep arising*/}
               <p>
                 <strong>Vendor:</strong> {req.vendorId.name} ({req.vendorId.email})
               </p>
