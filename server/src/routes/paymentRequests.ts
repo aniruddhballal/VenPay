@@ -10,21 +10,21 @@ interface AuthRequest extends Request {
   user?: IUser;
 }
 
-// GET payment request by productRequestId (returning amountDue)
+// GET payment request by productRequestId (returning amountDue AND paymentDeadline)
 router.get("/paymentRequestByProductRequest/:productRequestId", protect, async (req: AuthRequest, res: Response) => {
   try {
     const { productRequestId } = req.params;
-    //console.log("Received productRequestId:", productRequestId);
-
     const paymentRequest = await PaymentRequest.findOne({ productRequestId });
-    //console.log("Found paymentRequest:", paymentRequest);
-
+    
     if (!paymentRequest) {
       res.status(404).json({ error: "Payment request not found." });
       return;
     }
-
-    res.json({ amountDue: paymentRequest.amountDue });
+    
+    res.json({ 
+      amountDue: paymentRequest.amountDue,
+      paymentDeadline: paymentRequest.paymentDeadline 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
