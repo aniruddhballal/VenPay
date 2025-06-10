@@ -209,3 +209,15 @@ note ps:
 16. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
 17. global home button
 18. MUI-fy the datepickermodal.module.css
+19. change what the "go back" button does, depending on which page was visited before it
+
+20. add more fields in the product and user tables - phone number, address for the user table; product table can include additional images
+21. reminder to modify the product display page such that the whitespace under the product image gets filled with something else...
+22. clear password on wrong entry of password while trying to make payment, just like how it gets cleared on successful payment
+23. make payment button does not have the glassmorphism
+24. on vendor side - if payment has been cleared, remove amount due and deadlines
+25. new idea, let deadline be, remove time left - on both, vendor and company side
+26. vendor side could also show the star rating for each of the product requests
+27. collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - ideating how many "new" stuff are there in that category
+28. notifications of payment requests, payments, product requests, new products, product deletion.
+29. again, these are all on vendor side - so, company side??
