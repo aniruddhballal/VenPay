@@ -179,13 +179,13 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         [req._id]: [newTransaction, ...(prev[req._id] || [])],
       }));
 
-      // Clear form inputs
-      setAmounts((prev) => ({ ...prev, [req._id]: "" }));
-      setPasswords((prev) => ({ ...prev, [req._id]: "" }));
-
       toast.success("Payment successful!");
     } catch (err: any) {
       toast.error(err?.response?.data?.error || "Payment failed.");
+    } finally {
+      // Clear form inputs
+      setAmounts((prev) => ({ ...prev, [req._id]: "" }));
+      setPasswords((prev) => ({ ...prev, [req._id]: "" }));
     }
   };
 
@@ -349,7 +349,7 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
 
                 {/* Show payment cleared message when payment is complete */}
                 {isPaymentCleared && (
-                  <p className="paid-clear">✅ Payment has been cleared.</p>
+                  <p className="paid-clear">✅ Payment cleared before deadline.</p>
                 )}
 
                 <div className="transactions-list">
