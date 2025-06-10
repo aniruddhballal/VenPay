@@ -349,10 +349,10 @@ export default function Product() {
           <Box sx={{ display: "flex", flexDirection: { xs: "column", lg: "row" }, gap: 4 }}>
             {/* Product Image Section */}
             <Grow in timeout={1000}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: { xs: 'none', lg: '0 0 400px' } }}>
               <Paper
                 elevation={24}
                 sx={{
-                  flex: { xs: "none", lg: "0 0 400px" },
                   height: { xs: 300, lg: 400 },
                   borderRadius: 4,
                   background: "rgba(255, 255, 255, 0.95)",
@@ -408,14 +408,29 @@ export default function Product() {
                   </Box>
                 )}
               </Paper>
-            </Grow>
 
+              <SecondaryButton
+                startIcon={<DashboardIcon />}
+                onClick={() => navigate(-1)}
+                sx={{
+                  width: "100%",
+                  mt: '1rem',
+                  height: 60, // ⬅️ fixed height
+                  borderRadius: 2,
+                  fontWeight: 600,
+                }}
+              >
+                Go Back
+              </SecondaryButton>
+            </Box>
+          </Grow>
             {/* Product Details Section */}
             <Grow in timeout={1200}>
               <Paper
                 elevation={24}
                 sx={{
                   flex: 1,
+                  height: '420px',
                   p: { xs: 3, sm: 4 },
                   borderRadius: 4,
                   background: "rgba(255, 255, 255, 0.95)",
@@ -554,13 +569,6 @@ export default function Product() {
                       </Typography>
                     </Box>
                   </Box>
-                    <SecondaryButton
-                      startIcon={<DashboardIcon />}
-                      onClick={() => navigate(-1)}
-                      sx={{ flex: 1, mt: 3, width: '100%'}}
-                    >
-                      Go Back
-                    </SecondaryButton>
                 </Box>
               </Paper>
             </Grow>
