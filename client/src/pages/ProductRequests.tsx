@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import DatePickerModal from "./DatePickerModal"; // Import the separate component
+import { useMemo } from 'react';
 
 interface Transaction {
   _id: string;
@@ -194,6 +195,40 @@ export default function ProductRequests() {
 
           const timeLeft = deadlineMap[req._id] ? formatTimeLeft(deadlineMap[req._id]) : null;
 
+          // Calculate cleared before deadline text
+          const lastTx = transactions[req._id]?.[transactions[req._id].length - 1];
+          const deadline = deadlineMap[req._id] ? new Date(deadlineMap[req._id]).getTime() : null;
+          const clearedAt = lastTx ? new Date(lastTx?.paidAt || lastTx?.createdAt).getTime() : null;
+          const diff = deadline && clearedAt ? deadline - clearedAt : null;
+          
+          const clearedBeforeDeadlineText = useMemo(() => {
+            if (!lastTx || !deadline || !clearedAt || isNaN(deadline) || isNaN(clearedAt) || diff === null) return null;
+            
+            const formatTimeDifference = (timeDiff: number) => {
+              const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+              const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+              const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+              
+              const parts = [];
+              if (days > 0) parts.push(`${days} days`);
+              if (hours > 0) parts.push(`${hours} hrs`);
+              if (minutes > 0) parts.push(`${minutes} mins`);
+              if (seconds > 0) parts.push(`${seconds} seconds`);
+              
+              return parts.join(' ');
+            };
+            
+            if (diff > 0) {
+              const timeString = formatTimeDifference(diff);
+              return `✅ Payment cleared ${timeString} before deadline.`;
+            } else {
+              const absDiff = Math.abs(diff);
+              const timeString = formatTimeDifference(absDiff);
+              return `⚠️ Payment cleared ${timeString} after deadline.`;
+            }
+          }, [req._id, transactions, deadlineMap]);
+
           if (!req.productId) {
             return (
               <div key={req._id} className={`request-card status-${req.status}`}>
@@ -247,20 +282,23 @@ export default function ProductRequests() {
 
               {req.status === "accepted" && (
                 <div className="payment-section">
-                  <p>
-                    <strong>Amount Due:</strong> ₹
-                    {amountDueMap[req._id] !== undefined
-                      ? amountDueMap[req._id].toFixed(2)
-                      : "Loading..."}
-                  </p>
-
-                  {amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0 && (
-                    <p className="paid-clear">Payment has been cleared.</p>
+                  {amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0 ? (
+                    <p className="paid-clear">
+                      {clearedBeforeDeadlineText || "✅ Payment cleared before deadline."}
+                    </p>
+                  ) : (
+                    <>
+                      <p>
+                        <strong>Amount Due:</strong> ₹
+                        {amountDueMap[req._id] !== undefined
+                          ? amountDueMap[req._id].toFixed(2)
+                          : "Loading..."}
+                      </p>
+                      <p>
+                        <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
+                      </p>
+                    </>
                   )}
-
-                  <p>
-                    <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
-                  </p>
 
                   <div className="transactions-list">
                     <h5>Payment Transactions</h5>
@@ -281,7 +319,7 @@ export default function ProductRequests() {
                   </div>
                 </div>
               )}
-
+              
               {req.status === "pending" && (
                 <div className="vendor-actions">
                   <button onClick={() => handleAccept(req)} className="btn accept-btn">
@@ -303,6 +341,7 @@ export default function ProductRequests() {
       </section>
     );
   }
+
 
   const grouped = {
     accepted: requests.filter((r) => r.status === "accepted"),
