@@ -58,11 +58,11 @@ export default function PaymentRequests() {
   if (loading) return <div className="requests-loading">Loading requests...</div>;
 
   return (
-    <div className="company-requests-container">
-      <h3 className="requests-title">Your Product Requests</h3>
+    <div className="vendor-requests-container">
+      <h3 className="requests-title">Payment Requests</h3>
 
       {requests.length === 0 ? (
-        <p className=".no-requests">No requests sent yet.</p>
+        <p className="no-requests">No requests received yet.</p>
       ) : (
         <>
           <RequestSection title="Accepted Requests" data={grouped.accepted} />
@@ -275,8 +275,8 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
           <div key={req._id} className={`request-card status-${req.status}`}>
             <div className="request-info">
               <p>
-                <strong>Product:</strong> {req.productId?.name || "Deleted product"} {/*IS THE PRODUCT DELETION LOGIC NOT RIGHT?*/}
-              </p>                      {/*I think cascaded deletion doesnt exist rn, thats why these errors/issues keep arising*/}
+                <strong>Product:</strong> {req.productId?.name || "Deleted product"} 
+              </p>                      
               <p>
                 <strong>Vendor:</strong> {req.vendorId.name} ({req.vendorId.email})
               </p>
