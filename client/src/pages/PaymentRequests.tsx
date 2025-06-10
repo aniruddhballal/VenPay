@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useMemo } from 'react';
 
 interface Transaction {
   _id: string;
@@ -271,6 +272,40 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         const isPaymentCleared = amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0;
         const hasExistingRating = existingRatings[req._id];
 
+        // Calculate cleared before deadline text
+        const lastTx = transactions[req._id]?.[transactions[req._id].length - 1];
+        const deadline = req.paymentDeadline ? new Date(req.paymentDeadline).getTime() : null;
+        const clearedAt = lastTx ? new Date(lastTx?.paidAt || lastTx?.createdAt).getTime() : null;
+        const diff = deadline && clearedAt ? deadline - clearedAt : null;
+        
+        const clearedBeforeDeadlineText = useMemo(() => {
+          if (!lastTx || !deadline || !clearedAt || isNaN(deadline) || isNaN(clearedAt) || diff === null) return null;
+          
+          const formatTimeDifference = (timeDiff: number) => {
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            const parts = [];
+            if (days > 0) parts.push(`${days} days`);
+            if (hours > 0) parts.push(`${hours} hrs`);
+            if (minutes > 0) parts.push(`${minutes} mins`);
+            if (seconds > 0) parts.push(`${seconds} seconds`);
+            
+            return parts.join(' ');
+          };
+          
+          if (diff > 0) {
+            const timeString = formatTimeDifference(diff);
+            return `✅ Payment cleared ${timeString} before deadline.`;
+          } else {
+            const absDiff = Math.abs(diff);
+            const timeString = formatTimeDifference(absDiff);
+            return `⚠️ Payment cleared ${timeString} after deadline.`;
+          }
+        }, [req._id, transactions, req.paymentDeadline]);
+
         return (
           <div key={req._id} className={`request-card status-${req.status}`}>
             <div className="request-info">
@@ -315,7 +350,13 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                     </p>
 
                     {req.paymentDeadline && (
-                      <p>
+                      <p className={
+                        req.paymentDeadline && 
+                        new Date(req.paymentDeadline).getTime() - Date.now() < 24 * 60 * 60 * 1000 &&
+                        new Date(req.paymentDeadline).getTime() > Date.now()
+                          ? "deadline-urgent" 
+                          : ""
+                      }>
                         <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
                       </p>
                     )}
@@ -349,7 +390,9 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
 
                 {/* Show payment cleared message when payment is complete */}
                 {isPaymentCleared && (
-                  <p className="paid-clear">✅ Payment cleared before deadline.</p>
+                  <p className="paid-clear">
+                    {clearedBeforeDeadlineText || "✅ Payment cleared before deadline."}
+                  </p>
                 )}
 
                 <div className="transactions-list">
