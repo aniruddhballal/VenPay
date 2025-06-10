@@ -1464,3 +1464,12 @@ Merged ProductList and ProductManagement up next
   }
 }
 /*End of keyframe animations*/
+
+/*payment deadline in red*/
+.deadline-urgent {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 4px solid #dc2626;
+}
