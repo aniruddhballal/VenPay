@@ -35,6 +35,7 @@ export default function ProductRequests() {
   const [transactions, setTransactions] = useState<Record<string, Transaction[]>>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<Request | null>(null);
+  const [deadlineMap, setDeadlineMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     axios
@@ -50,6 +51,7 @@ export default function ProductRequests() {
     const fetchData = async () => {
       const txMap: Record<string, Transaction[]> = {};
       const dueMap: Record<string, number> = {};
+      const deadlineMap: Record<string, string> = {};
 
       for (const req of requests.filter((r) => r.status === "accepted")) {
         try {
@@ -64,6 +66,10 @@ export default function ProductRequests() {
 
           txMap[req._id] = txRes.data;
           dueMap[req._id] = amountRes.data.amountDue;
+          if (amountRes.data.paymentDeadline) {
+            deadlineMap[req._id] = amountRes.data.paymentDeadline;
+          }
+          
         } catch (err) {
           console.error("Error loading payment info for request", req._id, err);
           toast.error(`Failed to load payment info for request ${req._id.slice(-4)}...`);
@@ -72,6 +78,7 @@ export default function ProductRequests() {
 
       setTransactions(txMap);
       setAmountDueMap(dueMap);
+      setDeadlineMap(deadlineMap);
     };
 
     fetchData();
@@ -174,8 +181,8 @@ export default function ProductRequests() {
       <section className="request-section">
         <h4 className="section-title">{title}</h4>
         {data.map((req) => {
-          const deadlineDate = req.paymentDeadline
-            ? new Date(req.paymentDeadline).toLocaleString("en-IN", {
+          const deadlineDate = deadlineMap[req._id]
+            ? new Date(deadlineMap[req._id]).toLocaleString("en-IN", {
                 timeZone: "Asia/Kolkata",
                 year: "numeric",
                 month: "short",
@@ -185,8 +192,8 @@ export default function ProductRequests() {
               })
             : null;
 
-          const timeLeft = req.paymentDeadline ? formatTimeLeft(req.paymentDeadline) : null;
-                    
+          const timeLeft = deadlineMap[req._id] ? formatTimeLeft(deadlineMap[req._id]) : null;
+
           if (!req.productId) {
             return (
               <div key={req._id} className={`request-card status-${req.status}`}>
@@ -251,11 +258,9 @@ export default function ProductRequests() {
                     <p className="paid-clear">Payment has been cleared.</p>
                   )}
 
-                  {req.paymentDeadline && (
-                    <p>
-                      <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
-                    </p>
-                  )}
+                  <p>
+                    <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
+                  </p>
 
                   <div className="transactions-list">
                     <h5>Payment Transactions</h5>
