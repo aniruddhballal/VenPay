@@ -6,6 +6,12 @@ import {
   Button,
   keyframes,
 } from "@mui/material";
+import {
+  BusinessCenter,
+  RequestPage,
+  Payment,
+  Inventory,
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
@@ -60,6 +66,29 @@ const spin = keyframes`
   }
 `;
 
+const pulse = keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+`;
+
+const slideInFromLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
 const float = keyframes`
   from {
     transform: translateY(0px);
@@ -68,6 +97,101 @@ const float = keyframes`
     transform: translateY(-10px);
   }
 `;
+
+// Glassmorphic Navigation Container
+const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
+  display: 'flex',
+  gap: '1rem',
+  marginTop: '3.15rem',
+  marginBottom: '2rem',
+  padding: '1.5rem',
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(20px)',
+  borderRadius: '20px',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  animation: `${slideInFromLeft} 0.6s ease-out`,
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+    pointerEvents: 'none',
+  },
+  '@media (max-width: 768px)': {
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+}));
+
+const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
+  flex: 1,
+  minHeight: '60px',
+  background: 'rgba(255, 255, 255, 0.15)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  borderRadius: '16px',
+  color: '#1e293b',
+  fontWeight: 600,
+  fontSize: '0.95rem',
+  textTransform: 'none',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  position: 'relative',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.75rem',
+  padding: '0 1.5rem',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+    transition: 'left 0.5s ease',
+  },
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.25)',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    animation: `${pulse} 2s infinite`,
+    '&::before': {
+      left: '100%',
+    },
+  },
+  '&:active': {
+    transform: 'translateY(0)',
+  },
+  '& .MuiSvgIcon-root': {
+    fontSize: '1.4rem',
+    opacity: 0.8,
+  },
+}));
+
+const SectionContainer = styled(Box)(({ /*theme*/ }) => ({
+  marginBottom: '3rem',
+  padding: '2rem',
+  background: 'rgba(255, 255, 255, 0.05)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '20px',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+  transition: 'all 0.3s ease',
+  scrollMarginTop: '2rem',
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.08)',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.12)',
+  },
+}));
 
 // Styled components
 const DashboardContainer = styled(Box)(({ /*theme*/ }) => ({
@@ -97,7 +221,7 @@ const DashboardContainer = styled(Box)(({ /*theme*/ }) => ({
   },
 }));
 
-const DashboardHeader = styled(Typography)(({/* theme*/ }) => ({
+const DashboardHeader = styled(Typography)(({ /*theme*/ }) => ({
   fontSize: '3rem',
   fontWeight: 800,
   marginBottom: '2rem',
@@ -111,7 +235,7 @@ const DashboardHeader = styled(Typography)(({/* theme*/ }) => ({
   textShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
 }));
 
-const DashboardSubheader = styled(Typography)(({/* theme*/ }) => ({
+const DashboardSubheader = styled(Typography)(({ /*theme*/ }) => ({
   fontSize: '1.75rem',
   fontWeight: 600,
   margin: '2rem 0 1.5rem',
@@ -131,7 +255,7 @@ const DashboardSubheader = styled(Typography)(({/* theme*/ }) => ({
   },
 }));
 
-const LoadingContainer = styled(Box)(({/* theme*/ }) => ({
+const LoadingContainer = styled(Box)(({ /*theme*/ }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -152,7 +276,7 @@ const LoadingSpinner = styled(Box)(({ /*theme*/ }) => ({
   animation: `${spin} 1s linear infinite`,
 }));
 
-const StyledButton = styled(Button)<{ buttonType: 'profile' | 'logout' }>(({/* theme, */ buttonType }) => ({
+const StyledButton = styled(Button)<{ buttonType: 'profile' | 'logout' }>(({ /*theme,*/ buttonType }) => ({
   position: 'absolute',
   width: '120px',
   height: '50px',
@@ -181,7 +305,7 @@ const StyledButton = styled(Button)<{ buttonType: 'profile' | 'logout' }>(({/* t
     left: '100%',
   },
   ...(buttonType === 'profile' && {
-    top: '4.6rem',
+    top: '2.15rem',
     right: '3rem',
     background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
     color: '#fff',
@@ -193,7 +317,7 @@ const StyledButton = styled(Button)<{ buttonType: 'profile' | 'logout' }>(({/* t
     },
   }),
   ...(buttonType === 'logout' && {
-    top: '10.6rem',
+    top: '7.15rem',
     right: '3rem',
     background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
     color: 'white',
@@ -210,6 +334,17 @@ export default function Dashboard() {
   const { user, isLoading, isInitialized } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Smooth scroll function
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
 
   useEffect(() => {
     // Only fetch user data if not already initialized
@@ -294,20 +429,50 @@ export default function Dashboard() {
       {user.userType === "vendor" && (
         <>
           <DashboardSubheader variant="h2">Vendor Dashboard</DashboardSubheader>
-          <Box sx={{ marginBottom: '3rem' }}>
+          
+          <NavigationContainer>
+            <NavigationButton onClick={() => scrollToSection('product-management')}>
+              <Inventory />
+              Product Management
+            </NavigationButton>
+            <NavigationButton onClick={() => scrollToSection('product-requests')}>
+              <RequestPage />
+              Product Requests
+            </NavigationButton>
+          </NavigationContainer>
+
+          <SectionContainer id="product-management">
             <ProductManagement />
-          </Box>
-          <Box>
+          </SectionContainer>
+          
+          <SectionContainer id="product-requests">
             <ProductRequests />
-          </Box>
+          </SectionContainer>
         </>
       )}
 
       {user.userType === "company" && (
         <>
           <DashboardSubheader variant="h2">Company Dashboard</DashboardSubheader>
-          <ProductList />
-          <PaymentRequests />
+          
+          <NavigationContainer>
+            <NavigationButton onClick={() => scrollToSection('product-list')}>
+              <BusinessCenter />
+              Product Catalog
+            </NavigationButton>
+            <NavigationButton onClick={() => scrollToSection('payment-requests')}>
+              <Payment />
+              Payment Requests
+            </NavigationButton>
+          </NavigationContainer>
+
+          <SectionContainer id="product-list">
+            <ProductList />
+          </SectionContainer>
+          
+          <SectionContainer id="payment-requests">
+            <PaymentRequests />
+          </SectionContainer>
         </>
       )}
     </DashboardContainer>
