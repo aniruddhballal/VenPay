@@ -294,7 +294,13 @@ export default function ProductRequests() {
                           ? amountDueMap[req._id].toFixed(2)
                           : "Loading..."}
                       </p>
-                      <p>
+                      <p className={
+                        deadlineMap[req._id] && 
+                        new Date(deadlineMap[req._id]).getTime() - Date.now() < 24 * 60 * 60 * 1000 &&
+                        new Date(deadlineMap[req._id]).getTime() > Date.now()
+                          ? "deadline-urgent" 
+                          : ""
+                      }>
                         <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
                       </p>
                     </>
