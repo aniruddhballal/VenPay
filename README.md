@@ -229,4 +229,10 @@ DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time lef
 33. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
 
 34. filter products available by company, or when visiting vendor profile - show list of products
-35. profile photo for all users.enter twice)
+35. profile photo for all users.
+
+36. consider cropping in 1:1 ratio not the landscape 2:3 - on main pages and the product page
+
+37. reconsider the "back to dahsboard" -> "back to profile" -> edit profile - change the routing !!
+38. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
+39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards
