@@ -363,10 +363,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     setIsEditingImage(false);
   };
 
-  const getTransformedImage = (url: string, w = 300, h = 300) => {
-    return url.replace("/upload/", `/upload/c_fill,w_${w},h_${h}/`);
-  };
-
   const saveAllEdits = async () => {
     if (isEditingName) {
       await handleNameSave();
@@ -377,9 +373,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     if (isEditingDescription) {
       await handleDescriptionSave();
     }
-    /*if (isEditingImage) {
-      await handleImageSave();
-    }*/
   };
 
   useEffect(() => {
@@ -1682,7 +1675,6 @@ const ProductManagement = () => {
     setPreviewUrl("");
   };
 
-  // Step 5: Add validation in handleChange function for name length
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
