@@ -20,7 +20,6 @@ import {
   CircularProgress,
 } from '@mui/material';
 
-import type { ButtonProps } from "@mui/material";
 import {
   Check,
   Close,
