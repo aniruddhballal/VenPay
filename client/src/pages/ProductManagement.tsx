@@ -479,7 +479,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     backdropFilter: 'blur(6px)',
                   }}
                 >
-                  <Tooltip title="Save image (Enter)" arrow>
+                  <Tooltip title="Save image" arrow>
                     <IconButton
                       onClick={handleImageSave}
                       disabled={uploadingImage}
@@ -510,7 +510,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     </IconButton>
                   </Tooltip>
 
-                  <Tooltip title="Cancel (Esc)" arrow>
+                  <Tooltip title="Cancel" arrow>
                     <IconButton
                       onClick={handleImageCancel}
                       disabled={uploadingImage}
