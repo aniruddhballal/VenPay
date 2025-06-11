@@ -179,20 +179,21 @@ gotta match the details/delete button for all the products with the green, purpl
 add go back to dashboard button after visiting the product page
 
 umm here's a small summary of all the updates on the productmanagement page:
-1. inline editing UI is just too good now (except for image editing - will get back to this)
+1. inline editing UI is just too good now (except for image editing - will get back to this) - GOT BACK TO THIS FINALLY DONE.
 2. double expandable hover cards are now multi-level expandable (depends on what fields of the product details you are editing)
 3. auto-saving of product details when mouse leaves/stops hovering over the product card
 4. MUI-fied CSS obviously
 5. a lot of other small bugs, debugs wtv
 TO SUMMARISE, crazy updation of the "updation process" lol
 .
-YET TO Implement: features from ExpandProductCard onto AddProductCard
+YET TO Implement: features from ExpandProductCard onto AddProductCard - THIS
+
 
 NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
 
 note ps:
 1. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
-2. issues with the calendar (on non-net30 payments)
+2. issues with the calendar (on non-net30 payments) - DONE, RESOLVED!
 3. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 4. update image - better the ui
 5. cut stuff from reminaing.css that have no usage in any tsx file
@@ -220,6 +221,12 @@ DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time lef
 26. vendor side could also show the star rating for each of the product requests
 27. collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - ideating how many "new" stuff are there in that category
 28. notifications of payment requests, payments, product requests, new products, product deletion.
+    NOTIFICATIONS WILL BE A HUGE UPGRADE
 29. again, these are all on vendor side - so, company side??
 30. what happens if deadline passes by?!
 31. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice)
+32. WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
+33. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
+
+34. filter products available by company, or when visiting vendor profile - show list of products
+35. profile photo for all users.enter twice)
