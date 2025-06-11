@@ -503,7 +503,6 @@ export default function Product() {
                       }}
                     />
                     <Box 
-                      onClick={() => window.open(product.image, '_blank')}
                     sx={{
                       position: 'absolute',
                       top: 16,
