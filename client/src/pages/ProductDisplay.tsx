@@ -8,6 +8,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import OutlinedInput from '@mui/material/OutlinedInput';
 import {
   Box,
   Container,
@@ -18,26 +19,18 @@ import {
   CardMedia,
   Grid,
   Avatar,
-  Rating,
   Chip,
-  Divider,
-  Paper,
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
-  Skeleton,
-  IconButton,
   Stack,
   useTheme,
   useMediaQuery,
   Fade,
   Zoom,
-  Backdrop,
   CircularProgress,
   Alert,
   AlertTitle,
-  Tooltip,
   ButtonBase,
 } from "@mui/material";
 import {
@@ -502,7 +495,8 @@ export default function Product() {
                         filter: imageLoaded ? 'none' : 'blur(5px)',
                       }}
                     />
-                    <Box 
+                    <Box
+                    onClick={() => window.open(product.image, '_blank')}
                     sx={{
                       position: 'absolute',
                       top: 16,
@@ -835,51 +829,51 @@ export default function Product() {
 
                       {/* Company Filter */}
                       <Box sx={{ mb: 4 }}>
-                        <FormControl 
-                          fullWidth={isMobile} 
-                          sx={{ 
-                            minWidth: 250,
-                            '& .MuiOutlinedInput-root': {
-                              ...interactiveCardStyle,
-                              '&:hover': {
-                                transform: 'none',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                              }
-                            }
-                          }}
-                        >
-                          <InputLabel sx={{ 
-                            color: '#000000',
-                            fontWeight: 500,
-                            '&.Mui-focused': {
-                              color: '#000000',
-                            }
-                          }}>
-                            <FilterList sx={{ mr: 1, fontSize: 18 }} />
-                            Filter Company
-                          </InputLabel>
-                          <Select
-                            value={selectedCompany}
-                            onChange={(e) => setSelectedCompany(e.target.value)}
-                            label="Filter by Company"
-                            sx={{ 
-                              color: '#000000',
-                              fontWeight: 500,
-                              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#000000',
-                                borderWidth: 2,
-                              }
-                            }}
-                          >
-                            <MenuItem value="all">All Companies</MenuItem>
-                            {getUniqueCompanies().map((company) => (
-                              <MenuItem key={company._id} value={company._id}>
-                                {company.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Box>
+  <FormControl 
+    fullWidth={isMobile} 
+    sx={{ 
+      minWidth: 250,
+      '& .MuiOutlinedInput-root': {
+        ...interactiveCardStyle,
+        '&:hover': {
+          transform: 'none',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        }
+      }
+    }}
+  >
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+      <FilterList sx={{ mr: 1, fontSize: 28 }} />
+      <Typography sx={{ fontWeight: 500, color: '#000000' }}>
+        Filter
+      </Typography>
+    </Box>
+
+    <Select
+      value={selectedCompany}
+      onChange={(e) => setSelectedCompany(e.target.value)}
+      displayEmpty
+      input={<OutlinedInput label="Filter by Company" />}
+      sx={{ 
+        '& legend': { display: 'none' },  // hides the label's outline cut
+        '& fieldset': { top: 0 },         // pushes the border back to full
+        color: '#000000',
+        fontWeight: 500,
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: '#000000',
+          borderWidth: 2,
+        }
+      }}
+    >
+      <MenuItem value="all">All Companies</MenuItem>
+      {getUniqueCompanies().map((company) => (
+        <MenuItem key={company._id} value={company._id}>
+          {company.name}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Box>
 
                       {/* Reviews List */}
                       {filteredRatings.length === 0 ? (
