@@ -2,15 +2,8 @@ import React, { useEffect, useState, useRef} from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
-
-// Add this import at the top of your component file
 import { useNavigate } from "react-router-dom";
 
-// 1. Add a constant at the top of your file for the character limit
-const MAX_DESCRIPTION_LENGTH = 96; // Or whatever limit you want
-const MAX_NAME_LENGTH = 18; // Add this
-
-// IMPORT THESE MUI COMPONENTS AT THE TOP OF YOUR FILE:
 import {
   Box,
   TextField,
@@ -21,27 +14,25 @@ import {
   Grow,
   Chip,
   Tooltip,
-  alpha
-} from '@mui/material';
-import type { ButtonProps } from "@mui/material";
-import {
-  Check,
-  Close,
-  Edit,
-} from '@mui/icons-material';
-
-// Core Material-UI components
-import {
+  alpha,
   IconButton,
   Avatar,
   CircularProgress,
 } from '@mui/material';
 
-// Material-UI icons
+import type { ButtonProps } from "@mui/material";
 import {
+  Check,
+  Close,
+  Edit,
   CameraAlt,
   AddPhotoAlternate
 } from '@mui/icons-material';
+
+import { styled } from '@mui/material/styles';
+
+const MAX_DESCRIPTION_LENGTH = 96;
+const MAX_NAME_LENGTH = 18;
 
 interface Product {
   _id: string;
@@ -51,32 +42,24 @@ interface Product {
   image?: string;
 }
 
-import { styled } from '@mui/material/styles';
-
-interface StyledButton2Props extends ButtonProps {
-  variantType?: 'primary' | 'danger';
+// Define the props interface
+interface StyledButtonProps {
+  variant?: 'original' | 'primary' | 'danger';
+  [key: string]: any;
 }
 
-const StyledButton2 = styled(({ variantType, ...props }: StyledButton2Props) => (
+// Single unified styled button
+const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonProps) => (
   <Button {...props} />
-))(({ theme, variantType }) => ({
-  padding: '0.375rem 0.875rem',
-  fontSize: '0.75rem',
-  borderRadius: '6px',
+))(({ theme, variant }) => ({
+  // Base styles common to both buttons
   fontWeight: 600,
   textTransform: 'uppercase',
-  letterSpacing: '0.025em',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.375rem',
   position: 'relative',
   overflow: 'hidden',
-  transition: 'all 0.2s ease',
   color: 'white',
-  flex: 1,
-  justifyContent: 'center',
-
-
+  
+  // Shared ::before pseudo-element
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -84,93 +67,84 @@ const StyledButton2 = styled(({ variantType, ...props }: StyledButton2Props) => 
     left: '-100%',
     width: '100%',
     height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-    transition: 'left 0.4s ease',
+    transition: variant === 'original' ? 'left 0.6s ease' : 'left 0.4s ease',
+    background: variant === 'original' 
+      ? 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)'
+      : 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+    ...(variant === 'original' && {
+      '@media (prefers-reduced-motion: reduce)': {
+        display: 'none',
+      },
+    }),
   },
-
+  
   '&:hover::before': {
     left: '100%',
   },
 
-  ...(variantType === 'primary' && {
+  // Variant-specific styles
+  ...(variant === 'original' && {
+    padding: '0rem 1rem',
+    borderRadius: '12px',
+    fontSize: '0.875rem',
+    transition: 'all 0.3s ease',
+    '&:disabled': {
+      background: '#9ca3af !important',
+      color: '#ffffff !important',
+      boxShadow: 'none !important',
+      transform: 'none !important',
+    },
+    [theme.breakpoints.down('md')]: {
+      padding: '1rem 2rem',
+      fontSize: '1rem',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      transition: 'none',
+      '&:hover': { transform: 'none' },
+      '&:active': { transform: 'none' },
+    },
+  }),
+
+  ...(variant !== 'original' && {
+    padding: '0.375rem 0.875rem',
+    fontSize: '0.75rem',
+    borderRadius: '6px',
+    letterSpacing: '0.025em',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+    transition: 'all 0.2s ease',
+    flex: 1,
+    justifyContent: 'center',
+  }),
+
+  ...(variant === 'primary' && {
     background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
     boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)',
-
     '&:hover': {
       background: 'linear-gradient(135deg, #2563eb, #1e40af)',
       boxShadow: '0 4px 8px rgba(59, 130, 246, 0.4)',
       transform: 'translateY(-1px)',
     },
-
     '&:active': {
       transform: 'translateY(0)',
       boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)',
     },
   }),
 
-  ...(variantType === 'danger' && {
+  ...(variant === 'danger' && {
     background: 'linear-gradient(135deg, #ef4444, #dc2626)',
     boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)',
-
     '&:hover': {
       background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
       boxShadow: '0 4px 8px rgba(239, 68, 68, 0.4)',
       transform: 'translateY(-1px)',
     },
-
     '&:active': {
       transform: 'translateY(0)',
       boxShadow: '0 2px 4px rgba(239, 68, 68, 0.3)',
     },
   }),
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  padding: '0rem 1rem',
-  borderRadius: '12px',
-  fontWeight: 600,
-  fontSize: '0.875rem',
-  textTransform: 'uppercase',
-  position: 'relative',
-  overflow: 'hidden',
-  transition: 'all 0.3s ease',
-  color: 'white',
-
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: '-100%',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
-    transition: 'left 0.6s ease',
-    '@media (prefers-reduced-motion: reduce)': {
-      display: 'none',
-    },
-  },
-
-  '&:hover::before': {
-    left: '100%',
-  },
-
-  '&:disabled': {
-    background: '#9ca3af !important',
-    color: '#ffffff !important',
-    boxShadow: 'none !important',
-    transform: 'none !important',
-  },
-
-  [theme.breakpoints.down('md')]: {
-    padding: '1rem 2rem',
-    fontSize: '1rem',
-  },
-
-  '@media (prefers-reduced-motion: reduce)': {
-    transition: 'none',
-    '&:hover': { transform: 'none' },
-    '&:active': { transform: 'none' },
-  },
 }));
 
 // Updated ExpandCard component with hover-based resizing
@@ -193,6 +167,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const descriptionInputRef = useRef<HTMLInputElement | null>(null);
+  const fileSelectedRef = useRef(false);
 
   // Calculate the appropriate height and styling based on states
   const getCardStyles = () => {
@@ -325,7 +300,10 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    fileSelectedRef.current = true;
     if (e.target.files && e.target.files[0]) {
+      console.log("selected one")
+      console.log(e.target.files[0].name)
       setSelectedImage(e.target.files[0]);
       const url = URL.createObjectURL(e.target.files[0]);
       setPreviewUrl(url);
@@ -333,6 +311,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
   };
 
   const handleImageSave = async () => {
+    console.log("here, you clickews!")
     if (!selectedImage) {
       setIsEditingImage(false);
       return;
@@ -398,9 +377,9 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     if (isEditingDescription) {
       await handleDescriptionSave();
     }
-    //if (isEditingImage) {
-      //await handleImageSave();
-    //}
+    /*if (isEditingImage) {
+      await handleImageSave();
+    }*/
   };
 
   useEffect(() => {
@@ -433,55 +412,190 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         className="image-section" 
         sx={{
           width: '100%',
+          height: 200,
           position: 'relative',
           mb: 2,
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          borderRadius: 3,
+          overflow: 'hidden',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 25px rgba(102, 126, 234, 0.15)',
+          },
+          '&:hover .edit-overlay': {
+            opacity: 1,
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
+          }
         }}
+        onClick={handleImageClick}
       >
-        {isEditingImage && selectedImage ? (
-          <Grow in={isEditingImage} timeout={300}>
-            <Box sx={{ position: 'relative' }}>
-              <Paper
-                elevation={4}
+        {/* Background Image or Upload Placeholder */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            background: product.image 
+              ? `url(${product.image}) center/cover no-repeat`
+              : 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+            border: !product.image ? '2px dashed #d1d5db' : 'none',
+            display: !product.image ? 'flex' : 'block',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.3s ease',
+            '&:hover': !product.image ? {
+              border: '2px dashed #667eea',
+              background: 'linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%)',
+            } : {}
+          }}
+        >
+          {/* Upload placeholder content - only shown when no image */}
+          {!product.image && (
+            <>
+              <Avatar
+                className="upload-icon"
                 sx={{
-                  borderRadius: 3,
-                  overflow: 'hidden',
-                  position: 'relative',
-                  background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
-                  border: '2px solid #667eea',
-                  boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
+                  width: 64,
+                  height: 64,
+                  background: alpha('#667eea', 0.1),
+                  color: '#9ca3af',
+                  mb: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.1)',
+                    color: '#667eea',
+                  }
                 }}
               >
-                <img 
-                  src={previewUrl} 
-                  alt="Preview"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    maxHeight: '300px',
-                    objectFit: 'cover',
-                    display: 'block'
-                  }}
-                />
-                
-                {/* Floating action buttons - positioned at top-right corner */}
+                <AddPhotoAlternate sx={{ fontSize: 32 }} />
+              </Avatar>
+              
+              <Typography
+                className="upload-text"
+                variant="h6"
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  transition: 'color 0.3s ease',
+                  mb: 0.5,
+                  '&:hover': {
+                    color: '#667eea',
+                  }
+                }}
+              >
+                Add Product Image
+              </Typography>
+              
+              <Typography
+                variant="caption"
+                sx={{
+                  fontSize: '0.75rem',
+                  color: '#9ca3af',
+                  textAlign: 'center',
+                  fontWeight: '400'
+                }}
+              >
+                Click to upload • JPG, PNG, or GIF
+              </Typography>
+            </>
+          )}
+        </Box>
+
+        {/* Edit Overlay - only shown on hover when image exists */}
+        {product.image && (
+          <Box
+            className="edit-overlay"
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 2,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              gap: 2,
+              background: alpha('#1f2937', 0.75),
+              backdropFilter: 'blur(2px)',
+              opacity: 0,
+              transition: 'opacity 0.3s ease',
+              pointerEvents: 'none'
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 48,
+                height: 48,
+                background: alpha('#ffffff', 0.9),
+                color: '#667eea',
+                animation: 'pulse 2s infinite',
+                '@keyframes pulse': {
+                  '0%, 100%': { transform: 'scale(1)' },
+                  '50%': { transform: 'scale(1.1)' }
+                }
+              }}
+            >
+              <CameraAlt sx={{ fontSize: 24 }} />
+            </Avatar>
+            <Typography
+              variant="caption"
+              sx={{
+                color: '#ffffff',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                textTransform: 'uppercase',
+                letterSpacing: 1,
+                textAlign: 'center',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+              }}
+            >
+              Click to change image
+            </Typography>
+          </Box>
+        )}
+
+        {/* Image Editing Modal Overlay */}
+        {isEditingImage && selectedImage && (
+          <Grow in={isEditingImage} timeout={300}>
+            <Box 
+              sx={{ 
+                position: 'absolute',
+                inset: 0,
+                zIndex: 10,
+                borderRadius: 3,
+                overflow: 'hidden',
+                background: `url(${previewUrl}) center/cover no-repeat`,
+                border: '2px solid #667eea',
+                boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)',
+              }}
+            >
+
+                {/* Action buttons overlay */}
                 <Box
                   sx={{
                     position: 'absolute',
                     inset: 0,
-                    zIndex: 10,
+                    zIndex: 1,
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row',
                     gap: 2,
-                    background: alpha('#667eea', 0.12),
-                    backdropFilter: 'blur(6px)',
+                    background: alpha('#667eea', 0.15),
+                    backdropFilter: 'blur(2px)',
                   }}
                 >
                   <Tooltip title="Save image" arrow>
                     <IconButton
-                      onClick={handleImageSave}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImageSave();
+                      }}
                       disabled={uploadingImage}
                       size="large"
                       sx={{
@@ -512,7 +626,10 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
 
                   <Tooltip title="Cancel" arrow>
                     <IconButton
-                      onClick={handleImageCancel}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImageCancel();
+                      }}
                       disabled={uploadingImage}
                       size="large"
                       sx={{
@@ -537,207 +654,8 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     </IconButton>
                   </Tooltip>
                 </Box>
-              </Paper>
-
-              {/* Upload progress indicator - positioned absolutely to avoid layout shift */}
-              {uploadingImage && (
-                <Box sx={{ 
-                  position: 'absolute',
-                  bottom: -50,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1,
-                  justifyContent: 'center',
-                  p: 1.5,
-                  background: alpha('#667eea', 0.95),
-                  color: 'white',
-                  borderRadius: 2,
-                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
-                  zIndex: 20,
-                  whiteSpace: 'nowrap'
-                }}>
-                  <CircularProgress size={16} sx={{ color: 'white' }} />
-                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 500 }}>
-                    Uploading...
-                  </Typography>
-                </Box>
-              )}
             </Box>
           </Grow>
-        ) : product.image ? (
-          <Fade in={!isEditingImage} timeout={200}>
-            <Paper
-              onClick={handleImageClick}
-              elevation={0}
-              sx={{
-                cursor: 'pointer',
-                borderRadius: 3,
-                background: '#1f2937', // Dark grey/black background for sides
-                position: 'relative',
-                overflow: 'hidden', // This is crucial for rounded overlay
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 8px 25px rgba(102, 126, 234, 0.15)',
-                },
-                '&:hover .edit-overlay': {
-                  transition: 'all 0.3s ease', /* on hover: animate in */
-                  opacity: 1,
-                },
-                '&:active': {
-                  transform: 'translateY(0)',
-                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
-                }
-              }}
-            >
-              <img 
-                //src={product.image}
-                src={getTransformedImage(product.image, 300, 300)}
-                alt={product.name}
-                style={{
-                  width: '100%', // Fixed width - 30% total space for both sides
-                  height: 'auto',
-                  maxHeight: 'none',
-                  display: 'block',
-                  margin: '0 auto' // Center the image, leaving 15% on each side
-                }}
-              />
-              
-              <Box
-                className="edit-overlay"
-                sx={{
-                  position: 'absolute',
-                  top: '52px',
-                  left: '0px',
-                  height: '200px',
-                  width: '300px',
-                  zIndex: 2,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  gap: 2,
-                  background: alpha('#1f2937', 0.75), // Dark grey/black overlay
-                  //background: alpha('#667eea', 0.12),// - alternate blurring
-                  backdropFilter: 'blur(2px)',
-                  borderRadius: 3.5,
-                  opacity: 0,
-                  transition: 'all 0s ease',
-                  pointerEvents: 'none'
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 48,
-                    height: 48,
-                    background: alpha('#ffffff', 0.9),
-                    color: '#667eea',
-                    animation: 'pulse 2s infinite',
-                    '@keyframes pulse': {
-                      '0%, 100%': { transform: 'scale(1)' },
-                      '50%': { transform: 'scale(1.1)' }
-                    }
-                  }}
-                >
-                  <CameraAlt sx={{ fontSize: 24 }} />
-                </Avatar>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    fontSize: '0.8rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: 1,
-                    textAlign: 'center',
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
-                  }}
-                >
-                  Click to change image
-                </Typography>
-              </Box>
-            </Paper>
-          </Fade>
-        ) : (
-          <Fade in={!isEditingImage} timeout={200}>
-            <Paper
-              onClick={handleImageClick}
-              elevation={0}
-              sx={{
-                cursor: 'pointer',
-                borderRadius: 3,
-                border: '2px dashed #d1d5db',
-                background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
-                position: 'relative',
-                minHeight: 200,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  border: '2px dashed #667eea',
-                  background: 'linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%)',
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 8px 25px rgba(102, 126, 234, 0.1)',
-                },
-                '&:hover .upload-icon': {
-                  transform: 'scale(1.1)',
-                  color: '#667eea',
-                },
-                '&:hover .upload-text': {
-                  color: '#667eea',
-                },
-                '&:active': {
-                  transform: 'translateY(0)',
-                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.05)',
-                }
-              }}
-            >
-              <Avatar
-                className="upload-icon"
-                sx={{
-                  width: 64,
-                  height: 64,
-                  background: alpha('#667eea', 0.1),
-                  color: '#9ca3af',
-                  mb: 2,
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <AddPhotoAlternate sx={{ fontSize: 32 }} />
-              </Avatar>
-              
-              <Typography
-                className="upload-text"
-                variant="h6"
-                sx={{
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  color: '#6b7280',
-                  textAlign: 'center',
-                  transition: 'color 0.3s ease',
-                  mb: 0.5
-                }}
-              >
-                Add Product Image
-              </Typography>
-              
-              <Typography
-                variant="caption"
-                sx={{
-                  fontSize: '0.75rem',
-                  color: '#9ca3af',
-                  textAlign: 'center',
-                  fontWeight: '400'
-                }}
-              >
-                Click to upload • JPG, PNG, or GIF
-              </Typography>
-            </Paper>
-          </Fade>
         )}
         
         <input
@@ -747,6 +665,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           onChange={handleImageChange}
           style={{ display: 'none' }}
         />
+
       </Box>
       
       <div className="content">
@@ -837,6 +756,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   <Box sx={{ display: 'flex', gap: 2 }}>
                     <Tooltip title="Save changes (Enter)" arrow>
                       <StyledButton
+                        variant="original"
                         onClick={handleNameSave}
                         startIcon={<Check />}
                         sx={{
@@ -865,8 +785,10 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       </StyledButton>
                     </Tooltip>
 
+
                     <Tooltip title="Cancel editing (Esc)" arrow>
                       <StyledButton
+                        variant="original"
                         onClick={handleNameCancel}
                         startIcon={<Close />}
                         sx={{
@@ -1086,6 +1008,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                 }}>
                   <Tooltip title="Save changes (Enter)" arrow>
                     <StyledButton
+                      variant="original"
                       onClick={handlePriceSave}
                       startIcon={<Check />}
                       sx={{
@@ -1117,6 +1040,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
 
                   <Tooltip title="Cancel editing (Esc)" arrow>
                     <StyledButton
+                      variant="original"
                       onClick={handlePriceCancel}
                       startIcon={<Close />}
                       sx={{
@@ -1259,9 +1183,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             position: 'relative',
             mt: 0,
             mb: 0,
-            // Dynamic height based on editing and hover states
-            //minHeight: isEditingDescription ? (isHovered ? '300px' : '100px') : (isHovered ? '100px' : '60px'),
-            //maxHeight: isEditingDescription ? (isHovered ? 'none' : '100px') : (isHovered ? '100px' : '60px'),
             overflow: isEditingDescription && !isHovered ? 'hidden' : 'visible',
             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
@@ -1269,12 +1190,11 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           {isEditingDescription ? (
             <Grow in={isEditingDescription} timeout={300}>
               <Box>
-              {/* 3. In the ExpandCard component, modify the TextField for description editing:*/}
                 <TextField
                   inputRef={descriptionInputRef}
                   fullWidth
                   multiline
-                  rows={4} // More rows when hovered while editing
+                  rows={4}
                   value={editedDescription}
                   onChange={(e) => setEditedDescription(e.target.value)}
                   onKeyDown={handleDescriptionKeyPress}
@@ -1322,7 +1242,6 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       transform: isHovered ? 'translateY(0)' : 'translateY(-10px)',
                       transition: 'all 0.3s ease'
                     }}>
-                      {/* 4. Update the character counter in ExpandCard to show the limit:*/}
                       <Typography variant="caption" color="text.secondary">
                         {editedDescription.length}/{MAX_DESCRIPTION_LENGTH} characters
                       </Typography>
@@ -1342,6 +1261,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     <Box sx={{ display: 'flex', gap: 2, mt: 0 }}>
                       <Tooltip title="Save changes (Enter)" arrow>
                         <StyledButton
+                          variant="original"
                           onClick={handleDescriptionSave}
                           startIcon={<Check />}
                           sx={{
@@ -1371,6 +1291,7 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
 
                       <Tooltip title="Cancel editing (Esc)" arrow>
                         <StyledButton
+                          variant="original"
                           onClick={handleDescriptionCancel}
                           startIcon={<Close />}
                           sx={{
@@ -1498,25 +1419,25 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         </Box>
 
         <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'rem' }}>
-          <StyledButton2
-            variantType="primary"
+          <StyledButton
+            variant="primary"
             onClick={handleVisitProduct}
             sx={{
               fontSize: '0.875rem',
             }}
           >
             Details
-          </StyledButton2>
+          </StyledButton>
 
-          <StyledButton2
-            variantType="danger"
+          <StyledButton
+            variant="danger"
             onClick={handleDelete}
             sx={{
               fontSize: '0.875rem',
             }}
           >
             🗑️ Delete
-          </StyledButton2>
+          </StyledButton>
         </div>
         
       </div>
@@ -1647,7 +1568,6 @@ const AddProductCard = ({
           </div>
           
           <div className="details" style={{ flex: 1, marginBottom: '12px' }}>
-            {/* 2. In the AddProductCard component, modify the textarea:*/}
             <textarea
               name="description"
               placeholder="Product Description"
