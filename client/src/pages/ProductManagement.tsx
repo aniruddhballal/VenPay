@@ -30,6 +30,19 @@ import {
   Edit,
 } from '@mui/icons-material';
 
+// Core Material-UI components
+import {
+  IconButton,
+  Avatar,
+  CircularProgress,
+} from '@mui/material';
+
+// Material-UI icons
+import {
+  CameraAlt,
+  AddPhotoAlternate
+} from '@mui/icons-material';
+
 interface Product {
   _id: string;
   name: string;
@@ -381,9 +394,9 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     if (isEditingDescription) {
       await handleDescriptionSave();
     }
-    /*if (isEditingImage) {
-      await handleImageSave();
-    }*/
+    //if (isEditingImage) {
+      //await handleImageSave();
+    //}
   };
 
   useEffect(() => {
@@ -411,134 +424,320 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         overflow: 'hidden',
       }}
     >
-      <div className="image-section">
-        {isEditingImage && selectedImage ? (
-          <div className="image-edit-container">
-            <img 
-              src={previewUrl} 
-              alt="Preview"
-              className="product-image image-preview-inline"
-            />
-            <div className="image-edit-overlay">
-              <div className="image-edit-buttons">
-                <button 
-                  className="btn-save-image"
-                  onClick={handleImageSave}
-                  disabled={uploadingImage}
-                  title="Save image"
-                >
-                  {uploadingImage ? '⏳' : '✓'}
-                </button>
-                <button 
-                  className="btn-cancel-image"
-                  onClick={handleImageCancel}
-                  disabled={uploadingImage}
-                  title="Cancel"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : product.image ? (
-          <div 
-            className="image-container-editable" 
-            onClick={handleImageClick} 
-            title="Click to change image"
-            style={{ 
-              position: 'relative', 
-              cursor: 'pointer',
-              border: '2px dashed transparent',
-              borderRadius: '8px',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.border = '2px dashed #007bff';
-              const hint = e.currentTarget.querySelector('.image-edit-hint');
-              if (hint) (hint as HTMLElement).style.opacity = '1';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.border = '2px dashed transparent';
-              const hint = e.currentTarget.querySelector('.image-edit-hint');
-              if (hint) (hint as HTMLElement).style.opacity = '0';
-            }}
-          >
-            <img 
-              src={product.image} 
-              alt={product.name}
-              className="product-image"
-            />
-            <div 
-              className="image-edit-hint"
-              style={{
-                position: 'absolute',
-                bottom: '0',
-                left: '0',
-                right: '0',
-                background: 'rgba(0,0,0,0.8)',
-                color: 'white',
-                textAlign: 'center',
-                padding: '8px 4px',
-                fontSize: '12px',
-                opacity: '0',
-                transition: 'opacity 0.2s ease',
-                borderBottomLeftRadius: '6px',
-                borderBottomRightRadius: '6px'
-              }}
-            >
-              📷 Click to change
-            </div>
-          </div>
-        ) : (
-          <div 
-            className="image-placeholder image-placeholder-editable" 
-            onClick={handleImageClick} 
-            title="Click to add image"
+<Box 
+  className="image-section" 
+  sx={{
+    width: '100%',
+    position: 'relative',
+    mb: 2,
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  }}
+>
+  {isEditingImage && selectedImage ? (
+    <Grow in={isEditingImage} timeout={300}>
+      <Box sx={{ position: 'relative' }}>
+        <Paper
+          elevation={4}
+          sx={{
+            borderRadius: 3,
+            overflow: 'hidden',
+            position: 'relative',
+            background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
+            border: '2px solid #667eea',
+            boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
+          }}
+        >
+          <img 
+            src={previewUrl} 
+            alt="Preview"
             style={{
-              cursor: 'pointer',
-              border: '2px dashed #ccc',
-              borderRadius: '8px',
-              transition: 'all 0.2s ease',
+              width: '100%',
+              height: 'auto',
+              maxHeight: '300px',
+              objectFit: 'cover',
+              display: 'block'
+            }}
+          />
+          
+          {/* Floating action buttons - positioned at top-right corner */}
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 10,
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
               justifyContent: 'center',
-              minHeight: '120px',
-              backgroundColor: '#f8f9fa'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.border = '2px dashed #007bff';
-              e.currentTarget.style.backgroundColor = '#e3f2fd';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.border = '2px dashed #ccc';
-              e.currentTarget.style.backgroundColor = '#f8f9fa';
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: 2,
+              background: alpha('#667eea', 0.12),
+              backdropFilter: 'blur(6px)',
             }}
           >
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📦</div>
-              <div 
-                className="image-upload-hint"
-                style={{
-                  fontSize: '12px',
-                  color: '#666',
-                  fontWeight: '500'
+            <Tooltip title="Save image (Enter)" arrow>
+              <IconButton
+                onClick={handleImageSave}
+                disabled={uploadingImage}
+                size="large"
+                sx={{
+                  width: 56,
+                  height: 56,
+                  background: alpha('#ffffff', 0.95),
+                  color: '#2563eb',
+                  border: '2px solid rgba(37, 99, 235, 0.3)',
+                  backdropFilter: 'blur(8px)',
+                  '&:hover': {
+                    background: alpha('#ffffff', 1),
+                    transform: 'scale(1.1)',
+                    boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)',
+                  },
+                  '&:disabled': {
+                    background: alpha('#f5f5f5', 0.9),
+                    color: '#9ca3af',
+                  }
                 }}
               >
-                📷 Click to add image
-              </div>
-            </div>
-          </div>
+                {uploadingImage ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  <Check sx={{ fontSize: 24 }} />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Cancel (Esc)" arrow>
+              <IconButton
+                onClick={handleImageCancel}
+                disabled={uploadingImage}
+                size="large"
+                sx={{
+                  width: 56,
+                  height: 56,
+                  background: alpha('#ffffff', 0.95),
+                  color: '#dc2626',
+                  border: '2px solid rgba(220, 38, 38, 0.3)',
+                  backdropFilter: 'blur(8px)',
+                  '&:hover': {
+                    background: alpha('#ffffff', 1),
+                    transform: 'scale(1.1)',
+                    boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
+                  },
+                  '&:disabled': {
+                    background: alpha('#f5f5f5', 0.9),
+                    color: '#9ca3af',
+                  }
+                }}
+              >
+                <Close sx={{ fontSize: 24 }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Paper>
+
+        {/* Upload progress indicator - positioned absolutely to avoid layout shift */}
+        {uploadingImage && (
+          <Box sx={{ 
+            position: 'absolute',
+            bottom: -50,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 1,
+            justifyContent: 'center',
+            p: 1.5,
+            background: alpha('#667eea', 0.95),
+            color: 'white',
+            borderRadius: 2,
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+            zIndex: 20,
+            whiteSpace: 'nowrap'
+          }}>
+            <CircularProgress size={16} sx={{ color: 'white' }} />
+            <Typography variant="caption" sx={{ color: 'white', fontWeight: 500 }}>
+              Uploading...
+            </Typography>
+          </Box>
         )}
-        
-        <input
-          type="file"
-          ref={imageInputRef}
-          accept="image/*"
-          onChange={handleImageChange}
-          style={{ display: 'none' }}
+      </Box>
+    </Grow>
+  ) : product.image ? (
+    <Fade in={!isEditingImage} timeout={200}>
+      <Paper
+        onClick={handleImageClick}
+        elevation={0}
+        sx={{
+          cursor: 'pointer',
+          borderRadius: 3,
+          background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
+          border: '2px solid transparent',
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            border: '2px solid #667eea',
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 25px rgba(102, 126, 234, 0.15)',
+          },
+          '&:hover .edit-overlay': {
+            opacity: 1,
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
+          }
+        }}
+      >
+        <img 
+          src={product.image} 
+          alt={product.name}
+          style={{
+            width: '100%',
+            height: 'auto',
+            maxHeight: '300px',
+            objectFit: 'cover',
+            display: 'block'
+          }}
         />
-      </div>
+        
+        <Box
+          className="edit-overlay"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 2,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            gap: 1,
+            background: alpha('#667eea', 0.12),
+            backdropFilter: 'blur(2px)',
+            opacity: 0,
+            transition: 'all 0.3s ease',
+            pointerEvents: 'none'
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 48,
+              height: 48,
+              background: alpha('#ffffff', 0.9),
+              color: '#667eea',
+              animation: 'pulse 2s infinite',
+              '@keyframes pulse': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.1)' }
+              }
+            }}
+          >
+            <CameraAlt sx={{ fontSize: 24 }} />
+          </Avatar>
+          <Typography
+            variant="caption"
+            sx={{
+              color: '#ffffff',
+              fontWeight: 700,
+              fontSize: '0.8rem',
+              textTransform: 'uppercase',
+              letterSpacing: 1,
+              textAlign: 'center',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            Click to change image
+          </Typography>
+        </Box>
+      </Paper>
+    </Fade>
+  ) : (
+    <Fade in={!isEditingImage} timeout={200}>
+      <Paper
+        onClick={handleImageClick}
+        elevation={0}
+        sx={{
+          cursor: 'pointer',
+          borderRadius: 3,
+          border: '2px dashed #d1d5db',
+          background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+          position: 'relative',
+          minHeight: 200,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            border: '2px dashed #667eea',
+            background: 'linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%)',
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 25px rgba(102, 126, 234, 0.1)',
+          },
+          '&:hover .upload-icon': {
+            transform: 'scale(1.1)',
+            color: '#667eea',
+          },
+          '&:hover .upload-text': {
+            color: '#667eea',
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.05)',
+          }
+        }}
+      >
+        <Avatar
+          className="upload-icon"
+          sx={{
+            width: 64,
+            height: 64,
+            background: alpha('#667eea', 0.1),
+            color: '#9ca3af',
+            mb: 2,
+            transition: 'all 0.3s ease',
+          }}
+        >
+          <AddPhotoAlternate sx={{ fontSize: 32 }} />
+        </Avatar>
+        
+        <Typography
+          className="upload-text"
+          variant="h6"
+          sx={{
+            fontSize: '1rem',
+            fontWeight: '600',
+            color: '#6b7280',
+            textAlign: 'center',
+            transition: 'color 0.3s ease',
+            mb: 0.5
+          }}
+        >
+          Add Product Image
+        </Typography>
+        
+        <Typography
+          variant="caption"
+          sx={{
+            fontSize: '0.75rem',
+            color: '#9ca3af',
+            textAlign: 'center',
+            fontWeight: '400'
+          }}
+        >
+          Click to upload • JPG, PNG, or GIF
+        </Typography>
+      </Paper>
+    </Fade>
+  )}
+  
+  <input
+    type="file"
+    ref={imageInputRef}
+    accept="image/*"
+    onChange={handleImageChange}
+    style={{ display: 'none' }}
+  />
+</Box>
       
       <div className="content">
         <div 
