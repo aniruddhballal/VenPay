@@ -501,7 +501,6 @@ Merged ProductList and ProductManagement up next
 /* Image section for Product Management */
 .expand-card-compact .image-section {
   height: 200px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -543,16 +542,6 @@ Merged ProductList and ProductManagement up next
   color: white;
   background: transparent;
   border: none;
-}
-
-/* Image preview for forms */
-.image-preview {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: 2px solid #e2e8f0;
 }
 
 /* ============================================
