@@ -384,6 +384,10 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
     setIsEditingImage(false);
   };
 
+  const getTransformedImage = (url: string, w = 300, h = 300) => {
+    return url.replace("/upload/", `/upload/c_fill,w_${w},h_${h}/`);
+  };
+
   const saveAllEdits = async () => {
     if (isEditingName) {
       await handleNameSave();
@@ -424,320 +428,326 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         overflow: 'hidden',
       }}
     >
-<Box 
-  className="image-section" 
-  sx={{
-    width: '100%',
-    position: 'relative',
-    mb: 2,
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-  }}
->
-  {isEditingImage && selectedImage ? (
-    <Grow in={isEditingImage} timeout={300}>
-      <Box sx={{ position: 'relative' }}>
-        <Paper
-          elevation={4}
-          sx={{
-            borderRadius: 3,
-            overflow: 'hidden',
-            position: 'relative',
-            background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
-            border: '2px solid #667eea',
-            boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
-          }}
-        >
-          <img 
-            src={previewUrl} 
-            alt="Preview"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '300px',
-              objectFit: 'cover',
-              display: 'block'
-            }}
-          />
-          
-          {/* Floating action buttons - positioned at top-right corner */}
-          <Box
-            sx={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 10,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              gap: 2,
-              background: alpha('#667eea', 0.12),
-              backdropFilter: 'blur(6px)',
-            }}
-          >
-            <Tooltip title="Save image (Enter)" arrow>
-              <IconButton
-                onClick={handleImageSave}
-                disabled={uploadingImage}
-                size="large"
+
+      <Box 
+        className="image-section" 
+        sx={{
+          width: '100%',
+          position: 'relative',
+          mb: 2,
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        {isEditingImage && selectedImage ? (
+          <Grow in={isEditingImage} timeout={300}>
+            <Box sx={{ position: 'relative' }}>
+              <Paper
+                elevation={4}
                 sx={{
-                  width: 56,
-                  height: 56,
-                  background: alpha('#ffffff', 0.95),
-                  color: '#2563eb',
-                  border: '2px solid rgba(37, 99, 235, 0.3)',
-                  backdropFilter: 'blur(8px)',
-                  '&:hover': {
-                    background: alpha('#ffffff', 1),
-                    transform: 'scale(1.1)',
-                    boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)',
-                  },
-                  '&:disabled': {
-                    background: alpha('#f5f5f5', 0.9),
-                    color: '#9ca3af',
-                  }
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  position: 'relative',
+                  background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
+                  border: '2px solid #667eea',
+                  boxShadow: '0 8px 32px rgba(102, 126, 234, 0.2)',
                 }}
               >
-                {uploadingImage ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  <Check sx={{ fontSize: 24 }} />
-                )}
-              </IconButton>
-            </Tooltip>
+                <img 
+                  src={previewUrl} 
+                  alt="Preview"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '300px',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
+                />
+                
+                {/* Floating action buttons - positioned at top-right corner */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    zIndex: 10,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    gap: 2,
+                    background: alpha('#667eea', 0.12),
+                    backdropFilter: 'blur(6px)',
+                  }}
+                >
+                  <Tooltip title="Save image (Enter)" arrow>
+                    <IconButton
+                      onClick={handleImageSave}
+                      disabled={uploadingImage}
+                      size="large"
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        background: alpha('#ffffff', 0.95),
+                        color: '#2563eb',
+                        border: '2px solid rgba(37, 99, 235, 0.3)',
+                        backdropFilter: 'blur(8px)',
+                        '&:hover': {
+                          background: alpha('#ffffff', 1),
+                          transform: 'scale(1.1)',
+                          boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)',
+                        },
+                        '&:disabled': {
+                          background: alpha('#f5f5f5', 0.9),
+                          color: '#9ca3af',
+                        }
+                      }}
+                    >
+                      {uploadingImage ? (
+                        <CircularProgress size={24} />
+                      ) : (
+                        <Check sx={{ fontSize: 24 }} />
+                      )}
+                    </IconButton>
+                  </Tooltip>
 
-            <Tooltip title="Cancel (Esc)" arrow>
-              <IconButton
-                onClick={handleImageCancel}
-                disabled={uploadingImage}
-                size="large"
+                  <Tooltip title="Cancel (Esc)" arrow>
+                    <IconButton
+                      onClick={handleImageCancel}
+                      disabled={uploadingImage}
+                      size="large"
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        background: alpha('#ffffff', 0.95),
+                        color: '#dc2626',
+                        border: '2px solid rgba(220, 38, 38, 0.3)',
+                        backdropFilter: 'blur(8px)',
+                        '&:hover': {
+                          background: alpha('#ffffff', 1),
+                          transform: 'scale(1.1)',
+                          boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
+                        },
+                        '&:disabled': {
+                          background: alpha('#f5f5f5', 0.9),
+                          color: '#9ca3af',
+                        }
+                      }}
+                    >
+                      <Close sx={{ fontSize: 24 }} />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Paper>
+
+              {/* Upload progress indicator - positioned absolutely to avoid layout shift */}
+              {uploadingImage && (
+                <Box sx={{ 
+                  position: 'absolute',
+                  bottom: -50,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1,
+                  justifyContent: 'center',
+                  p: 1.5,
+                  background: alpha('#667eea', 0.95),
+                  color: 'white',
+                  borderRadius: 2,
+                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+                  zIndex: 20,
+                  whiteSpace: 'nowrap'
+                }}>
+                  <CircularProgress size={16} sx={{ color: 'white' }} />
+                  <Typography variant="caption" sx={{ color: 'white', fontWeight: 500 }}>
+                    Uploading...
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Grow>
+        ) : product.image ? (
+          <Fade in={!isEditingImage} timeout={200}>
+            <Paper
+              onClick={handleImageClick}
+              elevation={0}
+              sx={{
+                cursor: 'pointer',
+                borderRadius: 3,
+                background: '#1f2937', // Dark grey/black background for sides
+                position: 'relative',
+                overflow: 'hidden', // This is crucial for rounded overlay
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 25px rgba(102, 126, 234, 0.15)',
+                },
+                '&:hover .edit-overlay': {
+                  transition: 'all 0.3s ease', /* on hover: animate in */
+                  opacity: 1,
+                },
+                '&:active': {
+                  transform: 'translateY(0)',
+                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
+                }
+              }}
+            >
+              <img 
+                //src={product.image}
+                src={getTransformedImage(product.image, 300, 300)}
+                alt={product.name}
+                style={{
+                  width: '100%', // Fixed width - 30% total space for both sides
+                  height: 'auto',
+                  maxHeight: 'none',
+                  display: 'block',
+                  margin: '0 auto' // Center the image, leaving 15% on each side
+                }}
+              />
+              
+              <Box
+                className="edit-overlay"
                 sx={{
-                  width: 56,
-                  height: 56,
-                  background: alpha('#ffffff', 0.95),
-                  color: '#dc2626',
-                  border: '2px solid rgba(220, 38, 38, 0.3)',
-                  backdropFilter: 'blur(8px)',
-                  '&:hover': {
-                    background: alpha('#ffffff', 1),
-                    transform: 'scale(1.1)',
-                    boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
-                  },
-                  '&:disabled': {
-                    background: alpha('#f5f5f5', 0.9),
-                    color: '#9ca3af',
-                  }
+                  position: 'absolute',
+                  top: '52px',
+                  left: '0px',
+                  height: '200px',
+                  width: '300px',
+                  zIndex: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  gap: 2,
+                  background: alpha('#1f2937', 0.75), // Dark grey/black overlay
+                  //background: alpha('#667eea', 0.12),// - alternate blurring
+                  backdropFilter: 'blur(2px)',
+                  borderRadius: 3.5,
+                  opacity: 0,
+                  transition: 'all 0s ease',
+                  pointerEvents: 'none'
                 }}
               >
-                <Close sx={{ fontSize: 24 }} />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Paper>
-
-        {/* Upload progress indicator - positioned absolutely to avoid layout shift */}
-        {uploadingImage && (
-          <Box sx={{ 
-            position: 'absolute',
-            bottom: -50,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: 1,
-            justifyContent: 'center',
-            p: 1.5,
-            background: alpha('#667eea', 0.95),
-            color: 'white',
-            borderRadius: 2,
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
-            zIndex: 20,
-            whiteSpace: 'nowrap'
-          }}>
-            <CircularProgress size={16} sx={{ color: 'white' }} />
-            <Typography variant="caption" sx={{ color: 'white', fontWeight: 500 }}>
-              Uploading...
-            </Typography>
-          </Box>
+                <Avatar
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    background: alpha('#ffffff', 0.9),
+                    color: '#667eea',
+                    animation: 'pulse 2s infinite',
+                    '@keyframes pulse': {
+                      '0%, 100%': { transform: 'scale(1)' },
+                      '50%': { transform: 'scale(1.1)' }
+                    }
+                  }}
+                >
+                  <CameraAlt sx={{ fontSize: 24 }} />
+                </Avatar>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: '#ffffff',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: 1,
+                    textAlign: 'center',
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  Click to change image
+                </Typography>
+              </Box>
+            </Paper>
+          </Fade>
+        ) : (
+          <Fade in={!isEditingImage} timeout={200}>
+            <Paper
+              onClick={handleImageClick}
+              elevation={0}
+              sx={{
+                cursor: 'pointer',
+                borderRadius: 3,
+                border: '2px dashed #d1d5db',
+                background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
+                position: 'relative',
+                minHeight: 200,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  border: '2px dashed #667eea',
+                  background: 'linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%)',
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 25px rgba(102, 126, 234, 0.1)',
+                },
+                '&:hover .upload-icon': {
+                  transform: 'scale(1.1)',
+                  color: '#667eea',
+                },
+                '&:hover .upload-text': {
+                  color: '#667eea',
+                },
+                '&:active': {
+                  transform: 'translateY(0)',
+                  boxShadow: '0 4px 15px rgba(102, 126, 234, 0.05)',
+                }
+              }}
+            >
+              <Avatar
+                className="upload-icon"
+                sx={{
+                  width: 64,
+                  height: 64,
+                  background: alpha('#667eea', 0.1),
+                  color: '#9ca3af',
+                  mb: 2,
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                <AddPhotoAlternate sx={{ fontSize: 32 }} />
+              </Avatar>
+              
+              <Typography
+                className="upload-text"
+                variant="h6"
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textAlign: 'center',
+                  transition: 'color 0.3s ease',
+                  mb: 0.5
+                }}
+              >
+                Add Product Image
+              </Typography>
+              
+              <Typography
+                variant="caption"
+                sx={{
+                  fontSize: '0.75rem',
+                  color: '#9ca3af',
+                  textAlign: 'center',
+                  fontWeight: '400'
+                }}
+              >
+                Click to upload • JPG, PNG, or GIF
+              </Typography>
+            </Paper>
+          </Fade>
         )}
-      </Box>
-    </Grow>
-  ) : product.image ? (
-    <Fade in={!isEditingImage} timeout={200}>
-      <Paper
-        onClick={handleImageClick}
-        elevation={0}
-        sx={{
-          cursor: 'pointer',
-          borderRadius: 3,
-          background: 'linear-gradient(135deg, rgba(248, 250, 255, 0.8) 0%, rgba(240, 244, 255, 0.6) 100%)',
-          border: '2px solid transparent',
-          position: 'relative',
-          overflow: 'hidden',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            border: '2px solid #667eea',
-            transform: 'translateY(-2px)',
-            boxShadow: '0 8px 25px rgba(102, 126, 234, 0.15)',
-          },
-          '&:hover .edit-overlay': {
-            opacity: 1,
-          },
-          '&:active': {
-            transform: 'translateY(0)',
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
-          }
-        }}
-      >
-        <img 
-          src={product.image} 
-          alt={product.name}
-          style={{
-            width: '100%',
-            height: 'auto',
-            maxHeight: '300px',
-            objectFit: 'cover',
-            display: 'block'
-          }}
+        
+        <input
+          type="file"
+          ref={imageInputRef}
+          accept="image/*"
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
         />
-        
-        <Box
-          className="edit-overlay"
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 2,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            gap: 1,
-            background: alpha('#667eea', 0.12),
-            backdropFilter: 'blur(2px)',
-            opacity: 0,
-            transition: 'all 0.3s ease',
-            pointerEvents: 'none'
-          }}
-        >
-          <Avatar
-            sx={{
-              width: 48,
-              height: 48,
-              background: alpha('#ffffff', 0.9),
-              color: '#667eea',
-              animation: 'pulse 2s infinite',
-              '@keyframes pulse': {
-                '0%, 100%': { transform: 'scale(1)' },
-                '50%': { transform: 'scale(1.1)' }
-              }
-            }}
-          >
-            <CameraAlt sx={{ fontSize: 24 }} />
-          </Avatar>
-          <Typography
-            variant="caption"
-            sx={{
-              color: '#ffffff',
-              fontWeight: 700,
-              fontSize: '0.8rem',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              textAlign: 'center',
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
-            }}
-          >
-            Click to change image
-          </Typography>
-        </Box>
-      </Paper>
-    </Fade>
-  ) : (
-    <Fade in={!isEditingImage} timeout={200}>
-      <Paper
-        onClick={handleImageClick}
-        elevation={0}
-        sx={{
-          cursor: 'pointer',
-          borderRadius: 3,
-          border: '2px dashed #d1d5db',
-          background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
-          position: 'relative',
-          minHeight: 200,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            border: '2px dashed #667eea',
-            background: 'linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%)',
-            transform: 'translateY(-2px)',
-            boxShadow: '0 8px 25px rgba(102, 126, 234, 0.1)',
-          },
-          '&:hover .upload-icon': {
-            transform: 'scale(1.1)',
-            color: '#667eea',
-          },
-          '&:hover .upload-text': {
-            color: '#667eea',
-          },
-          '&:active': {
-            transform: 'translateY(0)',
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.05)',
-          }
-        }}
-      >
-        <Avatar
-          className="upload-icon"
-          sx={{
-            width: 64,
-            height: 64,
-            background: alpha('#667eea', 0.1),
-            color: '#9ca3af',
-            mb: 2,
-            transition: 'all 0.3s ease',
-          }}
-        >
-          <AddPhotoAlternate sx={{ fontSize: 32 }} />
-        </Avatar>
-        
-        <Typography
-          className="upload-text"
-          variant="h6"
-          sx={{
-            fontSize: '1rem',
-            fontWeight: '600',
-            color: '#6b7280',
-            textAlign: 'center',
-            transition: 'color 0.3s ease',
-            mb: 0.5
-          }}
-        >
-          Add Product Image
-        </Typography>
-        
-        <Typography
-          variant="caption"
-          sx={{
-            fontSize: '0.75rem',
-            color: '#9ca3af',
-            textAlign: 'center',
-            fontWeight: '400'
-          }}
-        >
-          Click to upload • JPG, PNG, or GIF
-        </Typography>
-      </Paper>
-    </Fade>
-  )}
-  
-  <input
-    type="file"
-    ref={imageInputRef}
-    accept="image/*"
-    onChange={handleImageChange}
-    style={{ display: 'none' }}
-  />
-</Box>
+      </Box>
       
       <div className="content">
         <div 
