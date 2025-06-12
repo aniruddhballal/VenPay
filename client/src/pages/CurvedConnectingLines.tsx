@@ -3,8 +3,51 @@ import { useEffect, useState } from 'react';
 const CurvedConnectingLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [shouldDisappear, setShouldDisappear] = useState(false);
+  const [paths, setPaths] = useState({ set1: [], set2: [] });
+  const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
+
+  // Generate random curved paths
+  const generateRandomPath = (isUpperRegion = true) => {
+    const points = [];
+    const numPoints = 5 + Math.floor(Math.random() * 4); // 5-8 points
+    
+    for (let i = 0; i < numPoints; i++) {
+      const x = 50 + (i * (1100 / (numPoints - 1))) + (Math.random() - 0.5) * 100;
+      const y = isUpperRegion 
+        ? 50 + Math.random() * 250 + Math.sin(i * 0.8) * 80
+        : 350 + Math.random() * 300 + Math.cos(i * 0.6) * 120;
+      points.push({ x, y });
+    }
+    
+    // Create smooth path using quadratic curves
+    let path = `M ${points[0].x} ${points[0].y}`;
+    
+    for (let i = 1; i < points.length; i++) {
+      if (i === points.length - 1) {
+        path += ` L ${points[i].x} ${points[i].y}`;
+      } else {
+        const cp1x = points[i].x + (Math.random() - 0.5) * 150;
+        const cp1y = points[i].y + (Math.random() - 0.5) * 100;
+        path += ` Q ${cp1x} ${cp1y} ${points[i].x} ${points[i].y}`;
+      }
+    }
+    
+    return path;
+  };
 
   useEffect(() => {
+    // Generate random paths
+    const newSet1 = Array.from({ length: 6 }, () => generateRandomPath(true));
+    const newSet2 = Array.from({ length: 6 }, () => generateRandomPath(false));
+    
+    setPaths({ set1: newSet1, set2: newSet2 });
+    
+    // Choose random surviving paths
+    setSurvivingIndices({
+      set1: Math.floor(Math.random() * newSet1.length),
+      set2: Math.floor(Math.random() * newSet2.length)
+    });
+
     // Trigger animation on component mount
     const timer = setTimeout(() => {
       setIsLoaded(true);
@@ -19,12 +62,23 @@ const CurvedConnectingLines = () => {
     const resetTimer = setTimeout(() => {
       setIsLoaded(false);
       setShouldDisappear(false);
+      
+      // Generate new random paths for next cycle
+      const nextSet1 = Array.from({ length: 6 }, () => generateRandomPath(true));
+      const nextSet2 = Array.from({ length: 6 }, () => generateRandomPath(false));
+      
+      setPaths({ set1: nextSet1, set2: nextSet2 });
+      setSurvivingIndices({
+        set1: Math.floor(Math.random() * nextSet1.length),
+        set2: Math.floor(Math.random() * nextSet2.length)
+      });
+      
       // Restart the cycle
       setTimeout(() => {
         setIsLoaded(true);
         setTimeout(() => setShouldDisappear(true), 4000);
       }, 500);
-    }, 6000);
+    }, 7000);
 
     return () => {
       clearTimeout(timer);
@@ -33,44 +87,37 @@ const CurvedConnectingLines = () => {
     };
   }, []);
 
-  // Complex intricate paths for Set 1 (upper region)
-  const set1Paths = [
-    "M 50 150 Q 150 50 250 100 Q 350 150 450 80 Q 550 10 650 90 Q 750 170 850 100 Q 950 30 1050 120",
-    "M 60 160 Q 160 60 260 110 Q 360 160 460 90 Q 560 20 660 100 Q 760 180 860 110 Q 960 40 1060 130",
-    "M 70 170 Q 170 70 270 120 Q 370 170 470 100 Q 570 30 670 110 Q 770 190 870 120 Q 970 50 1070 140",
-    "M 80 180 Q 180 80 280 130 Q 380 180 480 110 Q 580 40 680 120 Q 780 200 880 130 Q 980 60 1080 150",
-    "M 90 190 Q 190 90 290 140 Q 390 190 490 120 Q 590 50 690 130 Q 790 210 890 140 Q 990 70 1090 160"
-  ];
-
-  // Complex intricate paths for Set 2 (lower region)
-  const set2Paths = [
-    "M 100 400 Q 200 500 300 350 Q 400 200 500 380 Q 600 560 700 320 Q 800 80 900 400 Q 1000 720 1100 350",
-    "M 110 410 Q 210 510 310 360 Q 410 210 510 390 Q 610 570 710 330 Q 810 90 910 410 Q 1010 730 1110 360",
-    "M 120 420 Q 220 520 320 370 Q 420 220 520 400 Q 620 580 720 340 Q 820 100 920 420 Q 1020 740 1120 370",
-    "M 130 430 Q 230 530 330 380 Q 430 230 530 410 Q 630 590 730 350 Q 830 110 930 430 Q 1030 750 1130 380",
-    "M 140 440 Q 240 540 340 390 Q 440 240 540 420 Q 640 600 740 360 Q 840 120 940 440 Q 1040 760 1140 390"
-  ];
-
-  const renderPathSet = (paths, gradientId, baseDelay = 0) => {
-    return paths.map((path, index) => (
-      <path
-        key={index}
-        d={path}
-        fill="none"
-        stroke={`url(#${gradientId})`}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        className="transition-all ease-in-out"
-        style={{
-          strokeDasharray: 1500,
-          strokeDashoffset: isLoaded ? (shouldDisappear ? -1500 : 0) : 1500,
-          opacity: isLoaded ? (shouldDisappear ? 0 : 0.8 - index * 0.1) : 0,
-          filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.15))',
-          transitionDuration: '3s',
-          transitionDelay: `${baseDelay + index * 0.1}s`
-        }}
-      />
-    ));
+  const renderPathSet = (pathArray, gradientId, baseDelay = 0, setName) => {
+    const survivingIndex = survivingIndices[setName];
+    
+    return pathArray.map((path, index) => {
+      const isSurviving = index === survivingIndex;
+      const shouldPathDisappear = shouldDisappear && !isSurviving;
+      
+      return (
+        <path
+          key={index}
+          d={path}
+          fill="none"
+          stroke={`url(#${gradientId})`}
+          strokeWidth={isSurviving ? "3" : "2.5"}
+          strokeLinecap="round"
+          className="transition-all ease-in-out"
+          style={{
+            strokeDasharray: 2000,
+            strokeDashoffset: isLoaded ? (shouldPathDisappear ? -2000 : 0) : 2000,
+            opacity: isLoaded ? 
+              (shouldPathDisappear ? 0 : 
+                isSurviving ? 1 : 0.6 - index * 0.08) : 0,
+            filter: isSurviving ? 
+              'drop-shadow(0 3px 8px rgba(0,0,0,0.3)) drop-shadow(0 0 15px rgba(59,130,246,0.4))' : 
+              'drop-shadow(0 2px 6px rgba(0,0,0,0.15))',
+            transitionDuration: shouldPathDisappear ? '2s' : '3.5s',
+            transitionDelay: `${baseDelay + index * 0.15}s`
+          }}
+        />
+      );
+    });
   };
 
   return (
@@ -81,10 +128,10 @@ const CurvedConnectingLines = () => {
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Set 1 - Upper flowing lines */}
-        {renderPathSet(set1Paths, 'gradient1', 0)}
+        {renderPathSet(paths.set1, 'gradient1', 0, 'set1')}
         
         {/* Set 2 - Lower flowing lines */}
-        {renderPathSet(set2Paths, 'gradient2', 0.3)}
+        {renderPathSet(paths.set2, 'gradient2', 0.3, 'set2')}
 
         {/* Enhanced Gradient Definitions */}
         <defs>
@@ -119,10 +166,10 @@ const CurvedConnectingLines = () => {
 
       {/* Ambient particles for enhanced visual appeal */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(25)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-30"
+            className="absolute w-1 h-1 bg-white rounded-full opacity-20"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -139,11 +186,21 @@ const CurvedConnectingLines = () => {
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${isLoaded && !shouldDisappear ? 'bg-green-400' : shouldDisappear ? 'bg-orange-400' : 'bg-red-400'}`} />
             <span>
-              {!isLoaded ? 'Initializing...' : shouldDisappear ? 'Flowing away...' : 'Flowing...'}
+              {!isLoaded ? 'Initializing...' : shouldDisappear ? 'Converging...' : 'Flowing...'}
             </span>
+          </div>
+          <div className="text-xs text-white/60 mt-1">
+            Surviving paths: {survivingIndices.set1 + 1} & {survivingIndices.set2 + 1}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+      `}</style>
     </div>
   );
 };
