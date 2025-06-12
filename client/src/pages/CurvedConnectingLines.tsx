@@ -5,13 +5,27 @@ const CurvedConnectingLines = () => {
   const [shouldDisappear, setShouldDisappear] = useState(false);
   const [paths, setPaths] = useState({ set1: [], set2: [] });
   const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
+  const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
   // Generate random curved paths with fixed start and end points
-  const generateRandomPath = (isSet1 = true) => {
+  const generateRandomPath = (isSet1 = true, smoothnessLevel = 'rough') => {
+    // Fixed start and end points for all lines
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 189 } : { x: 320, y: 189 };
     
-    const numControlPoints = 3 + Math.floor(Math.random() * 3); // 3-5 control points between start and end
+    // Adjust control points and deviation based on smoothness
+    let numControlPoints, maxDeviationX, maxDeviationY;
+    
+    if (smoothnessLevel === 'smooth') {
+      numControlPoints = 2 + Math.floor(Math.random() * 2); // 2-3 control points for smoother curves
+      maxDeviationX = 80; // Less deviation for smoother paths
+      maxDeviationY = 60;
+    } else {
+      numControlPoints = 4 + Math.floor(Math.random() * 3); // 4-6 control points for rougher curves
+      maxDeviationX = 200; // More deviation for rougher paths
+      maxDeviationY = 150;
+    }
+    
     const points = [startPoint];
     
     // Generate random intermediate points
@@ -21,8 +35,8 @@ const CurvedConnectingLines = () => {
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
       // Add random deviation from the straight line
-      const deviationX = (Math.random() - 0.5) * 200;
-      const deviationY = (Math.random() - 0.5) * 150;
+      const deviationX = (Math.random() - 0.5) * maxDeviationX;
+      const deviationY = (Math.random() - 0.5) * maxDeviationY;
       
       points.push({
         x: baseX + deviationX,
@@ -39,8 +53,9 @@ const CurvedConnectingLines = () => {
       if (i === points.length - 1) {
         path += ` L ${points[i].x} ${points[i].y}`;
       } else {
-        const cp1x = points[i].x + (Math.random() - 0.5) * 100;
-        const cp1y = points[i].y + (Math.random() - 0.5) * 80;
+        const controlPointDeviation = smoothnessLevel === 'smooth' ? 40 : 100;
+        const cp1x = points[i].x + (Math.random() - 0.5) * controlPointDeviation;
+        const cp1y = points[i].y + (Math.random() - 0.5) * (controlPointDeviation * 0.8);
         path += ` Q ${cp1x} ${cp1y} ${points[i].x} ${points[i].y}`;
       }
     }
@@ -49,16 +64,28 @@ const CurvedConnectingLines = () => {
   };
 
   useEffect(() => {
-    // Generate random paths
-    const newSet1 = Array.from({ length: 6 }, () => generateRandomPath(true));
-    const newSet2 = Array.from({ length: 6 }, () => generateRandomPath(false));
+    // Define smoothness levels for each set
+    const smoothnessLevels1 = ['smooth', 'smooth', 'rough', 'rough', 'rough', 'rough'];
+    const smoothnessLevels2 = ['smooth', 'smooth', 'rough', 'rough', 'rough', 'rough'];
+    
+    // Shuffle to randomize which paths are smooth
+    const shuffledLevels1 = [...smoothnessLevels1].sort(() => Math.random() - 0.5);
+    const shuffledLevels2 = [...smoothnessLevels2].sort(() => Math.random() - 0.5);
+    
+    // Generate paths with assigned smoothness levels
+    const newSet1 = shuffledLevels1.map(level => generateRandomPath(true, level));
+    const newSet2 = shuffledLevels2.map(level => generateRandomPath(false, level));
     
     setPaths({ set1: newSet1, set2: newSet2 });
+    setPathSmoothness({ set1: shuffledLevels1, set2: shuffledLevels2 });
     
-    // Choose random surviving paths
+    // Choose surviving paths from smooth ones only
+    const smoothIndices1 = shuffledLevels1.map((level, index) => level === 'smooth' ? index : -1).filter(i => i !== -1);
+    const smoothIndices2 = shuffledLevels2.map((level, index) => level === 'smooth' ? index : -1).filter(i => i !== -1);
+    
     setSurvivingIndices({
-      set1: Math.floor(Math.random() * newSet1.length),
-      set2: Math.floor(Math.random() * newSet2.length)
+      set1: smoothIndices1[Math.floor(Math.random() * smoothIndices1.length)],
+      set2: smoothIndices2[Math.floor(Math.random() * smoothIndices2.length)]
     });
 
     // Trigger animation on component mount
@@ -77,13 +104,21 @@ const CurvedConnectingLines = () => {
       setShouldDisappear(false);
       
       // Generate new random paths for next cycle
-      const nextSet1 = Array.from({ length: 6 }, () => generateRandomPath(true));
-      const nextSet2 = Array.from({ length: 6 }, () => generateRandomPath(false));
+      const newShuffledLevels1 = [...smoothnessLevels1].sort(() => Math.random() - 0.5);
+      const newShuffledLevels2 = [...smoothnessLevels2].sort(() => Math.random() - 0.5);
+      
+      const nextSet1 = newShuffledLevels1.map(level => generateRandomPath(true, level));
+      const nextSet2 = newShuffledLevels2.map(level => generateRandomPath(false, level));
       
       setPaths({ set1: nextSet1, set2: nextSet2 });
+      setPathSmoothness({ set1: newShuffledLevels1, set2: newShuffledLevels2 });
+      
+      const newSmoothIndices1 = newShuffledLevels1.map((level, index) => level === 'smooth' ? index : -1).filter(i => i !== -1);
+      const newSmoothIndices2 = newShuffledLevels2.map((level, index) => level === 'smooth' ? index : -1).filter(i => i !== -1);
+      
       setSurvivingIndices({
-        set1: Math.floor(Math.random() * nextSet1.length),
-        set2: Math.floor(Math.random() * nextSet2.length)
+        set1: newSmoothIndices1[Math.floor(Math.random() * newSmoothIndices1.length)],
+        set2: newSmoothIndices2[Math.floor(Math.random() * newSmoothIndices2.length)]
       });
       
       // Restart the cycle
@@ -102,9 +137,11 @@ const CurvedConnectingLines = () => {
 
   const renderPathSet = (pathArray, gradientId, baseDelay = 0, setName) => {
     const survivingIndex = survivingIndices[setName];
+    const smoothnessArray = pathSmoothness[setName];
     
     return pathArray.map((path, index) => {
       const isSurviving = index === survivingIndex;
+      const isSmooth = smoothnessArray[index] === 'smooth';
       const shouldPathDisappear = shouldDisappear && !isSurviving;
       
       return (
@@ -113,7 +150,7 @@ const CurvedConnectingLines = () => {
           d={path}
           fill="none"
           stroke={`url(#${gradientId})`}
-          strokeWidth={isSurviving ? "4" : "2.5"}
+          strokeWidth={isSurviving ? "5" : isSmooth ? "3" : "2"}
           strokeLinecap="round"
           className="transition-all ease-in-out"
           style={{
@@ -121,9 +158,12 @@ const CurvedConnectingLines = () => {
             strokeDashoffset: isLoaded ? (shouldPathDisappear ? -2000 : 0) : 2000,
             opacity: isLoaded ? 
               (shouldPathDisappear ? 0 : 
-                isSurviving ? 1 : 0.6 - index * 0.08) : 0,
+                isSurviving ? 1 : 
+                isSmooth ? 0.7 : 0.4 - index * 0.05) : 0,
             filter: isSurviving ? 
-              'drop-shadow(0 3px 8px rgba(0,0,0,0.3)) drop-shadow(0 0 15px rgba(59,130,246,0.4))' : 
+              'drop-shadow(0 4px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 20px rgba(59,130,246,0.6))' : 
+              isSmooth ?
+              'drop-shadow(0 3px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 12px rgba(59,130,246,0.3))' :
               'drop-shadow(0 2px 6px rgba(0,0,0,0.15))',
             transitionDuration: shouldPathDisappear ? '2s' : '3.5s',
             transitionDelay: `${baseDelay + index * 0.15}s`
@@ -149,17 +189,11 @@ const CurvedConnectingLines = () => {
         <defs>
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 1}} />
-            {/* <stop offset="25%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
-            <stop offset="50%" style={{stopColor: '#8b5cf6', stopOpacity: 0.8}} />
-            <stop offset="75%" style={{stopColor: '#d946ef', stopOpacity: 0.9}} /> */}
             <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.8}} />
           </linearGradient>
           
           <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.9}} />
-            {/* <stop offset="25%" style={{stopColor: '#06b6d4', stopOpacity: 0.8}} />
-            <stop offset="50%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
-            <stop offset="75%" style={{stopColor: '#6366f1', stopOpacity: 0.8}} /> */}
             <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
           </linearGradient>
 
@@ -202,13 +236,16 @@ const CurvedConnectingLines = () => {
           <div className="text-xs text-white/60 mt-1">
             Surviving paths: {survivingIndices.set1 + 1} & {survivingIndices.set2 + 1}
           </div>
+          <div className="text-xs text-white/50 mt-1">
+            Smooth paths prioritized for survival
+          </div>
         </div>
       </div>
 
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
         }
       `}</style>
     </div>
