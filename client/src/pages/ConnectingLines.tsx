@@ -8,7 +8,7 @@ const CurvedConnectingLines = () => {
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
   // CONFIGURATION: Number of messy background lines
-  const NUM_MESSY_LINES = 12; // Modify this value to change the number of background lines
+  const NUM_MESSY_LINES = 4; // Modify this value to change the number of background lines
 
   // Generate smooth curved main path
   const generateMainPath = (isSet1 = true) => {
@@ -28,8 +28,11 @@ const CurvedConnectingLines = () => {
       const variation = 40 + Math.random() * 60;
       const offsetX = (Math.random() - 0.5) * variation;
       // Ensure Y offset keeps the path above the endpoint
-      const offsetY = Math.min((Math.random() - 0.5) * variation, endPoint.y - baseY - 10);
-      
+      const rawOffset = (Math.random() - 0.5) * variation;
+      const maxOffset = endPoint.y - baseY - 10; // max downward allowed
+      const minOffset = 100 - baseY; // max upward allowed (don't go above y=100)
+      const offsetY = Math.max(Math.min(rawOffset, maxOffset), minOffset);
+
       controlPoints.push({
         x: baseX + offsetX,
         y: Math.min(baseY + offsetY, endPoint.y - 5) // Ensure control points stay above endpoint
@@ -89,11 +92,13 @@ const CurvedConnectingLines = () => {
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
       // Larger deviation for messier appearance, but constrained vertically
-      const deviation = 60 + Math.random() * 80; // Increased deviation
+      const deviation = 100 + Math.random() * 80; // Increased deviation
       const deviationX = (Math.random() - 0.5) * deviation;
-      // Ensure Y deviation keeps the path above the endpoint
-      const deviationY = Math.min((Math.random() - 0.5) * deviation, endPoint.y - baseY - 15);
-      
+      const rawDeviation = (Math.random() - 0.5) * deviation;
+      const maxDeviation = endPoint.y - baseY - 15;
+      const minDeviation = 100 - baseY;
+      const deviationY = Math.max(Math.min(rawDeviation, maxDeviation), minDeviation);
+
       controlPoints.push({
         x: baseX + deviationX,
         y: Math.min(baseY + deviationY, endPoint.y - 10) // Ensure control points stay well above endpoint
@@ -170,7 +175,7 @@ const CurvedConnectingLines = () => {
     // Main path completes after 2.5 seconds, then start messy line disappearance
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 2600); // 2.5s for main path + 0.1s buffer
+    }, 1200); // 0.6s for main path + 0.1s buffer
 
     return () => {
       clearTimeout(timer);
@@ -229,17 +234,17 @@ const CurvedConnectingLines = () => {
           strokeDasharray: `${pathLength}`,
           strokeDashoffset: isLoaded ? 0 : pathLength,
           opacity: isLoaded ? 1 : 0,
-          transitionDuration: '2.5s',
+          transitionDuration: '1.5s',
           transitionDelay: '0s',
           transitionTimingFunction: 'ease-out'
         };
       } else {
-        // Messy paths: appear quickly, then disappear over 2.5 seconds
+        // Messy paths: appear quickly, then disappear over 1.5 seconds
         animationStyles = {
           strokeDasharray: 'none',
           strokeDashoffset: 0,
           opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
-          transitionDuration: shouldPathDisappear ? '2.5s' : '0.5s',
+          transitionDuration: shouldPathDisappear ? '1.5s' : '0.5s',
           transitionDelay: shouldPathDisappear ? `${index * 0.05}s` : `${0.2 + index * 0.03}s`,
           transitionTimingFunction: shouldPathDisappear ? 'ease-in' : 'ease-out'
         };
