@@ -1,5 +1,5 @@
- # VenPay2.0
-Heavily ramped up the 'VenPay' Project
+ # VenPay
+HEAVILY (LEGIT MEAN IT) ramped up the 'VenPay0.0' Project
 
 Currently, the UI-UX is VERY BAD - was working on developing the required functionalities.
 Will update the frontend interface soon
