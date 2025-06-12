@@ -237,4 +237,4 @@ DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time lef
 38. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards
 
-40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
+DONE YAYYYYY 40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
