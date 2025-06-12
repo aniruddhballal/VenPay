@@ -1,4 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from 'react';
+
+import CurvedConnectingLines from './CurvedConnectingLines'; // adjust path if needed
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
@@ -102,14 +105,13 @@ const float = keyframes`
 const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
   display: 'flex',
   gap: '1rem',
-  marginTop: '3.15rem',
+  marginTop: '0rem',
   marginBottom: '2rem',
   padding: '1.5rem',
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(20px)',
-  borderRadius: '20px',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  background: 'transparent',
+  // backdropFilter: 'blur(20px)',
+  // border: '1px solid rgba(255, 255, 255, 0.2)',
+  // boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   animation: `${slideInFromLeft} 0.6s ease-out`,
   position: 'relative',
   overflow: 'hidden',
@@ -120,7 +122,7 @@ const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+    background: 'transparent',
     pointerEvents: 'none',
   },
   '@media (max-width: 768px)': {
@@ -234,28 +236,44 @@ const DashboardHeader = styled(Typography)(({ /*theme*/ }) => ({
   position: 'relative',
   animation: `${slideInDown} 0.8s ease-out`,
   textAlign: 'center',
+  wodth: '30rem',
   textShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
 }));
 
-const DashboardSubheader = styled(Typography)(({ /*theme*/ }) => ({
+const DashboardSubheader = styled(Typography)(() => ({
   fontSize: '1.75rem',
   fontWeight: 600,
-  margin: '2rem 0 1.5rem',
   color: '#475569',
   position: 'relative',
-  paddingLeft: '1rem',
+  padding: '1rem 2rem',
+  borderRadius: '10px',
+  background: '#fff',
+  margin: '2rem auto',
+  width: '300px',
+  textAlign: 'center',
+  zIndex: 1,
+
   '&::before': {
     content: '""',
     position: 'absolute',
-    left: 0,
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: '4px',
-    height: '100%',
-    background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-    borderRadius: '2px',
+    top: '-2px',
+    left: '-2px',
+    right: '-2px',
+    bottom: '-2px',
+    zIndex: -1,
+    background: 'linear-gradient(135deg, #3b82f6, #10b981)',
+    borderRadius: '12px',
+
+    // Mask to keep only border visible
+    WebkitMask:
+      'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+    WebkitMaskComposite: 'xor',
+    maskComposite: 'exclude',
+    padding: '5px', // Thickness of visible border
+    boxSizing: 'border-box',
   },
 }));
+
 
 const LoadingContainer = styled(Box)(({ /*theme*/ }) => ({
   display: 'flex',
@@ -265,7 +283,7 @@ const LoadingContainer = styled(Box)(({ /*theme*/ }) => ({
   fontSize: '1.5rem',
   color: '#64748b',
   fontWeight: 600,
-  animation: `${fadeInSoft} 0.5s ease-in`,
+  animation: `${fadeInSoft} 0.7s ease-in`,
   gap: '1rem',
 }));
 
@@ -311,7 +329,6 @@ const StyledButton = styled(Button)<{ buttontype: 'profile' | 'logout' }>(({ /*t
     right: '3rem',
     background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
     color: '#fff',
-    boxShadow: '0 4px 15px rgba(31, 41, 55, 0.4)',
     '&:hover': {
       background: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
       transform: 'translateY(-2px)',
@@ -419,6 +436,9 @@ export default function Dashboard() {
 
   return (
     <DashboardContainer>
+    <div style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, width: '100%', height: '100%' }}>
+      <CurvedConnectingLines />
+    </div>      
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       
       <StyledButton buttontype="profile" onClick={goToProfile}>
