@@ -8,7 +8,7 @@ const CurvedConnectingLines = () => {
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
   // CONFIGURATION: Number of messy background lines
-  const NUM_MESSY_LINES = 3; // Modify this value to change the number of background lines
+  const NUM_MESSY_LINES = 1; // Modify this value to change the number of background lines
 
   // Generate smooth curved main path
   const generateMainPath = (isSet1 = true) => {
@@ -173,10 +173,10 @@ const CurvedConnectingLines = () => {
       setIsLoaded(true);
     }, 100);
 
-    // Main path completes after 2.5 seconds, then start messy line disappearance
+    // All paths complete after 2.5 seconds, then start messy line disappearance
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 2600); // 2.5s for main path + 0.1s buffer
+    }, 2600); // 2.5s for all paths + 0.1s buffer
 
     return () => {
       clearTimeout(timer);
@@ -232,31 +232,19 @@ const CurvedConnectingLines = () => {
         filter = 'drop-shadow(0 3px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(34,197,94,0.7))';
       }
       
-      // Animation styles
+      // Animation styles - now both main and messy paths animate the same way
       let animationStyles = {};
       
-      if (isMainPath) {
-        // Main path: animate from source to destination over 2.5 seconds, then get thicker
-        animationStyles = {
-          strokeDasharray: `${pathLength}`,
-          strokeDashoffset: isLoaded ? 0 : pathLength,
-          opacity: isLoaded ? opacity : 0, // Use the opacity from styling logic
-          transitionDuration: '2.5s, 0.5s', // Drawing + thickening
-          transitionDelay: '0s, 2.5s', // Thickening starts after drawing
-          transitionTimingFunction: 'ease-out',
-          transitionProperty: 'stroke-dashoffset, stroke-width, opacity, filter'
-        };
-      } else {
-        // Messy paths: appear quickly, then disappear over 2.5 seconds
-        animationStyles = {
-          strokeDasharray: 'none',
-          strokeDashoffset: 0,
-          opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
-          transitionDuration: shouldPathDisappear ? '2.5s' : '0.5s',
-          transitionDelay: shouldPathDisappear ? `${index * 0.05}s` : `${0.2 + index * 0.03}s`,
-          transitionTimingFunction: shouldPathDisappear ? 'ease-in' : 'ease-out'
-        };
-      }
+      // All paths: animate from source to destination over 2.5 seconds
+      animationStyles = {
+        strokeDasharray: `${pathLength}`,
+        strokeDashoffset: isLoaded ? 0 : pathLength,
+        opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
+        transitionDuration: shouldPathDisappear ? '2.5s, 2.5s' : '2.5s, 0.5s', // Drawing + (disappearing OR thickening)
+        transitionDelay: shouldPathDisappear ? `${index * 0.05}s, 0s` : `0s, ${isMainPath ? '2.5s' : '0s'}`, // Thickening starts after drawing for main path
+        transitionTimingFunction: shouldPathDisappear ? 'ease-in, ease-in' : 'ease-out, ease-out',
+        transitionProperty: 'stroke-dashoffset, opacity, stroke-width, filter'
+      };
       
       return (
         <path
@@ -325,6 +313,13 @@ const CurvedConnectingLines = () => {
           />
         ))}
       </div>
+      
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(180deg); }
+        }
+      `}</style>
     </div>
   );
 };
