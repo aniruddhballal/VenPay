@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import ElectricSparks from './Electric Sparks'; // adjust path if needed
+import ConnectingLines from './ConnectingLines'; // adjust path if needed
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -472,7 +472,7 @@ export default function Dashboard() {
   return (
     <DashboardContainer>
     <div style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, width: '100%', height: '100%' }}>
-      <ElectricSparks />
+      <ConnectingLines />
     </div>      
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       
