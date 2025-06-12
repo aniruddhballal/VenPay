@@ -202,20 +202,20 @@ note ps:
 8. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects
 9. poem on cycle
 10. organise all the word docs into Incessantly.docx
-11. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
-12. on minimised screen, the price overflows out of the box - but name and desc dont. - DONE
-13. on user details page - add a mailto link - DONE
-14. user account deletion logic (cascaded) - lol, cru of user was there, no d until now eh4
-15. move the star rating to under the product image
-16. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
+DONE KINDA 11. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
+DONE 12. on minimised screen, the price overflows out of the box - but name and desc dont. - DONE
+DONE 13. on user details page - add a mailto link - DONE
+DONE 14. user account deletion logic (cascaded) - lol, cru of user was there, no d until now eh4
+DONE 15. move the star rating to under the product image
+DONE 16. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
 17. global home button
 18. MUI-fy the datepickermodal.module.css
-19. change what the "go back" button does, depending on which page was visited before it
+DONE 19. change what the "go back" button does, depending on which page was visited before it
 
 20. add more fields in the product and user tables - phone number, address for the user table; product table can include additional images
 DONE 21. reminder to modify the product display page such that the whitespace under the product image gets filled with something else...
 DONE 22. clear password on wrong entry of password while trying to make payment, just like how it gets cleared on successful payment
-23. make payment button does not have the glassmorphism
+DONE 23. make payment button does not have the glassmorphism
 DONE 24. on vendor side - if payment has been cleared, remove amount due and deadlines
 DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time left - on both, vendor and company side
 26. vendor side could also show the star rating for each of the product requests
@@ -225,7 +225,7 @@ DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time lef
 29. again, these are all on vendor side - so, company side??
 30. what happens if deadline passes by?!
 31. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice)
-32. WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
+DONE I GUESS 32. WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
 33. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
 
 34. filter products available by company, or when visiting vendor profile - show list of products
@@ -237,4 +237,27 @@ DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time lef
 38. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards
 
-DONE YAYYYYY 40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
+40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
+
+41. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
+42. the dashboard onload curves - dont randomise maybe?
+43. remove compile errors from connectinglines.tsx
+44. profile photo
+45. multiple image products
+46. password change option
+47. infinite loop routing issue (dahsboard->profile->editprofile)
+48. notifications
+49. home page button
+50. dont disclose cloudinary link
+51. image on display -> cropped/resized?
+52. filter products by vendors - like reviews can be filtered by companies
+53. better the review giving UI
+54. appearance of product/payment requests - annoying-slide-aall-the-way-to-the-bottom
+55. payment? crypto? blockchain?
+56. delayed payments -> charges/fees/penalties -> deadline extension option when deadline nears (change from 24h to 48h)
+57. same product -> lend-borrow/buy-sell -> not just buy-sell
+58. addproductcard ui from updateproductcard's
+59. clear blank/whitespaces -> add designs -> compactify
+60. chatbox option -> very similar to notifications
+61. complexify the user/product tables
+62. 
