@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import styles from './CurvedConnectingLines.module.css';
 
 const CurvedConnectingLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,7 +27,6 @@ const CurvedConnectingLines = () => {
         <div className="w-24 h-1 bg-blue-500 mx-auto rounded"></div>
       </div>
 
-      {/* SVG Container for Lines */}
       <svg 
         className="absolute inset-0 w-full h-full pointer-events-none"
         viewBox="0 0 1200 800"
@@ -39,7 +39,7 @@ const CurvedConnectingLines = () => {
           stroke="url(#gradient1)"
           strokeWidth="3"
           strokeLinecap="round"
-          className={`transition-all duration-3000 ease-out ${
+          className={`transition-all ease-out ${styles['duration-3000']} ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
@@ -48,7 +48,7 @@ const CurvedConnectingLines = () => {
             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
           }}
         />
-        
+
         {/* Second Curved Line */}
         <path
           d={path2}
@@ -56,7 +56,7 @@ const CurvedConnectingLines = () => {
           stroke="url(#gradient2)"
           strokeWidth="3"
           strokeLinecap="round"
-          className={`transition-all duration-3500 ease-out ${
+          className={`transition-all ease-out ${styles['duration-3500']} ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
@@ -119,10 +119,6 @@ const CurvedConnectingLines = () => {
           {isLoaded ? 'Reset' : 'Animate'}
         </button>
       </div>
-
-      <style jsx>{`
-
-      `}</style>
     </div>
   );
 };
