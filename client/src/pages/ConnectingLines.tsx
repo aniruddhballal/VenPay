@@ -92,8 +92,9 @@ const CurvedConnectingLines = () => {
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
       // Larger deviation for messier appearance, but constrained vertically
-      const deviation = 100 + Math.random() * 80; // Increased deviation
+      const deviation = 60 + Math.random() * 80; // Increased deviation
       const deviationX = (Math.random() - 0.5) * deviation;
+      // Ensure Y deviation keeps the path above the endpoint
       const rawDeviation = (Math.random() - 0.5) * deviation;
       const maxDeviation = endPoint.y - baseY - 15;
       const minDeviation = 100 - baseY;
@@ -175,7 +176,7 @@ const CurvedConnectingLines = () => {
     // Main path completes after 2.5 seconds, then start messy line disappearance
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 1200); // 0.6s for main path + 0.1s buffer
+    }, 2600); // 2.5s for main path + 0.1s buffer
 
     return () => {
       clearTimeout(timer);
@@ -212,14 +213,20 @@ const CurvedConnectingLines = () => {
         pathLength = 1000;
       }
       
-      // Smooth path styling
-      let strokeWidth = isMainPath ? "2.5" : "1.2";
-      let opacity = isMainPath ? 1 : 0.4;
-      let filter = isMainPath ? 
-        'drop-shadow(0 2px 8px rgba(0,0,0,0.3)) drop-shadow(0 0 15px rgba(34,197,94,0.5))' :
-        'drop-shadow(0 1px 4px rgba(0,0,0,0.15))';
+      // Smooth path styling - start thin and same opacity for both main and messy lines
+      let strokeWidth = "1.2"; // Both start with same thin width
+      let opacity = 0.4; // Both start with same opacity
+      let filter = 'drop-shadow(0 1px 4px rgba(0,0,0,0.15))'; // Both start with same filter
       
-      if (isSurviving && shouldDisappear) {
+      // Main line gets thicker and more opaque once it reaches the endpoint (after animation completes)
+      if (isMainPath && isLoaded) {
+        strokeWidth = "3";
+        opacity = 1;
+        filter = 'drop-shadow(0 3px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(34,197,94,0.7))';
+      }
+      
+      // Surviving line enhancement when others disappear
+      if (isSurviving && shouldDisappear && !isMainPath) {
         opacity = 1;
         strokeWidth = "3";
         filter = 'drop-shadow(0 3px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(34,197,94,0.7))';
@@ -229,22 +236,23 @@ const CurvedConnectingLines = () => {
       let animationStyles = {};
       
       if (isMainPath) {
-        // Main path: animate from source to destination over 2.5 seconds
+        // Main path: animate from source to destination over 2.5 seconds, then get thicker
         animationStyles = {
           strokeDasharray: `${pathLength}`,
           strokeDashoffset: isLoaded ? 0 : pathLength,
           opacity: isLoaded ? 1 : 0,
-          transitionDuration: '1.5s',
+          transitionDuration: isLoaded ? '2.5s, 0.5s' : '2.5s', // First transition for draw, second for thickness
           transitionDelay: '0s',
-          transitionTimingFunction: 'ease-out'
+          transitionTimingFunction: 'ease-out',
+          transitionProperty: isLoaded ? 'stroke-dashoffset, opacity, stroke-width, filter' : 'stroke-dashoffset, opacity'
         };
       } else {
-        // Messy paths: appear quickly, then disappear over 1.5 seconds
+        // Messy paths: appear quickly, then disappear over 2.5 seconds
         animationStyles = {
           strokeDasharray: 'none',
           strokeDashoffset: 0,
           opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
-          transitionDuration: shouldPathDisappear ? '1.5s' : '0.5s',
+          transitionDuration: shouldPathDisappear ? '2.5s' : '0.5s',
           transitionDelay: shouldPathDisappear ? `${index * 0.05}s` : `${0.2 + index * 0.03}s`,
           transitionTimingFunction: shouldPathDisappear ? 'ease-in' : 'ease-out'
         };
