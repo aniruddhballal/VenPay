@@ -135,41 +135,43 @@ const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
   background: 'rgba(255, 255, 255, 0.15)',
   backdropFilter: 'blur(10px)',
   border: '1px solid rgba(255, 255, 255, 0.2)',
-  borderRadius: '16px',
   color: '#1e293b',
   fontWeight: 600,
   fontSize: '0.95rem',
   textTransform: 'none',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   position: 'relative',
   overflow: 'hidden',
   display: 'flex',
   alignItems: 'center',
   gap: '0.75rem',
   padding: '0 1.5rem',
+ 
+  // Container for all four lines
   '&::before': {
     content: '""',
     position: 'absolute',
-    top: 0,
-    left: '-100%',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
-    transition: 'left 0.5s ease',
+    inset: 0,
+    background: `
+      linear-gradient(90deg, #1e293b, #334155) 0 0/0 3px no-repeat,
+      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 3px no-repeat,
+      linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 0 no-repeat,
+      linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 0 no-repeat
+    `,
+    transition: 'background-size 0.3s ease',
   },
+ 
   '&:hover': {
-    background: 'rgba(255, 255, 255, 0.25)',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    animation: `${pulse} 2s infinite`,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     '&::before': {
-      left: '100%',
+      background: `
+        linear-gradient(90deg, #1e293b, #334155) 0 0/100% 3px no-repeat,
+        linear-gradient(270deg, #1e293b, #334155) 100% 100%/100% 3px no-repeat,
+        linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 100% no-repeat,
+        linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 100% no-repeat
+      `,
     },
   },
-  '&:active': {
-    transform: 'translateY(0)',
-  },
+ 
   '& .MuiSvgIcon-root': {
     fontSize: '1.4rem',
     opacity: 0.8,
@@ -276,7 +278,7 @@ const LoadingSpinner = styled(Box)(({ /*theme*/ }) => ({
   animation: `${spin} 1s linear infinite`,
 }));
 
-const StyledButton = styled(Button)<{ buttonType: 'profile' | 'logout' }>(({ /*theme,*/ buttonType }) => ({
+const StyledButton = styled(Button)<{ buttontype: 'profile' | 'logout' }>(({ /*theme,*/ buttontype: buttonType }) => ({
   position: 'absolute',
   width: '120px',
   height: '50px',
@@ -419,10 +421,10 @@ export default function Dashboard() {
     <DashboardContainer>
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       
-      <StyledButton buttonType="profile" onClick={goToProfile}>
+      <StyledButton buttontype="profile" onClick={goToProfile}>
         Profile
       </StyledButton>
-      <StyledButton buttonType="logout" onClick={handleLogout}>
+      <StyledButton buttontype="logout" onClick={handleLogout}>
         Logout
       </StyledButton>
 
