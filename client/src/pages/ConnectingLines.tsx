@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 const CurvedConnectingLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [shouldDisappear, setShouldDisappear] = useState(false);
+  const [shouldEnhanceMain, setShouldEnhanceMain] = useState(false);
   const [paths, setPaths] = useState({ set1: [], set2: [] });
   const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
   // CONFIGURATION: Number of messy background lines
-  const NUM_MESSY_LINES = 1; // Modify this value to change the number of background lines
+  const NUM_MESSY_LINES = 5; // Modify this value to change the number of background lines
 
   // Generate smooth curved main path
   const generateMainPath = (isSet1 = true) => {
@@ -25,7 +26,7 @@ const CurvedConnectingLines = () => {
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
       // Add smooth variation to the path, but keep it above the endpoint
-      const variation = 40 + Math.random() * 60;
+      const variation = 0;//40 + Math.random() * 60;
       const offsetX = (Math.random() - 0.5) * variation;
       // Ensure Y offset keeps the path above the endpoint
       const rawOffset = (Math.random() - 0.5) * variation;
@@ -173,13 +174,19 @@ const CurvedConnectingLines = () => {
       setIsLoaded(true);
     }, 100);
 
-    // All paths complete after 2.5 seconds, then start messy line disappearance
+    // All paths complete after 2.5 seconds, then enhance main lines
+    const enhanceTimer = setTimeout(() => {
+      setShouldEnhanceMain(true);
+    }, 2600); // 2.5s for all paths + 0.1s buffer
+
+    // Start messy line disappearance slightly after main line enhancement
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 2600); // 2.5s for all paths + 0.1s buffer
+    }, 3100); // 0.5s after main line enhancement
 
     return () => {
       clearTimeout(timer);
+      clearTimeout(enhanceTimer);
       clearTimeout(disappearTimer);
     };
   }, [NUM_MESSY_LINES]);
@@ -213,38 +220,64 @@ const CurvedConnectingLines = () => {
         pathLength = 1000;
       }
       
-      // Smooth path styling - start thin and same opacity for both main and messy lines
-      let strokeWidth = "1.2"; // Both start with same thin width
-      let opacity = 0.4; // Both start with same opacity
-      let filter = 'drop-shadow(0 1px 4px rgba(0,0,0,0.15))'; // Both start with same filter
+      // ALL lines start with same thin width and opacity
+      let strokeWidth = "1.2";
+      let opacity = 0.4;
+      let filter = 'drop-shadow(0 1px 4px rgba(0,0,0,0.15))';
       
-      // Main line gets thicker and more opaque once it reaches the endpoint (after animation completes)
-      if (isMainPath && isLoaded) {
+      // Main line gets enhanced after reaching endpoint (shouldEnhanceMain = true)
+      if (isMainPath && shouldEnhanceMain) {
         strokeWidth = "3";
         opacity = 1;
         filter = 'drop-shadow(0 3px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(34,197,94,0.7))';
       }
       
-      // Surviving line enhancement when others disappear
+      // Surviving messy line enhancement when others disappear
       if (isSurviving && shouldDisappear && !isMainPath) {
         opacity = 1;
         strokeWidth = "3";
         filter = 'drop-shadow(0 3px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(34,197,94,0.7))';
       }
       
-      // Animation styles - now both main and messy paths animate the same way
+      // Animation styles - ALL paths animate the same way initially
       let animationStyles = {};
       
-      // All paths: animate from source to destination over 2.5 seconds
-      animationStyles = {
-        strokeDasharray: `${pathLength}`,
-        strokeDashoffset: isLoaded ? 0 : pathLength,
-        opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
-        transitionDuration: shouldPathDisappear ? '2.5s, 2.5s' : '2.5s, 0.5s', // Drawing + (disappearing OR thickening)
-        transitionDelay: shouldPathDisappear ? `${index * 0.05}s, 0s` : `0s, ${isMainPath ? '2.5s' : '0s'}`, // Thickening starts after drawing for main path
-        transitionTimingFunction: shouldPathDisappear ? 'ease-in, ease-in' : 'ease-out, ease-out',
-        transitionProperty: 'stroke-dashoffset, opacity, stroke-width, filter'
-      };
+      if (shouldPathDisappear) {
+        // Messy lines disappearing
+        animationStyles = {
+          strokeDasharray: `${pathLength}`,
+          strokeDashoffset: 0,
+          opacity: 0,
+          transitionDuration: '2.5s',
+          transitionDelay: `${index * 0.05}s`,
+          transitionTimingFunction: 'ease-in',
+          transitionProperty: 'opacity'
+        };
+      } else if (isMainPath && shouldEnhanceMain) {
+        // Main line getting enhanced
+        animationStyles = {
+          strokeDasharray: `${pathLength}`,
+          strokeDashoffset: 0,
+          opacity: opacity,
+          strokeWidth: strokeWidth,
+          filter: filter,
+          transitionDuration: '0.5s',
+          transitionDelay: '0s',
+          transitionTimingFunction: 'ease-out',
+          transitionProperty: 'stroke-width, opacity, filter'
+        };
+      } else {
+        // Initial drawing animation for ALL paths (main and messy)
+        animationStyles = {
+          strokeDasharray: `${pathLength}`,
+          strokeDashoffset: isLoaded ? 0 : pathLength,
+          opacity: isLoaded ? opacity : 0,
+          transitionDuration: '2.5s, 0.5s',
+          transitionDelay: '0s, 0s', // No delay - all start together
+          transitionTimingFunction: 'ease-out, ease-out',
+          transitionProperty: 'stroke-dashoffset, opacity'
+        };
+      }
       
       return (
         <path
@@ -280,20 +313,20 @@ const CurvedConnectingLines = () => {
 
         <defs>
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.5}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.3}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.4}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.4}} />
           </linearGradient>
           
           <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.5}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.3}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.4}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.4}} />
           </linearGradient>
 
           {/* Main path gradient */}
           <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 1}} />
-            <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.9}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.8}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.4}} />
+            <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.4}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 1}} />
           </linearGradient>
         </defs>
       </svg>
