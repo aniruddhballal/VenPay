@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import CurvedConnectingLines from './CurvedConnectingLines'; // adjust path if needed
+import ElectricSparks from './Electric Sparks'; // adjust path if needed
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -69,18 +69,6 @@ const spin = keyframes`
   }
 `;
 
-const pulse = keyframes`
-  0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
-`;
-
 const slideInFromLeft = keyframes`
   from {
     opacity: 0;
@@ -131,12 +119,12 @@ const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
 const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
   flex: 1,
   minHeight: '60px',
-  background: 'rgba(234, 234, 234, 0.22)',
+  background: 'rgba(255, 255, 255, 0.15)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  border: 'none',
   color: '#1e293b',
   fontWeight: 600,
-  fontSize: '0.95rem',
+  fontSize: '1.25rem',
   textTransform: 'none',
   position: 'relative',
   overflow: 'hidden',
@@ -145,16 +133,16 @@ const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
   gap: '0.75rem',
   padding: '0 1.5rem',
  
-  // Container for all four lines
+  //four lines
   '&::before': {
     content: '""',
     position: 'absolute',
     inset: 0,
     background: `
-      linear-gradient(90deg, #1e293b, #334155) 0 0/0 4px no-repeat,
-      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 4px no-repeat,
-      linear-gradient(0deg, #1e293b, #334155) 0 100%/4px 0 no-repeat,
-      linear-gradient(180deg, #1e293b, #334155) 100% 0/4px 0 no-repeat
+      linear-gradient(90deg, #1e293b, #334155) 0 0/0 3px no-repeat,
+      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 3px no-repeat,
+      linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 0 no-repeat,
+      linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 0 no-repeat
     `,
     transition: 'background-size 0.7s ease',
   },
@@ -164,16 +152,16 @@ const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
     color: '#1e293b',
     '&::before': {
       background: `
-        linear-gradient(90deg, #10b981, #10b981) 0 0/100% 4px no-repeat,
-        linear-gradient(270deg, #10b981, #10b981) 100% 100%/100% 4px no-repeat,
-        linear-gradient(0deg, #10b981, #10b981) 0 100%/4px 100% no-repeat,
-        linear-gradient(180deg, #10b981, #10b981) 100% 0/4px 100% no-repeat
+        linear-gradient(90deg, #10b981, #10b981) 0 0/100% 3px no-repeat,
+        linear-gradient(270deg, #10b981, #10b981) 100% 100%/100% 3px no-repeat,
+        linear-gradient(0deg, #10b981, #10b981) 0 100%/3px 100% no-repeat,
+        linear-gradient(180deg, #10b981, #10b981) 100% 0/3px 100% no-repeat
       `,
     },
   },
  
   '& .MuiSvgIcon-root': {
-    fontSize: '1.4rem',
+    fontSize: '1.5rem',
     opacity: 0.8,
   },
 }));
@@ -183,10 +171,10 @@ const NavigationButton2 = styled(Button)(({ /*theme*/ }) => ({
   minHeight: '60px',
   background: 'rgba(255, 255, 255, 0.15)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  border: 'none',
   color: '#1e293b',
   fontWeight: 600,
-  fontSize: '0.95rem',
+  fontSize: '1.25rem',
   textTransform: 'none',
   position: 'relative',
   overflow: 'hidden',
@@ -195,34 +183,34 @@ const NavigationButton2 = styled(Button)(({ /*theme*/ }) => ({
   gap: '0.75rem',
   padding: '0 1.5rem',
  
-  // Container for all four lines
+  //four lines
   '&::before': {
     content: '""',
     position: 'absolute',
     inset: 0,
     background: `
-      linear-gradient(90deg, #1e293b, #334155) 0 0/0 4px no-repeat,
-      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 4px no-repeat,
-      linear-gradient(0deg, #1e293b, #334155) 0 100%/4px 0 no-repeat,
-      linear-gradient(180deg, #1e293b, #334155) 100% 0/4px 0 no-repeat
+      linear-gradient(90deg, #1e293b, #334155) 0 0/0 3px no-repeat,
+      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 3px no-repeat,
+      linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 0 no-repeat,
+      linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 0 no-repeat
     `,
-    transition: 'background-size 0.3s ease',
+    transition: 'background-size 0.7s ease',
   },
  
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     '&::before': {
       background: `
-        linear-gradient(90deg, #3b82f6, #3b82f6) 0 0/100% 4px no-repeat,
-        linear-gradient(270deg, #3b82f6, #3b82f6) 100% 100%/100% 4px no-repeat,
-        linear-gradient(0deg, #3b82f6, #3b82f6) 0 100%/4px 100% no-repeat,
-        linear-gradient(180deg, #3b82f6, #3b82f6) 100% 0/4px 100% no-repeat
+        linear-gradient(90deg, #3b82f6, #3b82f6) 0 0/100% 3px no-repeat,
+        linear-gradient(270deg, #3b82f6, #3b82f6) 100% 100%/100% 3px no-repeat,
+        linear-gradient(0deg, #3b82f6, #3b82f6) 0 100%/3px 100% no-repeat,
+        linear-gradient(180deg, #3b82f6, #3b82f6) 100% 0/3px 100% no-repeat
       `,
     },
   },
  
   '& .MuiSvgIcon-root': {
-    fontSize: '1.4rem',
+    fontSize: '1.5rem',
     opacity: 0.8,
   },
 }));
@@ -484,7 +472,7 @@ export default function Dashboard() {
   return (
     <DashboardContainer>
     <div style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, width: '100%', height: '100%' }}>
-      <CurvedConnectingLines />
+      <ElectricSparks />
     </div>      
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       
