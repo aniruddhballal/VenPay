@@ -7,98 +7,98 @@ const CurvedConnectingLines = () => {
   const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
-  // Generate random curved paths with fixed start and end points
-  const generateRandomPath = (isSet1 = true, pathType = 'rough') => {
-    // Fixed start and end points for all lines
+  // Generate electric circuit path with multiple sharp turns
+  const generateCircuitPath = (isSet1 = true) => {
+    const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
+    const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
+    
+    const points = [startPoint];
+    const totalDistanceX = endPoint.x - startPoint.x;
+    const totalDistanceY = endPoint.y - startPoint.y;
+    
+    // Create multiple sharp turns (8-12 segments for complexity)
+    const segments = 8 + Math.floor(Math.random() * 5);
+    let currentPoint = { ...startPoint };
+    
+    for (let i = 0; i < segments; i++) {
+      const progress = (i + 1) / segments;
+      const isLastSegment = i === segments - 1;
+      
+      if (isLastSegment) {
+        points.push(endPoint);
+      } else {
+        // Alternate between different movement patterns for sharp turns
+        if (i % 4 === 0) {
+          // Horizontal step
+          const stepX = totalDistanceX * (0.1 + Math.random() * 0.15);
+          currentPoint = { x: currentPoint.x + stepX, y: currentPoint.y };
+        } else if (i % 4 === 1) {
+          // Vertical step with sharp turn
+          const stepY = (Math.random() - 0.5) * 100;
+          currentPoint = { x: currentPoint.x, y: currentPoint.y + stepY };
+        } else if (i % 4 === 2) {
+          // Diagonal step
+          const stepX = totalDistanceX * (0.05 + Math.random() * 0.1);
+          const stepY = totalDistanceY * (0.1 + Math.random() * 0.2);
+          currentPoint = { x: currentPoint.x + stepX, y: currentPoint.y + stepY };
+        } else {
+          // Sharp turn back towards target
+          const remainingX = endPoint.x - currentPoint.x;
+          const stepX = remainingX * (0.2 + Math.random() * 0.3);
+          const stepY = (Math.random() - 0.5) * 60;
+          currentPoint = { x: currentPoint.x + stepX, y: currentPoint.y + stepY };
+        }
+        
+        points.push({ ...currentPoint });
+      }
+    }
+    
+    // Create path with straight lines only
+    let path = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      path += ` L ${points[i].x} ${points[i].y}`;
+    }
+    
+    return path;
+  };
+
+  // Generate messy paths that stay close to the circuit path
+  const generateMessyPath = (isSet1 = true, circuitPath) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 189 } : { x: 320, y: 189 };
     
-    if (pathType === 'circuit') {
-      // Electric circuit-like path with right angles and straight segments
-      const points = [startPoint];
-      
-      // Create a path with right-angled segments like electrical circuits
-      const totalDistance = Math.abs(endPoint.x - startPoint.x);
-      const segments = 3 + Math.floor(Math.random() * 3); // 3-5 segments
-      
-      let currentPoint = { ...startPoint };
-      
-      for (let i = 0; i < segments; i++) {
-        const isLastSegment = i === segments - 1;
-        
-        if (isLastSegment) {
-          // Final segment goes to end point
-          points.push(endPoint);
-        } else {
-          // Alternate between horizontal and vertical movements
-          if (i % 2 === 0) {
-            // Horizontal movement
-            const progressX = (i + 1) / segments;
-            const targetX = startPoint.x + (endPoint.x - startPoint.x) * progressX;
-            const jitterY = (Math.random() - 0.5) * 60; // Small vertical jitter
-            currentPoint = { x: targetX, y: currentPoint.y + jitterY };
-          } else {
-            // Vertical movement
-            const jitterY = (Math.random() - 0.5) * 80;
-            currentPoint = { x: currentPoint.x, y: startPoint.y + (endPoint.y - startPoint.y) * 0.5 + jitterY };
-          }
-          points.push({ ...currentPoint });
-        }
-      }
-      
-      // Create path with straight lines only (no curves for circuit effect)
-      let path = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 1; i < points.length; i++) {
-        path += ` L ${points[i].x} ${points[i].y}`;
-      }
-      
-      return path;
-    }
+    // Extract some points from circuit path to stay close to it
+    const pathLength = circuitPath.length;
+    const samplePoints = [];
     
-    // Regular curved paths for smooth/rough types
-    let numControlPoints, maxDeviationX, maxDeviationY;
-    
-    if (pathType === 'smooth') {
-      numControlPoints = 2 + Math.floor(Math.random() * 2); // 2-3 control points for smoother curves
-      maxDeviationX = 80; // Less deviation for smoother paths
-      maxDeviationY = 60;
-    } else {
-      numControlPoints = 4 + Math.floor(Math.random() * 3); // 4-6 control points for rougher curves
-      maxDeviationX = 200; // More deviation for rougher paths
-      maxDeviationY = 150;
-    }
-    
-    const points = [startPoint];
-    
-    // Generate random intermediate points
-    for (let i = 1; i <= numControlPoints; i++) {
-      const progress = i / (numControlPoints + 1);
+    // Sample points along the circuit path direction
+    const numSamples = 4 + Math.floor(Math.random() * 3);
+    for (let i = 0; i <= numSamples; i++) {
+      const progress = i / numSamples;
       const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
-      // Add random deviation from the straight line
-      const deviationX = (Math.random() - 0.5) * maxDeviationX;
-      const deviationY = (Math.random() - 0.5) * maxDeviationY;
+      // Stay close to the main path with small deviations
+      const deviation = 30 + Math.random() * 40; // Much smaller deviation
+      const deviationX = (Math.random() - 0.5) * deviation;
+      const deviationY = (Math.random() - 0.5) * deviation;
       
-      points.push({
+      samplePoints.push({
         x: baseX + deviationX,
         y: baseY + deviationY
       });
     }
     
-    points.push(endPoint);
+    // Create curved path
+    let path = `M ${startPoint.x} ${startPoint.y}`;
     
-    // Create smooth path using quadratic curves
-    let path = `M ${points[0].x} ${points[0].y}`;
-    
-    for (let i = 1; i < points.length; i++) {
-      if (i === points.length - 1) {
-        path += ` L ${points[i].x} ${points[i].y}`;
+    for (let i = 1; i < samplePoints.length; i++) {
+      if (i === samplePoints.length - 1) {
+        path += ` L ${endPoint.x} ${endPoint.y}`;
       } else {
-        const controlPointDeviation = pathType === 'smooth' ? 40 : 100;
-        const cp1x = points[i].x + (Math.random() - 0.5) * controlPointDeviation;
-        const cp1y = points[i].y + (Math.random() - 0.5) * (controlPointDeviation * 0.8);
-        path += ` Q ${cp1x} ${cp1y} ${points[i].x} ${points[i].y}`;
+        const cp1x = samplePoints[i].x + (Math.random() - 0.5) * 20;
+        const cp1y = samplePoints[i].y + (Math.random() - 0.5) * 20;
+        path += ` Q ${cp1x} ${cp1y} ${samplePoints[i].x} ${samplePoints[i].y}`;
       }
     }
     
@@ -106,74 +106,40 @@ const CurvedConnectingLines = () => {
   };
 
   useEffect(() => {
-    // Define path types for each set - always include one circuit path
-    const pathTypes1 = ['circuit', 'smooth', 'smooth', 'rough', 'rough', 'rough'];
-    const pathTypes2 = ['circuit', 'smooth', 'smooth', 'rough', 'rough', 'rough'];
+    // Generate one circuit path per set
+    const circuitPath1 = generateCircuitPath(true);
+    const circuitPath2 = generateCircuitPath(false);
     
-    // Shuffle to randomize positions (but keep circuit in the mix)
-    const shuffledTypes1 = [...pathTypes1].sort(() => Math.random() - 0.5);
-    const shuffledTypes2 = [...pathTypes2].sort(() => Math.random() - 0.5);
+    // Generate messy paths that follow near the circuit paths
+    const messyPaths1 = Array.from({ length: 5 }, () => generateMessyPath(true, circuitPath1));
+    const messyPaths2 = Array.from({ length: 5 }, () => generateMessyPath(false, circuitPath2));
     
-    // Generate paths with assigned types
-    const newSet1 = shuffledTypes1.map(type => generateRandomPath(true, type));
-    const newSet2 = shuffledTypes2.map(type => generateRandomPath(false, type));
+    // Combine paths (circuit first, then messy)
+    const allPaths1 = [circuitPath1, ...messyPaths1];
+    const allPaths2 = [circuitPath2, ...messyPaths2];
     
-    setPaths({ set1: newSet1, set2: newSet2 });
-    setPathSmoothness({ set1: shuffledTypes1, set2: shuffledTypes2 });
+    const pathTypes1 = ['circuit', 'messy', 'messy', 'messy', 'messy', 'messy'];
+    const pathTypes2 = ['circuit', 'messy', 'messy', 'messy', 'messy', 'messy'];
     
-    // Always choose the circuit path as the surviving one
-    const circuitIndex1 = shuffledTypes1.findIndex(type => type === 'circuit');
-    const circuitIndex2 = shuffledTypes2.findIndex(type => type === 'circuit');
+    setPaths({ set1: allPaths1, set2: allPaths2 });
+    setPathSmoothness({ set1: pathTypes1, set2: pathTypes2 });
     
-    setSurvivingIndices({
-      set1: circuitIndex1,
-      set2: circuitIndex2
-    });
+    // Circuit path is always at index 0
+    setSurvivingIndices({ set1: 0, set2: 0 });
 
-    // Trigger animation on component mount
+    // Initial animation
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 500);
+    }, 100);
 
-    // Start disappearing animation after lines complete
+    // Circuit path completes after 2.5 seconds, then messy lines disappear
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 4500); // Lines complete around 4s, start disappearing at 4.5s
-
-    // Reset for continuous loop
-    const resetTimer = setTimeout(() => {
-      setIsLoaded(false);
-      setShouldDisappear(false);
-      
-      // Generate new random paths for next cycle
-      const newShuffledTypes1 = [...pathTypes1].sort(() => Math.random() - 0.5);
-      const newShuffledTypes2 = [...pathTypes2].sort(() => Math.random() - 0.5);
-      
-      const nextSet1 = newShuffledTypes1.map(type => generateRandomPath(true, type));
-      const nextSet2 = newShuffledTypes2.map(type => generateRandomPath(false, type));
-      
-      setPaths({ set1: nextSet1, set2: nextSet2 });
-      setPathSmoothness({ set1: newShuffledTypes1, set2: newShuffledTypes2 });
-      
-      const newCircuitIndex1 = newShuffledTypes1.findIndex(type => type === 'circuit');
-      const newCircuitIndex2 = newShuffledTypes2.findIndex(type => type === 'circuit');
-      
-      setSurvivingIndices({
-        set1: newCircuitIndex1,
-        set2: newCircuitIndex2
-      });
-      
-      // Restart the cycle
-      setTimeout(() => {
-        setIsLoaded(true);
-        setTimeout(() => setShouldDisappear(true), 4000);
-      }, 500);
-    }, 7000);
+    }, 2500);
 
     return () => {
       clearTimeout(timer);
       clearTimeout(disappearTimer);
-      clearTimeout(resetTimer);
     };
   }, []);
 
@@ -184,27 +150,20 @@ const CurvedConnectingLines = () => {
     return pathArray.map((path, index) => {
       const isSurviving = index === survivingIndex;
       const pathType = pathTypesArray[index];
+      const isCircuit = pathType === 'circuit';
       const shouldPathDisappear = shouldDisappear && !isSurviving;
       
-      // Different styling based on path type
-      let strokeWidth, opacity, filter;
+      // Circuit path styling
+      let strokeWidth = isCircuit ? "3" : "0.8"; // Very thin messy lines
+      let opacity = isCircuit ? 1 : 0.6;
+      let filter = isCircuit ? 
+        'drop-shadow(0 3px 10px rgba(0,0,0,0.4)) drop-shadow(0 0 20px rgba(34,197,94,0.6))' :
+        'drop-shadow(0 1px 3px rgba(0,0,0,0.2))';
       
-      if (isSurviving) {
-        strokeWidth = "6";
+      if (isSurviving && shouldDisappear) {
         opacity = 1;
-        filter = 'drop-shadow(0 5px 15px rgba(0,0,0,0.5)) drop-shadow(0 0 25px rgba(59,130,246,0.8))';
-      } else if (pathType === 'circuit') {
-        strokeWidth = "3.5";
-        opacity = 0.8;
-        filter = 'drop-shadow(0 3px 10px rgba(0,0,0,0.3)) drop-shadow(0 0 15px rgba(34,197,94,0.4))';
-      } else if (pathType === 'smooth') {
-        strokeWidth = "2.5";
-        opacity = 0.6;
-        filter = 'drop-shadow(0 2px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 10px rgba(59,130,246,0.3))';
-      } else {
-        strokeWidth = "2";
-        opacity = 0.4 - index * 0.05;
-        filter = 'drop-shadow(0 2px 6px rgba(0,0,0,0.15))';
+        strokeWidth = "3";
+        filter = 'drop-shadow(0 4px 15px rgba(0,0,0,0.5)) drop-shadow(0 0 30px rgba(34,197,94,0.8))';
       }
       
       return (
@@ -212,17 +171,17 @@ const CurvedConnectingLines = () => {
           key={index}
           d={path}
           fill="none"
-          stroke={pathType === 'circuit' ? `url(#circuitGradient)` : `url(#${gradientId})`}
+          stroke={isCircuit ? `url(#circuitGradient)` : `url(#${gradientId})`}
           strokeWidth={strokeWidth}
-          strokeLinecap={pathType === 'circuit' ? 'square' : 'round'}
+          strokeLinecap={isCircuit ? 'square' : 'round'}
           className="transition-all ease-in-out"
           style={{
-            strokeDasharray: pathType === 'circuit' ? '8,4' : 2000,
-            strokeDashoffset: isLoaded ? (shouldPathDisappear ? (pathType === 'circuit' ? -2000 : -2000) : 0) : 2000,
-            opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
+            strokeDasharray: isCircuit ? '6,3' : 'none',
+            strokeDashoffset: isLoaded ? 0 : (isCircuit ? 3000 : 2000),
+            opacity: isLoaded ? (shouldPathDisappear ? (isSurviving ? 1 : 0) : opacity) : 0,
             filter: filter,
-            transitionDuration: shouldPathDisappear ? '2s' : '3.5s',
-            transitionDelay: `${baseDelay + index * 0.15}s`
+            transitionDuration: isCircuit ? '2.5s' : '1.5s',
+            transitionDelay: isCircuit ? '0s' : `${0.2 + index * 0.1}s`
           }}
         />
       );
@@ -240,47 +199,37 @@ const CurvedConnectingLines = () => {
         {renderPathSet(paths.set1, 'gradient1', 0, 'set1')}
         
         {/* Set 2 - Lower flowing lines */}
-        {renderPathSet(paths.set2, 'gradient2', 0.3, 'set2')}
+        {renderPathSet(paths.set2, 'gradient2', 0.1, 'set2')}
 
         <defs>
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 1}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.8}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.7}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.5}} />
           </linearGradient>
           
           <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.9}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.7}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.5}} />
           </linearGradient>
 
           {/* Circuit-specific gradient */}
           <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#22c55e', stopOpacity: 1}} />
-            <stop offset="50%" style={{stopColor: '#eab308', stopOpacity: 0.9}} />
-            <stop offset="100%" style={{stopColor: '#f97316', stopOpacity: 0.8}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 1}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
           </linearGradient>
-
-          {/* Glowing effects */}
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge> 
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
         </defs>
       </svg>
 
-      {/* Ambient particles for enhanced visual appeal */}
+      {/* Ambient particles */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(25)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-20"
+            className="absolute w-1 h-1 bg-white rounded-full opacity-10"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
+              animation: `float ${4 + Math.random() * 3}s ease-in-out infinite`,
               animationDelay: `${Math.random() * 2}s`
             }}
           />
@@ -288,19 +237,22 @@ const CurvedConnectingLines = () => {
       </div>
 
       {/* Status indicator */}
-      <div className="absolute bottom-8 left-8 bg-black/20 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-white/10">
-        <div className="text-white/80 text-sm">
+      <div className="absolute bottom-8 left-8 bg-black/30 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-white/20">
+        <div className="text-white/90 text-sm">
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isLoaded && !shouldDisappear ? 'bg-green-400' : shouldDisappear ? 'bg-orange-400' : 'bg-red-400'}`} />
+            <div className={`w-2 h-2 rounded-full ${
+              !isLoaded ? 'bg-red-400' : 
+              !shouldDisappear ? 'bg-yellow-400' : 
+              'bg-green-400'
+            }`} />
             <span>
-              {!isLoaded ? 'Initializing...' : shouldDisappear ? 'Converging...' : 'Flowing...'}
+              {!isLoaded ? 'Initializing...' : 
+               !shouldDisappear ? 'Circuit Forming...' : 
+               'Circuit Complete'}
             </span>
           </div>
-          <div className="text-xs text-white/60 mt-1">
-            Surviving paths: {survivingIndices.set1 + 1} & {survivingIndices.set2 + 1}
-          </div>
-          <div className="text-xs text-white/50 mt-1">
-            Circuit paths prioritized for survival
+          <div className="text-xs text-white/70 mt-1">
+            Electric paths: {survivingIndices.set1 + 1} & {survivingIndices.set2 + 1}
           </div>
         </div>
       </div>
@@ -308,7 +260,7 @@ const CurvedConnectingLines = () => {
       <style jsx>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+          50% { transform: translateY(-8px); }
         }
       `}</style>
     </div>
