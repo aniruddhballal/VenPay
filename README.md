@@ -236,3 +236,5 @@ DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time lef
 37. reconsider the "back to dahsboard" -> "back to profile" -> edit profile - change the routing !!
 38. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards
+
+40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
