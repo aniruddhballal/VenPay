@@ -109,9 +109,6 @@ const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
   marginBottom: '2rem',
   padding: '1.5rem',
   background: 'transparent',
-  // backdropFilter: 'blur(20px)',
-  // border: '1px solid rgba(255, 255, 255, 0.2)',
-  // boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   animation: `${slideInFromLeft} 0.6s ease-out`,
   position: 'relative',
   overflow: 'hidden',
@@ -134,6 +131,56 @@ const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
 const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
   flex: 1,
   minHeight: '60px',
+  background: 'rgba(234, 234, 234, 0.22)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  color: '#1e293b',
+  fontWeight: 600,
+  fontSize: '0.95rem',
+  textTransform: 'none',
+  position: 'relative',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.75rem',
+  padding: '0 1.5rem',
+ 
+  // Container for all four lines
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    background: `
+      linear-gradient(90deg, #1e293b, #334155) 0 0/0 4px no-repeat,
+      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 4px no-repeat,
+      linear-gradient(0deg, #1e293b, #334155) 0 100%/4px 0 no-repeat,
+      linear-gradient(180deg, #1e293b, #334155) 100% 0/4px 0 no-repeat
+    `,
+    transition: 'background-size 0.7s ease',
+  },
+ 
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    color: '#1e293b',
+    '&::before': {
+      background: `
+        linear-gradient(90deg, #10b981, #10b981) 0 0/100% 4px no-repeat,
+        linear-gradient(270deg, #10b981, #10b981) 100% 100%/100% 4px no-repeat,
+        linear-gradient(0deg, #10b981, #10b981) 0 100%/4px 100% no-repeat,
+        linear-gradient(180deg, #10b981, #10b981) 100% 0/4px 100% no-repeat
+      `,
+    },
+  },
+ 
+  '& .MuiSvgIcon-root': {
+    fontSize: '1.4rem',
+    opacity: 0.8,
+  },
+}));
+
+const NavigationButton2 = styled(Button)(({ /*theme*/ }) => ({
+  flex: 1,
+  minHeight: '60px',
   background: 'rgba(255, 255, 255, 0.15)',
   backdropFilter: 'blur(10px)',
   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -154,10 +201,10 @@ const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
     position: 'absolute',
     inset: 0,
     background: `
-      linear-gradient(90deg, #1e293b, #334155) 0 0/0 3px no-repeat,
-      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 3px no-repeat,
-      linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 0 no-repeat,
-      linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 0 no-repeat
+      linear-gradient(90deg, #1e293b, #334155) 0 0/0 4px no-repeat,
+      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 4px no-repeat,
+      linear-gradient(0deg, #1e293b, #334155) 0 100%/4px 0 no-repeat,
+      linear-gradient(180deg, #1e293b, #334155) 100% 0/4px 0 no-repeat
     `,
     transition: 'background-size 0.3s ease',
   },
@@ -166,10 +213,10 @@ const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     '&::before': {
       background: `
-        linear-gradient(90deg, #1e293b, #334155) 0 0/100% 3px no-repeat,
-        linear-gradient(270deg, #1e293b, #334155) 100% 100%/100% 3px no-repeat,
-        linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 100% no-repeat,
-        linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 100% no-repeat
+        linear-gradient(90deg, #3b82f6, #3b82f6) 0 0/100% 4px no-repeat,
+        linear-gradient(270deg, #3b82f6, #3b82f6) 100% 100%/100% 4px no-repeat,
+        linear-gradient(0deg, #3b82f6, #3b82f6) 0 100%/4px 100% no-repeat,
+        linear-gradient(180deg, #3b82f6, #3b82f6) 100% 0/4px 100% no-repeat
       `,
     },
   },
@@ -283,7 +330,7 @@ const LoadingContainer = styled(Box)(({ /*theme*/ }) => ({
   fontSize: '1.5rem',
   color: '#64748b',
   fontWeight: 600,
-  animation: `${fadeInSoft} 0.7s ease-in`,
+  animation: `${fadeInSoft} 0.5s ease-in`,
   gap: '1rem',
 }));
 
@@ -457,10 +504,10 @@ export default function Dashboard() {
               <Inventory />
               Product Management
             </NavigationButton>
-            <NavigationButton onClick={() => scrollToSection('product-requests')}>
+            <NavigationButton2 onClick={() => scrollToSection('product-requests')}>
               <RequestPage />
               Product Requests
-            </NavigationButton>
+            </NavigationButton2>
           </NavigationContainer>
 
           <SectionContainer id="product-management">
@@ -482,10 +529,10 @@ export default function Dashboard() {
               <BusinessCenter />
               Product Catalog
             </NavigationButton>
-            <NavigationButton onClick={() => scrollToSection('payment-requests')}>
+            <NavigationButton2 onClick={() => scrollToSection('payment-requests')}>
               <Payment />
               Payment Requests
-            </NavigationButton>
+            </NavigationButton2>
           </NavigationContainer>
 
           <SectionContainer id="product-list">
