@@ -7,56 +7,51 @@ const CurvedConnectingLines = () => {
   const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
-  // Generate electric circuit path with multiple sharp turns
-  const generateCircuitPath = (isSet1 = true) => {
+  // Generate smooth curved main path
+  const generateMainPath = (isSet1 = true) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
     
-    const points = [startPoint];
-    const totalDistanceX = endPoint.x - startPoint.x;
-    const totalDistanceY = endPoint.y - startPoint.y;
+    // Create smooth flowing path with multiple control points
+    const controlPoints = [];
+    const numControlPoints = 3 + Math.floor(Math.random() * 3); // 3-5 control points
     
-    // Create multiple sharp turns (8-12 segments for complexity)
-    const segments = 2
-    let currentPoint = { ...startPoint };
-    
-    for (let i = 0; i < segments; i++) {
-      const progress = (i + 1) / segments;
-      const isLastSegment = i === segments - 1;
+    for (let i = 0; i <= numControlPoints; i++) {
+      const progress = i / numControlPoints;
+      const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
+      const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
-      if (isLastSegment) {
-        points.push(endPoint);
-      } else {
-        // Alternate between different movement patterns for sharp turns
-        if (i % 4 === 0) {
-          // Horizontal step
-          const stepX = totalDistanceX * (0.1 + Math.random() * 0.15);
-          currentPoint = { x: currentPoint.x + stepX, y: currentPoint.y };
-        } else if (i % 4 === 1) {
-          // Vertical step with sharp turn
-          const stepY = (Math.random() - 0.5) * 100;
-          currentPoint = { x: currentPoint.x, y: currentPoint.y + stepY };
-        } else if (i % 4 === 2) {
-          // Diagonal step
-          const stepX = totalDistanceX * (0.05 + Math.random() * 0.1);
-          const stepY = totalDistanceY * (0.1 + Math.random() * 0.2);
-          currentPoint = { x: currentPoint.x + stepX, y: currentPoint.y + stepY };
-        } else {
-          // Sharp turn back towards target
-          const remainingX = endPoint.x - currentPoint.x;
-          const stepX = remainingX * (0.2 + Math.random() * 0.3);
-          const stepY = (Math.random() - 0.5) * 60;
-          currentPoint = { x: currentPoint.x + stepX, y: currentPoint.y + stepY };
-        }
-        
-        points.push({ ...currentPoint });
-      }
+      // Add smooth variation to the path
+      const variation = 40 + Math.random() * 60;
+      const offsetX = (Math.random() - 0.5) * variation;
+      const offsetY = (Math.random() - 0.5) * variation;
+      
+      controlPoints.push({
+        x: baseX + offsetX,
+        y: baseY + offsetY
+      });
     }
     
-    // Create path with straight lines only
-    let path = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length; i++) {
-      path += ` L ${points[i].x} ${points[i].y}`;
+    // Create smooth cubic bezier path
+    let path = `M ${startPoint.x} ${startPoint.y}`;
+    
+    for (let i = 0; i < controlPoints.length; i++) {
+      if (i === controlPoints.length - 1) {
+        // Final curve to end point
+        const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 30;
+        const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 30;
+        const cp2x = endPoint.x + (Math.random() - 0.5) * 20;
+        const cp2y = endPoint.y + (Math.random() - 0.5) * 20;
+        path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endPoint.x} ${endPoint.y}`;
+      } else {
+        // Smooth curves between control points
+        const nextPoint = controlPoints[i + 1] || endPoint;
+        const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 40;
+        const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 40;
+        const cp2x = nextPoint.x + (Math.random() - 0.5) * 40;
+        const cp2y = nextPoint.y + (Math.random() - 0.5) * 40;
+        path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${controlPoints[i].x} ${controlPoints[i].y}`;
+      }
     }
     
     return path;
@@ -75,43 +70,64 @@ const CurvedConnectingLines = () => {
     return length;
   };
 
-  // Generate messy paths that stay close to the circuit path
-  const generateMessyPath = (isSet1 = true, circuitPath) => {
+  // Generate smooth messy paths with quadratic and cubic curves
+  const generateMessyPath = (isSet1 = true, mainPath) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 189 } : { x: 320, y: 189 };
     
-    // Extract some points from circuit path to stay close to it
-    const pathLength = circuitPath.length;
-    const samplePoints = [];
+    // Create more control points for smoother, more varied paths
+    const controlPoints = [];
+    const numControlPoints = 4 + Math.floor(Math.random() * 5); // 4-8 control points for more variation
     
-    // Sample points along the circuit path direction
-    const numSamples = 4 + Math.floor(Math.random() * 3);
-    for (let i = 0; i <= numSamples; i++) {
-      const progress = i / numSamples;
+    for (let i = 0; i <= numControlPoints; i++) {
+      const progress = i / numControlPoints;
       const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
-      // Stay close to the main path with small deviations
-      const deviation = 30 + Math.random() * 40; // Much smaller deviation
+      // Larger deviation for messier appearance
+      const deviation = 60 + Math.random() * 80; // Increased deviation
       const deviationX = (Math.random() - 0.5) * deviation;
       const deviationY = (Math.random() - 0.5) * deviation;
       
-      samplePoints.push({
+      controlPoints.push({
         x: baseX + deviationX,
         y: baseY + deviationY
       });
     }
     
-    // Create curved path
+    // Create smooth path with mix of quadratic and cubic curves
     let path = `M ${startPoint.x} ${startPoint.y}`;
     
-    for (let i = 1; i < samplePoints.length; i++) {
-      if (i === samplePoints.length - 1) {
-        path += ` L ${endPoint.x} ${endPoint.y}`;
+    for (let i = 0; i < controlPoints.length; i++) {
+      const useQuadratic = Math.random() > 0.5; // Randomly choose between quadratic and cubic
+      
+      if (i === controlPoints.length - 1) {
+        // Final curve to end point
+        if (useQuadratic) {
+          const cpx = (controlPoints[i].x + endPoint.x) / 2 + (Math.random() - 0.5) * 40;
+          const cpy = (controlPoints[i].y + endPoint.y) / 2 + (Math.random() - 0.5) * 40;
+          path += ` Q ${cpx} ${cpy} ${endPoint.x} ${endPoint.y}`;
+        } else {
+          const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 50;
+          const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 50;
+          const cp2x = endPoint.x + (Math.random() - 0.5) * 30;
+          const cp2y = endPoint.y + (Math.random() - 0.5) * 30;
+          path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endPoint.x} ${endPoint.y}`;
+        }
       } else {
-        const cp1x = samplePoints[i].x + (Math.random() - 0.5) * 20;
-        const cp1y = samplePoints[i].y + (Math.random() - 0.5) * 20;
-        path += ` Q ${cp1x} ${cp1y} ${samplePoints[i].x} ${samplePoints[i].y}`;
+        // Curves between control points
+        if (useQuadratic) {
+          const cpx = controlPoints[i].x + (Math.random() - 0.5) * 60;
+          const cpy = controlPoints[i].y + (Math.random() - 0.5) * 60;
+          path += ` Q ${cpx} ${cpy} ${controlPoints[i].x} ${controlPoints[i].y}`;
+        } else {
+          const nextPoint = controlPoints[i + 1] || endPoint;
+          const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 60;
+          const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 60;
+          const cp2x = nextPoint.x + (Math.random() - 0.5) * 60;
+          const cp2y = nextPoint.y + (Math.random() - 0.5) * 60;
+          path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${controlPoints[i].x} ${controlPoints[i].y}`;
+        }
       }
     }
     
@@ -119,25 +135,25 @@ const CurvedConnectingLines = () => {
   };
 
   useEffect(() => {
-    // Generate one circuit path per set
-    const circuitPath1 = generateCircuitPath(true);
-    const circuitPath2 = generateCircuitPath(false);
+    // Generate one main smooth path per set
+    const mainPath1 = generateMainPath(true);
+    const mainPath2 = generateMainPath(false);
     
-    // Generate messy paths that follow near the circuit paths
-    const messyPaths1 = Array.from({ length: 5 }, () => generateMessyPath(true, circuitPath1));
-    const messyPaths2 = Array.from({ length: 5 }, () => generateMessyPath(false, circuitPath2));
+    // Generate more messy paths with smooth curves
+    const messyPaths1 = Array.from({ length: 12 }, () => generateMessyPath(true, mainPath1));
+    const messyPaths2 = Array.from({ length: 12 }, () => generateMessyPath(false, mainPath2));
     
-    // Combine paths (circuit first, then messy)
-    const allPaths1 = [circuitPath1, ...messyPaths1];
-    const allPaths2 = [circuitPath2, ...messyPaths2];
+    // Combine paths (main first, then messy)
+    const allPaths1 = [mainPath1, ...messyPaths1];
+    const allPaths2 = [mainPath2, ...messyPaths2];
     
-    const pathTypes1 = ['circuit', 'messy', 'messy', 'messy', 'messy', 'messy'];
-    const pathTypes2 = ['circuit', 'messy', 'messy', 'messy', 'messy', 'messy'];
+    const pathTypes1 = ['main', ...Array(12).fill('messy')];
+    const pathTypes2 = ['main', ...Array(12).fill('messy')];
     
     setPaths({ set1: allPaths1, set2: allPaths2 });
     setPathSmoothness({ set1: pathTypes1, set2: pathTypes2 });
     
-    // Circuit path is always at index 0
+    // Main path is always at index 0
     setSurvivingIndices({ set1: 0, set2: 0 });
 
     // Start animation immediately
@@ -145,10 +161,10 @@ const CurvedConnectingLines = () => {
       setIsLoaded(true);
     }, 100);
 
-    // Circuit path completes after 2.5 seconds, then start messy line disappearance
+    // Main path completes after 2.5 seconds, then start messy line disappearance
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 2600); // 2.5s for circuit + 0.1s buffer
+    }, 2600); // 2.5s for main path + 0.1s buffer
 
     return () => {
       clearTimeout(timer);
@@ -163,7 +179,7 @@ const CurvedConnectingLines = () => {
     return pathArray.map((path, index) => {
       const isSurviving = index === survivingIndex;
       const pathType = pathTypesArray[index];
-      const isCircuit = pathType === 'circuit';
+      const isMainPath = pathType === 'main';
       const shouldPathDisappear = shouldDisappear && !isSurviving;
       
       // Calculate path length for proper stroke-dasharray animation
@@ -185,24 +201,24 @@ const CurvedConnectingLines = () => {
         pathLength = 1000;
       }
       
-      // Circuit path styling
-      let strokeWidth = isCircuit ? "3" : "0.8";
-      let opacity = isCircuit ? 1 : 0.6;
-      let filter = isCircuit ? 
-        'drop-shadow(0 3px 10px rgba(0,0,0,0.4)) drop-shadow(0 0 20px rgba(34,197,94,0.6))' :
-        'drop-shadow(0 1px 3px rgba(0,0,0,0.2))';
+      // Smooth path styling
+      let strokeWidth = isMainPath ? "2.5" : "1.2";
+      let opacity = isMainPath ? 1 : 0.4;
+      let filter = isMainPath ? 
+        'drop-shadow(0 2px 8px rgba(0,0,0,0.3)) drop-shadow(0 0 15px rgba(34,197,94,0.5))' :
+        'drop-shadow(0 1px 4px rgba(0,0,0,0.15))';
       
       if (isSurviving && shouldDisappear) {
         opacity = 1;
         strokeWidth = "3";
-        filter = 'drop-shadow(0 4px 15px rgba(0,0,0,0.5)) drop-shadow(0 0 30px rgba(34,197,94,0.8))';
+        filter = 'drop-shadow(0 3px 12px rgba(0,0,0,0.4)) drop-shadow(0 0 25px rgba(34,197,94,0.7))';
       }
       
       // Animation styles
       let animationStyles = {};
       
-      if (isCircuit) {
-        // Circuit path: animate from source to destination over 2.5 seconds
+      if (isMainPath) {
+        // Main path: animate from source to destination over 2.5 seconds
         animationStyles = {
           strokeDasharray: `${pathLength}`,
           strokeDashoffset: isLoaded ? 0 : pathLength,
@@ -218,7 +234,7 @@ const CurvedConnectingLines = () => {
           strokeDashoffset: 0,
           opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
           transitionDuration: shouldPathDisappear ? '2.5s' : '0.5s',
-          transitionDelay: shouldPathDisappear ? `${index * 0.1}s` : `${0.2 + index * 0.05}s`,
+          transitionDelay: shouldPathDisappear ? `${index * 0.05}s` : `${0.2 + index * 0.03}s`,
           transitionTimingFunction: shouldPathDisappear ? 'ease-in' : 'ease-out'
         };
       }
@@ -228,9 +244,10 @@ const CurvedConnectingLines = () => {
           key={index}
           d={path}
           fill="none"
-          stroke={isCircuit ? `url(#circuitGradient)` : `url(#${gradientId})`}
+          stroke={isMainPath ? `url(#mainGradient)` : `url(#${gradientId})`}
           strokeWidth={strokeWidth}
-          strokeLinecap={isCircuit ? 'square' : 'round'}
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="transition-all"
           style={{
             ...animationStyles,
@@ -256,19 +273,20 @@ const CurvedConnectingLines = () => {
 
         <defs>
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.7}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.5}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.5}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.3}} />
           </linearGradient>
           
           <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.7}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.5}} />
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.5}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.3}} />
           </linearGradient>
 
-          {/* Circuit-specific gradient */}
-          <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          {/* Main path gradient */}
+          <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 1}} />
-            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
+            <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.9}} />
+            <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0.8}} />
           </linearGradient>
         </defs>
       </svg>
@@ -290,6 +308,6 @@ const CurvedConnectingLines = () => {
       </div>
     </div>
   );
-}; 
+};
 
 export default CurvedConnectingLines;
