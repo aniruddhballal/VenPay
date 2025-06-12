@@ -7,6 +7,9 @@ const CurvedConnectingLines = () => {
   const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
+  // CONFIGURATION: Number of messy background lines
+  const NUM_MESSY_LINES = 12; // Modify this value to change the number of background lines
+
   // Generate smooth curved main path
   const generateMainPath = (isSet1 = true) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
@@ -21,14 +24,15 @@ const CurvedConnectingLines = () => {
       const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
-      // Add smooth variation to the path
+      // Add smooth variation to the path, but keep it above the endpoint
       const variation = 40 + Math.random() * 60;
       const offsetX = (Math.random() - 0.5) * variation;
-      const offsetY = (Math.random() - 0.5) * variation;
+      // Ensure Y offset keeps the path above the endpoint
+      const offsetY = Math.min((Math.random() - 0.5) * variation, endPoint.y - baseY - 10);
       
       controlPoints.push({
         x: baseX + offsetX,
-        y: baseY + offsetY
+        y: Math.min(baseY + offsetY, endPoint.y - 5) // Ensure control points stay above endpoint
       });
     }
     
@@ -39,17 +43,17 @@ const CurvedConnectingLines = () => {
       if (i === controlPoints.length - 1) {
         // Final curve to end point
         const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 30;
-        const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 30;
+        const cp1y = Math.min(controlPoints[i].y + (Math.random() - 0.5) * 30, endPoint.y - 5);
         const cp2x = endPoint.x + (Math.random() - 0.5) * 20;
-        const cp2y = endPoint.y + (Math.random() - 0.5) * 20;
+        const cp2y = Math.min(endPoint.y + (Math.random() - 0.5) * 20, endPoint.y);
         path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endPoint.x} ${endPoint.y}`;
       } else {
         // Smooth curves between control points
         const nextPoint = controlPoints[i + 1] || endPoint;
         const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 40;
-        const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 40;
+        const cp1y = Math.min(controlPoints[i].y + (Math.random() - 0.5) * 40, endPoint.y - 5);
         const cp2x = nextPoint.x + (Math.random() - 0.5) * 40;
-        const cp2y = nextPoint.y + (Math.random() - 0.5) * 40;
+        const cp2y = Math.min(nextPoint.y + (Math.random() - 0.5) * 40, endPoint.y - 5);
         path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${controlPoints[i].x} ${controlPoints[i].y}`;
       }
     }
@@ -84,14 +88,15 @@ const CurvedConnectingLines = () => {
       const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
-      // Larger deviation for messier appearance
+      // Larger deviation for messier appearance, but constrained vertically
       const deviation = 60 + Math.random() * 80; // Increased deviation
       const deviationX = (Math.random() - 0.5) * deviation;
-      const deviationY = (Math.random() - 0.5) * deviation;
+      // Ensure Y deviation keeps the path above the endpoint
+      const deviationY = Math.min((Math.random() - 0.5) * deviation, endPoint.y - baseY - 15);
       
       controlPoints.push({
         x: baseX + deviationX,
-        y: baseY + deviationY
+        y: Math.min(baseY + deviationY, endPoint.y - 10) // Ensure control points stay well above endpoint
       });
     }
     
@@ -106,27 +111,27 @@ const CurvedConnectingLines = () => {
         // Final curve to end point
         if (useQuadratic) {
           const cpx = (controlPoints[i].x + endPoint.x) / 2 + (Math.random() - 0.5) * 40;
-          const cpy = (controlPoints[i].y + endPoint.y) / 2 + (Math.random() - 0.5) * 40;
+          const cpy = Math.min((controlPoints[i].y + endPoint.y) / 2 + (Math.random() - 0.5) * 40, endPoint.y - 5);
           path += ` Q ${cpx} ${cpy} ${endPoint.x} ${endPoint.y}`;
         } else {
           const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 50;
-          const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 50;
+          const cp1y = Math.min(controlPoints[i].y + (Math.random() - 0.5) * 50, endPoint.y - 5);
           const cp2x = endPoint.x + (Math.random() - 0.5) * 30;
-          const cp2y = endPoint.y + (Math.random() - 0.5) * 30;
+          const cp2y = Math.min(endPoint.y + (Math.random() - 0.5) * 30, endPoint.y);
           path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endPoint.x} ${endPoint.y}`;
         }
       } else {
         // Curves between control points
         if (useQuadratic) {
           const cpx = controlPoints[i].x + (Math.random() - 0.5) * 60;
-          const cpy = controlPoints[i].y + (Math.random() - 0.5) * 60;
+          const cpy = Math.min(controlPoints[i].y + (Math.random() - 0.5) * 60, endPoint.y - 10);
           path += ` Q ${cpx} ${cpy} ${controlPoints[i].x} ${controlPoints[i].y}`;
         } else {
           const nextPoint = controlPoints[i + 1] || endPoint;
           const cp1x = controlPoints[i].x + (Math.random() - 0.5) * 60;
-          const cp1y = controlPoints[i].y + (Math.random() - 0.5) * 60;
+          const cp1y = Math.min(controlPoints[i].y + (Math.random() - 0.5) * 60, endPoint.y - 10);
           const cp2x = nextPoint.x + (Math.random() - 0.5) * 60;
-          const cp2y = nextPoint.y + (Math.random() - 0.5) * 60;
+          const cp2y = Math.min(nextPoint.y + (Math.random() - 0.5) * 60, endPoint.y - 10);
           path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${controlPoints[i].x} ${controlPoints[i].y}`;
         }
       }
@@ -140,16 +145,16 @@ const CurvedConnectingLines = () => {
     const mainPath1 = generateMainPath(true);
     const mainPath2 = generateMainPath(false);
     
-    // Generate more messy paths with smooth curves
-    const messyPaths1 = Array.from({ length: 12 }, () => generateMessyPath(true, mainPath1));
-    const messyPaths2 = Array.from({ length: 12 }, () => generateMessyPath(false, mainPath2));
+    // Generate messy paths with smooth curves using the configurable number
+    const messyPaths1 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(true, mainPath1));
+    const messyPaths2 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(false, mainPath2));
     
     // Combine paths (main first, then messy)
     const allPaths1 = [mainPath1, ...messyPaths1];
     const allPaths2 = [mainPath2, ...messyPaths2];
     
-    const pathTypes1 = ['main', ...Array(12).fill('messy')];
-    const pathTypes2 = ['main', ...Array(12).fill('messy')];
+    const pathTypes1 = ['main', ...Array(NUM_MESSY_LINES).fill('messy')];
+    const pathTypes2 = ['main', ...Array(NUM_MESSY_LINES).fill('messy')];
     
     setPaths({ set1: allPaths1, set2: allPaths2 });
     setPathSmoothness({ set1: pathTypes1, set2: pathTypes2 });
@@ -171,7 +176,7 @@ const CurvedConnectingLines = () => {
       clearTimeout(timer);
       clearTimeout(disappearTimer);
     };
-  }, []);
+  }, [NUM_MESSY_LINES]);
 
   const renderPathSet = (pathArray, gradientId, baseDelay = 0, setName) => {
     const survivingIndex = survivingIndices[setName];
