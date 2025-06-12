@@ -62,6 +62,19 @@ const CurvedConnectingLines = () => {
     return path;
   };
 
+  // Calculate path length for proper animation timing
+  const calculatePathLength = (pathString) => {
+    // Create a temporary SVG to measure path length
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', pathString);
+    svg.appendChild(path);
+    document.body.appendChild(svg);
+    const length = path.getTotalLength();
+    document.body.removeChild(svg);
+    return length;
+  };
+
   // Generate messy paths that stay close to the circuit path
   const generateMessyPath = (isSet1 = true, circuitPath) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
@@ -127,15 +140,15 @@ const CurvedConnectingLines = () => {
     // Circuit path is always at index 0
     setSurvivingIndices({ set1: 0, set2: 0 });
 
-    // Initial animation
+    // Start animation immediately
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
 
-    // Circuit path completes after 2.5 seconds, then messy lines disappear
+    // Circuit path completes after 2.5 seconds, then start messy line disappearance
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 2500);
+    }, 2600); // 2.5s for circuit + 0.1s buffer
 
     return () => {
       clearTimeout(timer);
@@ -153,8 +166,27 @@ const CurvedConnectingLines = () => {
       const isCircuit = pathType === 'circuit';
       const shouldPathDisappear = shouldDisappear && !isSurviving;
       
+      // Calculate path length for proper stroke-dasharray animation
+      let pathLength = 1000; // default fallback
+      try {
+        if (typeof document !== 'undefined') {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          pathElement.setAttribute('d', path);
+          svg.appendChild(pathElement);
+          svg.style.position = 'absolute';
+          svg.style.visibility = 'hidden';
+          document.body.appendChild(svg);
+          pathLength = pathElement.getTotalLength();
+          document.body.removeChild(svg);
+        }
+      } catch (e) {
+        // Fallback if path length calculation fails
+        pathLength = 1000;
+      }
+      
       // Circuit path styling
-      let strokeWidth = isCircuit ? "3" : "0.8"; // Very thin messy lines
+      let strokeWidth = isCircuit ? "3" : "0.8";
       let opacity = isCircuit ? 1 : 0.6;
       let filter = isCircuit ? 
         'drop-shadow(0 3px 10px rgba(0,0,0,0.4)) drop-shadow(0 0 20px rgba(34,197,94,0.6))' :
@@ -166,6 +198,31 @@ const CurvedConnectingLines = () => {
         filter = 'drop-shadow(0 4px 15px rgba(0,0,0,0.5)) drop-shadow(0 0 30px rgba(34,197,94,0.8))';
       }
       
+      // Animation styles
+      let animationStyles = {};
+      
+      if (isCircuit) {
+        // Circuit path: animate from source to destination over 2.5 seconds
+        animationStyles = {
+          strokeDasharray: `${pathLength}`,
+          strokeDashoffset: isLoaded ? 0 : pathLength,
+          opacity: isLoaded ? 1 : 0,
+          transitionDuration: '2.5s',
+          transitionDelay: '0s',
+          transitionTimingFunction: 'ease-out'
+        };
+      } else {
+        // Messy paths: appear quickly, then disappear over 2.5 seconds
+        animationStyles = {
+          strokeDasharray: 'none',
+          strokeDashoffset: 0,
+          opacity: isLoaded ? (shouldPathDisappear ? 0 : opacity) : 0,
+          transitionDuration: shouldPathDisappear ? '2.5s' : '0.5s',
+          transitionDelay: shouldPathDisappear ? `${index * 0.1}s` : `${0.2 + index * 0.05}s`,
+          transitionTimingFunction: shouldPathDisappear ? 'ease-in' : 'ease-out'
+        };
+      }
+      
       return (
         <path
           key={index}
@@ -174,14 +231,10 @@ const CurvedConnectingLines = () => {
           stroke={isCircuit ? `url(#circuitGradient)` : `url(#${gradientId})`}
           strokeWidth={strokeWidth}
           strokeLinecap={isCircuit ? 'square' : 'round'}
-          className="transition-all ease-in-out"
+          className="transition-all"
           style={{
-            strokeDasharray: isCircuit ? '6,3' : 'none',
-            strokeDashoffset: isLoaded ? 0 : (isCircuit ? 3000 : 2000),
-            opacity: isLoaded ? (shouldPathDisappear ? (isSurviving ? 1 : 0) : opacity) : 0,
-            filter: filter,
-            transitionDuration: isCircuit ? '2.5s' : '1.5s',
-            transitionDelay: isCircuit ? '0s' : `${0.2 + index * 0.1}s`
+            ...animationStyles,
+            filter: filter
           }}
         />
       );
@@ -247,24 +300,17 @@ const CurvedConnectingLines = () => {
             }`} />
             <span>
               {!isLoaded ? 'Initializing...' : 
-               !shouldDisappear ? 'Circuit Forming...' : 
-               'Circuit Complete'}
+               !shouldDisappear ? 'Electric Path Traveling...' : 
+               'Path Complete - Clearing Interference'}
             </span>
           </div>
           <div className="text-xs text-white/70 mt-1">
-            Electric paths: {survivingIndices.set1 + 1} & {survivingIndices.set2 + 1}
+            Phase: {!shouldDisappear ? '1/2 - Path Formation' : '2/2 - Cleanup'}
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-      `}</style>
     </div>
   );
-};
+}; 
 
 export default CurvedConnectingLines;
