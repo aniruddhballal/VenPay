@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import "react-toastify/dist/ReactToastify.css";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import GridOverlay from './pages/GridOverlay';
 
 // Protected route logic
 function ProtectedRoute({ children }: { children: JSX.Element }) {
@@ -45,6 +46,9 @@ function App() {
     <Provider store={store}>
       <AuthProvider>
         <BrowserRouter>
+          {/* Always-on debug grid overlay */}
+          <GridOverlay scaleFactor={1.27} />
+
           <Routes>
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/register" element={<Register />} />
@@ -82,6 +86,7 @@ function App() {
               }
             />
           </Routes>
+
           <ToastContainer
             position="top-right"
             autoClose={1500}
@@ -96,5 +101,6 @@ function App() {
     </Provider>
   );
 }
+
 
 export default App;
