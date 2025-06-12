@@ -14,7 +14,7 @@ const CurvedConnectingLines = () => {
     
     // Create smooth flowing path with multiple control points
     const controlPoints = [];
-    const numControlPoints = 3 + Math.floor(Math.random() * 3); // 3-5 control points
+    const numControlPoints = 1 + Math.floor(Math.random() * 3); // 3-5 control points
     
     for (let i = 0; i <= numControlPoints; i++) {
       const progress = i / numControlPoints;
@@ -99,7 +99,8 @@ const CurvedConnectingLines = () => {
     let path = `M ${startPoint.x} ${startPoint.y}`;
     
     for (let i = 0; i < controlPoints.length; i++) {
-      const useQuadratic = Math.random() > 0.5; // Randomly choose between quadratic and cubic
+      //MODIFY THIS LINE TO SWITCH BETWEEN QUADRATIC AND CUBIC
+      const useQuadratic = 0;//Math.random() > 0.5; // Randomly choose between quadratic and cubic
       
       if (i === controlPoints.length - 1) {
         // Final curve to end point
