@@ -17,7 +17,7 @@ const CurvedConnectingLines = () => {
     const totalDistanceY = endPoint.y - startPoint.y;
     
     // Create multiple sharp turns (8-12 segments for complexity)
-    const segments = 8 + Math.floor(Math.random() * 5);
+    const segments = 2
     let currentPoint = { ...startPoint };
     
     for (let i = 0; i < segments; i++) {
@@ -287,27 +287,6 @@ const CurvedConnectingLines = () => {
             }}
           />
         ))}
-      </div>
-
-      {/* Status indicator */}
-      <div className="absolute bottom-8 left-8 bg-black/30 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-white/20">
-        <div className="text-white/90 text-sm">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${
-              !isLoaded ? 'bg-red-400' : 
-              !shouldDisappear ? 'bg-yellow-400' : 
-              'bg-green-400'
-            }`} />
-            <span>
-              {!isLoaded ? 'Initializing...' : 
-               !shouldDisappear ? 'Electric Path Traveling...' : 
-               'Path Complete - Clearing Interference'}
-            </span>
-          </div>
-          <div className="text-xs text-white/70 mt-1">
-            Phase: {!shouldDisappear ? '1/2 - Path Formation' : '2/2 - Cleanup'}
-          </div>
-        </div>
       </div>
     </div>
   );
