@@ -8,7 +8,7 @@ const CurvedConnectingLines = () => {
   const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
 
   // CONFIGURATION: Number of messy background lines
-  const NUM_MESSY_LINES = 4; // Modify this value to change the number of background lines
+  const NUM_MESSY_LINES = 3; // Modify this value to change the number of background lines
 
   // Generate smooth curved main path
   const generateMainPath = (isSet1 = true) => {
@@ -32,7 +32,7 @@ const CurvedConnectingLines = () => {
       const maxOffset = endPoint.y - baseY - 10; // max downward allowed
       const minOffset = 100 - baseY; // max upward allowed (don't go above y=100)
       const offsetY = Math.max(Math.min(rawOffset, maxOffset), minOffset);
-
+      
       controlPoints.push({
         x: baseX + offsetX,
         y: Math.min(baseY + offsetY, endPoint.y - 5) // Ensure control points stay above endpoint
@@ -92,7 +92,7 @@ const CurvedConnectingLines = () => {
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
       // Larger deviation for messier appearance, but constrained vertically
-      const deviation = 60 + Math.random() * 80; // Increased deviation
+      const deviation = 40 + Math.random() * 80; // Increased deviation
       const deviationX = (Math.random() - 0.5) * deviation;
       // Ensure Y deviation keeps the path above the endpoint
       const rawDeviation = (Math.random() - 0.5) * deviation;
@@ -240,11 +240,11 @@ const CurvedConnectingLines = () => {
         animationStyles = {
           strokeDasharray: `${pathLength}`,
           strokeDashoffset: isLoaded ? 0 : pathLength,
-          opacity: isLoaded ? 1 : 0,
-          transitionDuration: isLoaded ? '2.5s, 0.5s' : '2.5s', // First transition for draw, second for thickness
-          transitionDelay: '0s',
+          opacity: isLoaded ? opacity : 0, // Use the opacity from styling logic
+          transitionDuration: '2.5s, 0.5s', // Drawing + thickening
+          transitionDelay: '0s, 2.5s', // Thickening starts after drawing
           transitionTimingFunction: 'ease-out',
-          transitionProperty: isLoaded ? 'stroke-dashoffset, opacity, stroke-width, filter' : 'stroke-dashoffset, opacity'
+          transitionProperty: 'stroke-dashoffset, stroke-width, opacity, filter'
         };
       } else {
         // Messy paths: appear quickly, then disappear over 2.5 seconds
