@@ -7,6 +7,7 @@ import { useLogin } from "../hooks/useLogin";
 // ===== COMPONENTS =====
 import { AuthLogo } from "../components/AuthLogo";
 import { AuthForm } from "../components/AuthForm";
+import { ErrorMessage } from "../components/ErrorMessage";
 
 // ===== STYLES SECTION =====
 import {
@@ -37,11 +38,7 @@ export default function Login() {
             Sign In
           </Typography>
 
-          {message && (
-            <Fade in>
-              <Box sx={errorMessageStyles}>{message}</Box>
-            </Fade>
-          )}
+          <ErrorMessage message={message} sx={errorMessageStyles} />
 
           <AuthForm
             email={email}
