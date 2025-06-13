@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CurvedConnectingLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -7,12 +7,12 @@ const CurvedConnectingLines = () => {
     // Trigger animation on component mount
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 500); // Small delay for better effect
+    }, 2000); // Small delay for better effect
 
     return () => clearTimeout(timer);
   }, []);
 
-// SVG path for first curved line - from (742,120) to (900,189) with loops and curves
+    // SVG path for first curved line - from (742,120) to (900,189) with loops and curves
   const path1 = "M 742 120 Q 800 60 850 100 Q 920 140 880 180 Q 860 200 900 189";
   
   // SVG path for second curved line - from (457,120) to (320,189) with loops and curves
@@ -63,7 +63,7 @@ const CurvedConnectingLines = () => {
             strokeDasharray: 1000,
             strokeDashoffset: isLoaded ? 0 : 1000,
             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
-            transitionDelay: '0.5s'
+            transitionDelay: '2s'
           }}
         />
 
@@ -119,10 +119,6 @@ const CurvedConnectingLines = () => {
           {isLoaded ? 'Reset' : 'Animate'}
         </button>
       </div>
-
-      <style jsx>{`
-
-      `}</style>
     </div>
   );
 };
