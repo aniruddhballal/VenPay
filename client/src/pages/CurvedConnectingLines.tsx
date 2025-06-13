@@ -4,15 +4,15 @@ const CurvedConnectingLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Trigger animation on component mount
+    // Trigger animation on component mount with a shorter delay
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 2000); // Small delay for better effect
+    }, 200); // Reduced delay before animation starts
 
     return () => clearTimeout(timer);
   }, []);
 
-    // SVG path for first curved line - from (742,120) to (900,189) with loops and curves
+  // SVG path for first curved line - from (742,120) to (900,189) with loops and curves
   const path1 = "M 742 120 Q 800 60 850 100 Q 920 140 880 180 Q 860 200 900 189";
   
   // SVG path for second curved line - from (457,120) to (320,189) with loops and curves
@@ -39,13 +39,15 @@ const CurvedConnectingLines = () => {
           stroke="url(#gradient1)"
           strokeWidth="3"
           strokeLinecap="round"
-          className={`transition-all duration-3000 ease-out ${
+          className={`transition-all ease-linear ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
             strokeDasharray: 1000,
             strokeDashoffset: isLoaded ? 0 : 1000,
-            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+            transitionDuration: '3000ms', // Exactly 3 seconds
+            transitionProperty: 'stroke-dashoffset, opacity'
           }}
         />
         
@@ -56,14 +58,16 @@ const CurvedConnectingLines = () => {
           stroke="url(#gradient2)"
           strokeWidth="3"
           strokeLinecap="round"
-          className={`transition-all duration-3500 ease-out ${
+          className={`transition-all ease-linear ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
             strokeDasharray: 1000,
             strokeDashoffset: isLoaded ? 0 : 1000,
             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
-            transitionDelay: '2s'
+            transitionDuration: '3000ms', // Exactly 3 seconds
+            transitionProperty: 'stroke-dashoffset, opacity',
+            transitionDelay: '0.5s' // Second line starts 0.5s after first
           }}
         />
 
@@ -83,28 +87,40 @@ const CurvedConnectingLines = () => {
       </svg>
 
       {/* Content Sections */}
-      <div className="relative z-10 flex justify-between items-center px-16 mt-24">
-        {/* Left Section - Starting Point */}
-        <div className="text-center">
-          <div className="w-4 h-4 bg-blue-500 rounded-full mx-auto mb-4 shadow-lg"></div>
-          <h2 className="text-2xl font-semibold text-slate-700">Dashboard Overview</h2>
-          <p className="text-slate-500 mt-2">Central hub for all operations</p>
+      <div className="relative z-10 px-16 mt-24">
+        {/* Center Left Section - First Path Start */}
+        <div className="absolute" style={{left: '742px', top: '120px', transform: 'translate(-50%, -50%)'}}>
+          <div className="text-center">
+            <div className="w-4 h-4 bg-blue-500 rounded-full mx-auto mb-4 shadow-lg"></div>
+            <h2 className="text-xl font-semibold text-slate-700 whitespace-nowrap">Dashboard Overview</h2>
+            <p className="text-slate-500 mt-2 text-sm">Central hub</p>
+          </div>
         </div>
 
-        {/* Right Section - End Points */}
-        <div className="space-y-16">
-          {/* Product Catalog */}
+        {/* Right Section - First Path End */}
+        <div className="absolute" style={{left: '900px', top: '189px', transform: 'translate(-50%, -50%)'}}>
           <div className="text-center">
             <div className="w-4 h-4 bg-purple-500 rounded-full mx-auto mb-4 shadow-lg"></div>
-            <h2 className="text-2xl font-semibold text-slate-700">Product Catalog</h2>
-            <p className="text-slate-500 mt-2">Browse and manage products</p>
+            <h2 className="text-xl font-semibold text-slate-700 whitespace-nowrap">Product Catalog</h2>
+            <p className="text-slate-500 mt-2 text-sm">Browse products</p>
           </div>
+        </div>
 
-          {/* Payment Requests */}
+        {/* Center Right Section - Second Path Start */}
+        <div className="absolute" style={{left: '457px', top: '120px', transform: 'translate(-50%, -50%)'}}>
           <div className="text-center">
             <div className="w-4 h-4 bg-green-500 rounded-full mx-auto mb-4 shadow-lg"></div>
-            <h2 className="text-2xl font-semibold text-slate-700">Payment Requests</h2>
-            <p className="text-slate-500 mt-2">Handle financial transactions</p>
+            <h2 className="text-xl font-semibold text-slate-700 whitespace-nowrap">Analytics Hub</h2>
+            <p className="text-slate-500 mt-2 text-sm">Data insights</p>
+          </div>
+        </div>
+
+        {/* Left Section - Second Path End */}
+        <div className="absolute" style={{left: '320px', top: '189px', transform: 'translate(-50%, -50%)'}}>
+          <div className="text-center">
+            <div className="w-4 h-4 bg-emerald-500 rounded-full mx-auto mb-4 shadow-lg"></div>
+            <h2 className="text-xl font-semibold text-slate-700 whitespace-nowrap">Payment Requests</h2>
+            <p className="text-slate-500 mt-2 text-sm">Financial transactions</p>
           </div>
         </div>
       </div>
