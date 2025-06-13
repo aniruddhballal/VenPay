@@ -18,7 +18,7 @@ const CurvedConnectingLines = () => {
     
     // Create smooth flowing path with multiple control points
     const controlPoints = [];
-    const numControlPoints = 1 + Math.floor(Math.random() * 3); // 3-5 control points
+    const numControlPoints = 1; //1 + Math.floor(Math.random() * 3); // 3-5 control points
     
     for (let i = 0; i <= numControlPoints; i++) {
       const progress = i / numControlPoints;
@@ -85,7 +85,7 @@ const CurvedConnectingLines = () => {
     
     // Create more control points for smoother, more varied paths
     const controlPoints = [];
-    const numControlPoints = 4 + Math.floor(Math.random() * 5); // 4-8 control points for more variation
+    const numControlPoints = 1; // + Math.floor(Math.random() * 5); // 4-8 control points for more variation
     
     for (let i = 0; i <= numControlPoints; i++) {
       const progress = i / numControlPoints;
@@ -93,7 +93,7 @@ const CurvedConnectingLines = () => {
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
       // Larger deviation for messier appearance, but constrained vertically
-      const deviation = 40 + Math.random() * 80; // Increased deviation
+      const deviation = 100 + Math.random() * 80; // Increased deviation
       const deviationX = (Math.random() - 0.5) * deviation;
       // Ensure Y deviation keeps the path above the endpoint
       const rawDeviation = (Math.random() - 0.5) * deviation;
@@ -177,12 +177,12 @@ const CurvedConnectingLines = () => {
     // All paths complete after 2.5 seconds, then enhance main lines
     const enhanceTimer = setTimeout(() => {
       setShouldEnhanceMain(true);
-    }, 2600); // 2.5s for all paths + 0.1s buffer
+    }, 2500); // 2.5s for all paths + 0.1s buffer
 
     // Start messy line disappearance slightly after main line enhancement
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 3100); // 0.5s after main line enhancement
+    }, 2800); // 0.5s after main line enhancement
 
     return () => {
       clearTimeout(timer);
@@ -248,7 +248,7 @@ const CurvedConnectingLines = () => {
           strokeDasharray: `${pathLength}`,
           strokeDashoffset: 0,
           opacity: 0,
-          transitionDuration: '2.5s',
+          transitionDuration: '0.5s',
           transitionDelay: `${index * 0.05}s`,
           transitionTimingFunction: 'ease-in',
           transitionProperty: 'opacity'
