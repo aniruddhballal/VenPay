@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a23 0%, #1a1a3e 50%, #2a2a5e 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            position: relative;
+            min-height: 100vh;
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        .connecting-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .line-horizontal {
+            height: 1px;
+            width: 100%;
+        }
+
+        .line-vertical {
+            width: 1px;
+            height: 100%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.6; }
+        }
+
+        .dashboard-header {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #ff006e, #8338ec);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        .user-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .styled-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 1rem;
+        }
+
+        .styled-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .styled-button:hover::before {
+            left: 100%;
+        }
+
+        .button-profile {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+        }
+
+        .button-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .button-logout {
+            background: linear-gradient(135deg, #ff006e, #cc0055);
+            color: white;
+        }
+
+        .button-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 0, 110, 0.3);
+        }
+
+        .dashboard-subheader {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 3rem 0;
+            background: linear-gradient(135deg, #8338ec, #3a86ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .navigation-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .navigation-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            min-width: 200px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .navigation-button:hover {
+            transform: scale(1.05) translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .nav-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #00d4ff, #8338ec);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .section-container {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #00d4ff;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00d4ff;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .user-type-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .user-type-selector select {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-type-selector option {
+            background: #1a1a3e;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                font-size: 2rem;
+            }
+            
+            .navigation-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .navigation-button {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="user-type-selector">
+        <select id="userTypeSelect">
+            <option value="vendor">Vendor User</option>
+            <option value="company">Company User</option>
+        </select>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="connecting-lines">
+            <div class="line line-horizontal" style="top: 20%;"></div>
+            <div class="line line-horizontal" style="top: 50%;"></div>
+            <div class="line line-horizontal" style="top: 80%;"></div>
+            <div class="line line-vertical" style="left: 25%;"></div>
+            <div class="line line-vertical" style="left: 75%;"></div>
+        </div>
+
+        <h1 class="dashboard-header" id="welcomeHeader">Welcome, Alex Johnson</h1>
+
+        <div class="user-controls">
+            <button class="styled-button button-profile" id="profileBtn">
+                📱 Profile
+            </button>
+            <button class="styled-button button-logout" id="logoutBtn">
+                🚪 Logout
+            </button>
+        </div>
+
+        <div id="dashboardContent">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // User data simulation
+        const users = {
+            vendor: { name: "Alex Johnson", userType: "vendor" },
+            company: { name: "Sarah Chen", userType: "company" }
+        };
+
+        let currentUser = users.vendor;
+
+        // Initialize particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particlesContainer.appendChild(particle);
+
+                gsap.to(particle, {
+                    x: (Math.random() - 0.5) * 200,
+                    y: (Math.random() - 0.5) * 200,
+                    duration: Math.random() * 10 + 5,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "power1.inOut"
+                });
+
+                gsap.to(particle, {
+                    opacity: Math.random() * 0.5 + 0.2,
+                    duration: Math.random() * 3 + 1,
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+        }
+
+        // Animation functions
+        function animateHeader() {
+            gsap.to(".dashboard-header", {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: "power3.out"
+            });
+        }
+
+        function animateControls() {
+            gsap.to(".user-controls", {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: 0.5,
+                ease: "power2.out"
+            });
+        }
+
+        function animateSubheader() {
+            gsap.to(".dashboard-subheader", {
+                opacity: 1,
+                x: 0,
+                duration: 1.2,
+                ease: "power3.out"
+            });
+        }
+
+        function animateNavigationButtons() {
+            gsap.to(".navigation-button", {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "back.out(1.7)"
+            });
+        }
+
+        function animateSections() {
+            gsap.to(".section-container", {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.3,
+                ease: "power2.out"
+            });
+        }
+
+        // Scroll to section function
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: section,
+                    ease: "power2.inOut"
+                });
+            }
+        }
+
+        // Generate dashboard content
+        function generateDashboardContent(userType) {
+            const contentContainer = document.getElementById('dashboardContent');
+            
+            if (userType === 'vendor') {
+                contentContainer.innerHTML = `
+                    <h2 class="dashboard-subheader">Vendor Dashboard</h2>
+                    
+                    <div class="navigation-container">
+                        <div class="navigation-button" onclick="scrollToSection('product-management')">
+                            <div class="nav-icon">📦</div>
+                            <span>Product Management</span>
+                        </div>
+                        <div class="navigation-button" onclick="scrollToSection('product-requests')">
+                            <div class="nav-icon">📋</div>
+                            <span>Product Requests</span>
+                        </div>
+                    </div>
+
+                    <div class="section-container" id="product-management">
+                        <h3 class="section-title">Product Management</h3>
+                        <div class="product-grid">
+                            <div class="product-card">
+                                <h4>Wireless Headphones</h4>
+                                <p>Stock: 45 units</p>
+                                <p>Price: $299.99</p>
+                                <p>Status: Active</p>
+                            </div>
+                            <div class="product-card">
+                                <h4>Smart Watch</h4>
+                                <p>Stock: 23 units</p>
+                                <p>Price: $199.99</p>
+                                <p>Status: Low Stock</p>
+                            </div>
+                            <div class="product-card">
+                                <h4>Laptop Stand</h4>
+                                <p>Stock: 67 units</p>
+                                <p>Price: $79.99</p>
+                                <p>Status: Active</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-container" id="product-requests">
+                        <h3 class="section-title">Product Requests</h3>
+                        <div class="product-grid">
+                            <div class="product-card">
+                                <h4>Request #1001</h4>
+                                <p>Product: Gaming Mouse</p>
+                                <p>Quantity: 15 units</p>
+                                <p>Status: Pending</p>
+                                <p>Priority: High</p>
+                            </div>
+                            <div class="product-card">
+                                <h4>Request #1002</h4>
+                                <p>Product: USB-C Cable</p>
+                                <p>Quantity: 100 units</p>
+                                <p>Status: In Progress</p>
+                                <p>Priority: Medium</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                contentContainer.innerHTML = `
+                    <h2 class="dashboard-subheader">Company Dashboard</h2>
+                    
+                    <div class="navigation-container">
+                        <div class="navigation-button" onclick="scrollToSection('product-list')">
+                            <div class="nav-icon">🏢</div>
+                            <span>Product Catalog</span>
+                        </div>
+                        <div class="navigation-button" onclick="scrollToSection('payment-requests')">
+                            <div class="nav-icon">💳</div>
+                            <span>Payment Requests</span>
+                        </div>
+                    </div>
+
+                    <div class="section-container" id="product-list">
+                        <h3 class="section-title">Product Catalog</h3>
+                        <div class="product-grid">
+                            <div class="product-card">
+                                <h4>Office Supplies Bundle</h4>
+                                <p>Vendor: OfficeMax Pro</p>
+                                <p>Price: $145.99</p>
+                                <p>Delivery: 2-3 days</p>
+                            </div>
+                            <div class="product-card">
+                                <h4>Ergonomic Chairs</h4>
+                                <p>Vendor: ComfortSeating</p>
+                                <p>Price: $389.99</p>
+                                <p>Delivery: 5-7 days</p>
+                            </div>
+                            <div class="product-card">
+                                <h4>Conference Room Tech</h4>
+                                <p>Vendor: TechSolutions</p>
+                                <p>Price: $1,299.99</p>
+                                <p>Delivery: 1-2 weeks</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-container" id="payment-requests">
+                        <h3 class="section-title">Payment Requests</h3>
+                        <div class="product-grid">
+                            <div class="product-card">
+                                <h4>Invoice #PAY-001</h4>
+                                <p>Amount: $2,450.00</p>
+                                <p>Vendor: TechCorp Solutions</p>
+                                <p>Due Date: Dec 15, 2024</p>
+                                <p>Status: Pending Approval</p>
+                            </div>
+                            <div class="product-card">
+                                <h4>Invoice #PAY-002</h4>
+                                <p>Amount: $890.50</p>
+                                <p>Vendor: Office Supplies Plus</p>
+                                <p>Due Date: Dec 20, 2024</p>
+                                <p>Status: Approved</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Update dashboard based on user type
+        function updateDashboard(userType) {
+            currentUser = users[userType];
+            document.getElementById('welcomeHeader').textContent = `Welcome, ${currentUser.name}`;
+            
+            // Reset animations
+            gsap.set([".dashboard-subheader", ".navigation-button", ".section-container"], {
+                opacity: 0,
+                y: 50,
+                x: userType === 'vendor' ? -100 : 100,
+                scale: 0.8
+            });
+
+            generateDashboardContent(userType);
+            
+            // Animate new content
+            setTimeout(() => {
+                animateSubheader();
+                animateNavigationButtons();
+                animateSections();
+            }, 100);
+        }
+
+        // Event listeners
+        document.getElementById('userTypeSelect').addEventListener('change', function(e) {
+            updateDashboard(e.target.value);
+        });
+
+        document.getElementById('profileBtn').addEventListener('click', function() {
+            gsap.to(this, {
+                scale: 0.95,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1
+            });
+            alert('Profile clicked!');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            gsap.to(this, {
+                scale: 0.95,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1
+            });
+            
+            gsap.to('.dashboard-container', {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.5,
+                ease: "power2.in",
+                onComplete: () => {
+                    alert('Logged out successfully!');
+                    gsap.to('.dashboard-container', {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                }
+            });
+        });
+
+        // Initialize dashboard
+        function initializeDashboard() {
+            createParticles();
+            generateDashboardContent('vendor');
+            
+            // Initial animations
+            setTimeout(() => {
+                animateHeader();
+                animateControls();
+                animateSubheader();
+                animateNavigationButtons();
+                animateSections();
+            }, 500);
+
+            // Add hover effects to product cards
+            document.addEventListener('mouseover', function(e) {
+                if (e.target.closest('.product-card')) {
+                    gsap.to(e.target.closest('.product-card'), {
+                        scale: 1.02,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                }
+            });
+
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.closest('.product-card')) {
+                    gsap.to(e.target.closest('.product-card'), {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                }
+            });
+        }
+
+        // Start the dashboard
+        initializeDashboard();
+    </script>
+</body>
+</html>
