@@ -1,11 +1,16 @@
 import { Box, Typography, Paper, Fade, Grow } from "@mui/material";
 import { Link } from "react-router-dom";
 
+// ==== FORM LOGIC + CUSTOM HOOK ====
 import { useRegister } from "../hooks/useRegister";
-import { RegisterForm } from "../components/RegisterForm";
+
+// ===== COMPONENTS =====
 import { AuthLogo } from "../components/AuthLogo";
-import { registerStyles } from "../styles/registerStyles";
+import { RegisterForm } from "../components/RegisterForm";
 import { ErrorMessage } from "../components/ErrorMessage";
+
+// ===== STYLES SECTION =====
+import { registerStyles } from "../styles/registerStyles";
 
 export default function Register() {
   const {
