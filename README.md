@@ -263,3 +263,8 @@ DONE 40. translatex, translatey - make it go around the boxes - complete a round
 62. minimumprice limit in input/edit field of price
 63. make reviews as a drop down or something - let it optionally occupy space
 64. instead of having separate edit profile page - allow editing inline - just like product mgmt
+
+implementing profile photo patch now: wait, let me think about where all this change will ripple into...
+dashboard (profile button can be replaced with profile photo, same functionality onclick).
+then displayuser and edit profile pages. and while showing product requests, payment requests.
+BTW NONE of the payment requests - company side - show images of all the products.
