@@ -320,17 +320,6 @@ export const StyledButton = styled(Button)<{ buttontype: 'profile' | 'logout' }>
   '&:hover::before': {
     left: '100%',
   },
-  ...(buttonType === 'profile' && {
-    top: '2.15rem',
-    right: '3rem',
-    background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
-    color: '#fff',
-    '&:hover': {
-      background: 'linear-gradient(135deg, #374151 0%, #1f2937 100%)',
-      transform: 'translateY(-2px)',
-      boxShadow: '0 8px 25px rgba(31, 41, 55, 0.5)',
-    },
-  }),
   ...(buttonType === 'logout' && {
     top: '7.15rem',
     right: '3rem',
@@ -343,4 +332,38 @@ export const StyledButton = styled(Button)<{ buttontype: 'profile' | 'logout' }>
       boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
     },
   }),
+}));
+
+export const ProfileButton = styled(Button)(({ /*theme*/ }) => ({
+  position: 'absolute',
+  top: '2.15rem',
+  right: '3rem',
+  width: '50px',
+  height: '50px',
+  minWidth: '50px',
+  borderRadius: '50%',
+  border: '3px solid rgba(255, 255, 255, 0.8)',
+  cursor: 'pointer',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  zIndex: 1000,
+  padding: 0,
+  overflow: 'hidden',
+  background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)',
+  boxShadow: '0 4px 15px rgba(31, 41, 55, 0.4)',
+  '&:hover': {
+    transform: 'translateY(-2px) scale(1.05)',
+    boxShadow: '0 8px 25px rgba(31, 41, 55, 0.5)',
+    border: '3px solid rgba(255, 255, 255, 1)',
+  },
+  '& .MuiSvgIcon-root': {
+    fontSize: '1.5rem',
+    color: '#fff',
+  },
+}));
+
+export const ProfileImage = styled('img')(() => ({
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  borderRadius: '50%',
 }));
