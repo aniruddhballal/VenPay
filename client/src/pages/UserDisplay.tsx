@@ -35,10 +35,6 @@ import {
   SecondaryButton,
   LoadingContainer,
   ErrorContainer,
-  ProfileSection,
-  ProfileImageContainer,
-  ProfileName,
-  ProfileEmail,
 } from '../styles/userDisplayStyles';
 
 export default function UserDisplay() {
@@ -128,13 +124,34 @@ export default function UserDisplay() {
               User Profile
             </Title>
 
-            <ProfileSection>
-              <ProfileImageContainer>
+            {/* Large Profile Picture Section */}
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              marginBottom: '3rem',
+              marginTop: '2rem'
+            }}>
+              <Box sx={{
+                width: { xs: '200px', sm: '300px' },
+                height: { xs: '200px', sm: '300px' },
+                borderRadius: '12px',
+                overflow: 'hidden',
+                border: '2px solid #e5e7eb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              }}>
                 {user.profilePicture ? (
                   <img 
                     src={user.profilePicture} 
                     alt={`${user.name}'s profile`}
-                    className="profile-image"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
                     onError={(e) => {
                       // Fallback to placeholder if image fails to load
                       const target = e.target as HTMLImageElement;
@@ -145,31 +162,20 @@ export default function UserDisplay() {
                   />
                 ) : null}
                 <Box 
-                  className="profile-placeholder"
                   style={{ 
-                    display: user.profilePicture ? 'none' : 'flex' 
+                    display: user.profilePicture ? 'none' : 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    color: '#9ca3af',
+                    fontSize: '4rem'
                   }}
                 >
                   <PersonIcon fontSize="inherit" />
                 </Box>
-              </ProfileImageContainer>
-              
-              <ProfileName>
-                {user.name}
-              </ProfileName>
-              
-              <ProfileEmail>
-                {user.email}
-              </ProfileEmail>
-              
-              <Box sx={{ marginTop: '1rem' }}>
-                <UserTypeChip
-                  usertype={user.userType}
-                  icon={user.userType === 'company' ? <BusinessIcon /> : <PersonIcon />}
-                  label={user.userType}
-                />
               </Box>
-            </ProfileSection>
+            </Box>
 
             <Typography 
               variant="h6" 
