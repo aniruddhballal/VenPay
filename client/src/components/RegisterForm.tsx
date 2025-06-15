@@ -1,5 +1,5 @@
 import { Box, Button, MenuItem, TextField } from "@mui/material";
-import { registerStyles } from "../styles/registerStyles";
+import { registerFormStyles } from "../styles/registerStyles";
 
 export function RegisterForm({
   email, setEmail,
@@ -10,14 +10,14 @@ export function RegisterForm({
   handleSubmit
 }: any) {
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={registerStyles.form}>
+    <Box component="form" onSubmit={handleSubmit} sx={registerFormStyles.form}>
       <TextField
         type="email"
         label="Email Address"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required fullWidth autoComplete="email"
-        sx={registerStyles.textField}
+        sx={registerFormStyles.textField}
       />
       <TextField
         type="text"
@@ -25,7 +25,7 @@ export function RegisterForm({
         value={name}
         onChange={(e) => setName(e.target.value)}
         required fullWidth autoComplete="name"
-        sx={registerStyles.textField}
+        sx={registerFormStyles.textField}
       />
       <TextField
         type="password"
@@ -33,14 +33,14 @@ export function RegisterForm({
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required fullWidth autoComplete="new-password"
-        sx={registerStyles.textField}
+        sx={registerFormStyles.textField}
       />
       <TextField
         select
         label="Account Type"
         value={userType}
         onChange={(e) => setUserType(e.target.value)}
-        required fullWidth sx={registerStyles.selectField}
+        required fullWidth sx={registerFormStyles.selectField}
       >
         <MenuItem value="vendor">Vendor</MenuItem>
         <MenuItem value="company">Company</MenuItem>
@@ -50,7 +50,7 @@ export function RegisterForm({
         variant="contained"
         size="large"
         disabled={loading}
-        sx={registerStyles.submitButton}
+        sx={registerFormStyles.submitButton}
       >
         {loading ? "Creating Account..." : "Create Account"}
       </Button>
