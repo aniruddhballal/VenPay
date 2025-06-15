@@ -197,27 +197,6 @@ export default function UserDisplay() {
                   {user.name}
                 </Typography>
 
-                <Typography 
-                  variant="h6" 
-                  sx={{ 
-                    marginBottom: '1.5rem', 
-                    color: '#6b7280', 
-                    fontWeight: 400,
-                    fontSize: '1.125rem'
-                  }}
-                >
-                  {user.email}
-                </Typography>
-
-                <Box sx={{ marginBottom: '2rem' }}>
-                  <UserTypeChip
-                    usertype={user.userType}
-                    icon={user.userType === 'company' ? <BusinessIcon /> : <PersonIcon />}
-                    label={user.userType}
-                    sx={{ fontSize: '0.875rem' }}
-                  />
-                </Box>
-
                 <Box>
                   <InfoRow sx={{ marginBottom: '1rem' }}>
                     <InfoLabel className="info-label">
