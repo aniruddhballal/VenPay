@@ -16,7 +16,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       dispatch(setLoading(true));
       try {
         // This will use the JWT cookie to verify auth
-        const response = await api.get('/auth/me');
+        const response = await api.get('/auth/me', {
+          headers: {
+            'X-Internal-Check': 'true',
+          },
+        });
         dispatch(setUser(response.data.user));
       } catch (error) {
         // No valid token/user, set to null
