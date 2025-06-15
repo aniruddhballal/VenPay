@@ -10,10 +10,7 @@ import { AuthForm } from "../components/AuthForm";
 import { ErrorMessage } from "../components/ErrorMessage";
 
 // ===== STYLES SECTION =====
-import {
-  containerStyles, headerBoxStyles, welcomeTextStyles, paperStyles,
-  titleStyles, errorMessageStyles, footerTextStyles
-} from '../styles/loginStyles';
+import { loginStyles } from '../styles/loginStyles';
 
 export default function Login() {
   const {
@@ -22,23 +19,23 @@ export default function Login() {
   } = useLogin();
 
   return (
-    <Box sx={containerStyles}>
+    <Box sx={loginStyles.container}>
       <Fade in timeout={800}>
-        <Box sx={headerBoxStyles}>
+        <Box sx={loginStyles.headerBox}>
           <AuthLogo />
-          <Typography variant="h6" sx={welcomeTextStyles}>
+          <Typography variant="h6" sx={loginStyles.welcomeText}>
             Welcome Back
           </Typography>
         </Box>
       </Fade>
 
       <Grow in timeout={1000}>
-        <Paper elevation={24} sx={paperStyles}>
-          <Typography variant="h4" align="center" sx={titleStyles}>
+        <Paper elevation={24} sx={loginStyles.paper}>
+          <Typography variant="h4" align="center" sx={loginStyles.title}>
             Sign In
           </Typography>
 
-          <ErrorMessage message={message} sx={errorMessageStyles} />
+          <ErrorMessage message={message} sx={loginStyles.errorMessage} />
 
           <AuthForm
             email={email}
@@ -49,7 +46,7 @@ export default function Login() {
             onSubmit={handleSubmit}
           />
 
-          <Typography variant="body2" align="center" sx={footerTextStyles}>
+          <Typography variant="body2" align="center" sx={loginStyles.footerText}>
             Don't have an account? <Link to="/register">Create one</Link>
           </Typography>
         </Paper>
