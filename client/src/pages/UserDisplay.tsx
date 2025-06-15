@@ -134,8 +134,8 @@ export default function UserDisplay() {
             }}>
               {/* Profile Picture */}
               <Box sx={{
-                width: { xs: '200px', md: '250px' },
-                height: { xs: '200px', md: '250px' },
+                width: { xs: '300px', md: '360px' },
+                height: { xs: '300px', md: '360px' },
                 borderRadius: '12px',
                 overflow: 'hidden',
                 border: '2px solid #e5e7eb',
