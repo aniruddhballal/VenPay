@@ -54,7 +54,7 @@ export const datePickerModalStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '24px 24px 0 24px',
+    padding: '10px 10px 10px 10px',
     borderBottom: '1px solid #e2e8f0',
     marginBottom: '24px',
     '@media (max-width: 480px)': {
