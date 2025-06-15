@@ -337,9 +337,9 @@ export const StyledButton = styled(Button)<{ buttontype: 'profile' | 'logout' }>
 export const ProfileButton = styled(Button)(({ /*theme*/ }) => ({
   position: 'absolute',
   top: '2.15rem',
-  right: '3rem',
-  width: '50px',
-  height: '50px',
+  right: '5rem',
+  width: '60px',
+  height: '60px',
   minWidth: '50px',
   borderRadius: '50%',
   border: '3px solid rgba(255, 255, 255, 0.8)',
