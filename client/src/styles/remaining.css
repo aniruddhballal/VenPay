@@ -1377,6 +1377,9 @@ Merged ProductList and ProductManagement up next
 @keyframes float {
   0% { transform: translateY(0px); }
   100% { transform: translateY(-1px); }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes slideInDown {
