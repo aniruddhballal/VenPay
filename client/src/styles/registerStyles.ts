@@ -1,6 +1,4 @@
-import type { SxProps, Theme } from '@mui/material';
-
-export const registerStyles: Record<string, SxProps<Theme>> = {
+export const registerStyles = {
   container: {
     minHeight: "100vh",
     display: "flex",
@@ -15,26 +13,6 @@ export const registerStyles: Record<string, SxProps<Theme>> = {
   header: {
     textAlign: "center",
     mb: 6,
-  },
-  
-  logoContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
-    mb: 2,
-  },
-  
-  logo: {
-    height: { xs: 70, sm: 95 }, 
-    width: { xs: 77, sm: 105 },
-    filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.4))"
-  },
-  
-  brandText: {
-    height: { xs: 70, sm: 95 }, 
-    width: "auto",
-    filter: "drop-shadow(0 4px 20px rgba(59, 130, 246, 0.4))"
   },
   
   subtitle: {
@@ -87,12 +65,28 @@ export const registerStyles: Record<string, SxProps<Theme>> = {
     fontSize: "0.9rem",
   },
   
+  footer: {
+    mt: 4, 
+    color: "rgba(255,255,255,0.6)",
+    "& a": {
+      color: "#60a5fa",
+      textDecoration: "none",
+      fontWeight: 600,
+      transition: "color 0.2s",
+      "&:hover": {
+        color: "#93c5fd",
+        textDecoration: "underline"
+      }
+    }
+  }
+};
+
+export const registerFormStyles = {
   form: {
     display: "flex", 
     flexDirection: "column", 
     gap: 3.5
   },
-  
   textField: {
     "& .MuiOutlinedInput-root": {
       borderRadius: 3,
@@ -125,7 +119,6 @@ export const registerStyles: Record<string, SxProps<Theme>> = {
       }
     }
   },
-  
   selectField: {
     "& .MuiOutlinedInput-root": {
       borderRadius: 3,
@@ -161,7 +154,6 @@ export const registerStyles: Record<string, SxProps<Theme>> = {
       color: "rgba(255, 255, 255, 0.7)",
     }
   },
-  
   submitButton: {
     background: "linear-gradient(135deg, #10b981 0%, #3b82f6 100%)",
     color: "white",
@@ -201,19 +193,4 @@ export const registerStyles: Record<string, SxProps<Theme>> = {
       opacity: 0.7,
     }
   },
-  
-  footer: {
-    mt: 4, 
-    color: "rgba(255,255,255,0.6)",
-    "& a": {
-      color: "#60a5fa",
-      textDecoration: "none",
-      fontWeight: 600,
-      transition: "color 0.2s",
-      "&:hover": {
-        color: "#93c5fd",
-        textDecoration: "underline"
-      }
-    }
-  }
-};
+}
