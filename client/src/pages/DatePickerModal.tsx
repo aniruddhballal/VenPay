@@ -137,7 +137,7 @@ function DatePickerModal({ isOpen, onClose, onConfirm, title }: DatePickerModalP
                   max: maxDate,
                 }}
                 sx={{
-                  width: '90%',
+                  width: '100%',
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '12px',
                     backgroundColor: '#ffffff',
