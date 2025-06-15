@@ -2,11 +2,12 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
-    _id: Types.ObjectId;        // 👈 Add this line
+    _id: Types.ObjectId;
     email: string;
     name: string;
     password: string;
     userType: "company" | "vendor";
+    profilePicture?: string; // 👈 optional field
 }
 
 const userSchema = new Schema<IUser>({
@@ -18,6 +19,7 @@ const userSchema = new Schema<IUser>({
     enum: ["company", "vendor"],
     required: true,
   },
+  profilePicture: { type: String }, // 👈 e.g., Cloudinary URL, base64, etc.
 });
 
 userSchema.pre("save", async function () {
