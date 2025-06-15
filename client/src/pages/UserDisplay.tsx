@@ -120,20 +120,22 @@ export default function UserDisplay() {
       <Fade in timeout={800}>
         <StyledCard elevation={0}>
           <CardContent sx={{ padding: '3rem' }}>
-            <Title component="h1">
+            <Title component="h1" sx={{ marginBottom: '2rem' }}>
               User Profile
             </Title>
 
-            {/* Large Profile Picture Section */}
+            {/* Horizontal Layout: Profile Picture + User Info */}
             <Box sx={{ 
               display: 'flex', 
-              justifyContent: 'center', 
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: { xs: '2rem', md: '3rem' },
               marginBottom: '3rem',
-              marginTop: '2rem'
+              alignItems: { xs: 'center', md: 'flex-start' }
             }}>
+              {/* Profile Picture */}
               <Box sx={{
-                width: { xs: '200px', sm: '300px' },
-                height: { xs: '200px', sm: '300px' },
+                width: { xs: '200px', md: '250px' },
+                height: { xs: '200px', md: '250px' },
                 borderRadius: '12px',
                 overflow: 'hidden',
                 border: '2px solid #e5e7eb',
@@ -142,6 +144,7 @@ export default function UserDisplay() {
                 justifyContent: 'center',
                 background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                flexShrink: 0,
               }}>
                 {user.profilePicture ? (
                   <img 
@@ -175,66 +178,84 @@ export default function UserDisplay() {
                   <PersonIcon fontSize="inherit" />
                 </Box>
               </Box>
-            </Box>
 
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                marginBottom: '2rem', 
-                color: '#374151', 
-                fontWeight: 600,
-                fontSize: '1.25rem'
-              }}
-            >
-              Account Details
-            </Typography>
-
-            <Box sx={{ marginBottom: '3rem' }}>
-              <InfoRow>
-                <InfoLabel className="info-label">
-                  <BadgeIcon fontSize="small" className="info-icon" />
-                  User ID
-                </InfoLabel>
-                <InfoValue className="info-value" sx={{ fontFamily: 'monospace', fontSize: '1rem' }}>
-                  {user._id}
-                </InfoValue>
-              </InfoRow>
-
-              <InfoRow>
-                <InfoLabel className="info-label">
-                  <PersonIcon fontSize="small" className="info-icon" />
-                  Full Name
-                </InfoLabel>
-                <InfoValue className="info-value">
+              {/* User Information */}
+              <Box sx={{ 
+                flex: 1, 
+                width: { xs: '100%', md: 'auto' },
+                textAlign: { xs: 'center', md: 'left' }
+              }}>
+                <Typography 
+                  variant="h4" 
+                  sx={{ 
+                    marginBottom: '1rem', 
+                    color: '#1f2937', 
+                    fontWeight: 700,
+                    fontSize: { xs: '1.75rem', md: '2.25rem' }
+                  }}
+                >
                   {user.name}
-                </InfoValue>
-              </InfoRow>
+                </Typography>
 
-              <InfoRow>
-                <InfoLabel className="info-label">
-                  <EmailIcon fontSize="small" className="info-icon" />
-                  Email Address
-                </InfoLabel>
-                <InfoValue className="info-value">
-                  <a href={`mailto:${user.email}`} style={{ textDecoration: "none", color: "inherit" }}>
-                    {user.email}
-                  </a>
-                </InfoValue>
-              </InfoRow>
-              
-              <InfoRow>
-                <InfoLabel className="info-label">
-                  <AccountCircleIcon fontSize="small" className="info-icon" />
-                  Account Type
-                </InfoLabel>
-                <Box>
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    marginBottom: '1.5rem', 
+                    color: '#6b7280', 
+                    fontWeight: 400,
+                    fontSize: '1.125rem'
+                  }}
+                >
+                  {user.email}
+                </Typography>
+
+                <Box sx={{ marginBottom: '2rem' }}>
                   <UserTypeChip
                     usertype={user.userType}
                     icon={user.userType === 'company' ? <BusinessIcon /> : <PersonIcon />}
                     label={user.userType}
+                    sx={{ fontSize: '0.875rem' }}
                   />
                 </Box>
-              </InfoRow>
+
+                <Box>
+                  <InfoRow sx={{ marginBottom: '1rem' }}>
+                    <InfoLabel className="info-label">
+                      <BadgeIcon fontSize="small" className="info-icon" />
+                      User ID
+                    </InfoLabel>
+                    <InfoValue className="info-value" sx={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                      {user._id}
+                    </InfoValue>
+                  </InfoRow>
+
+                  <InfoRow sx={{ marginBottom: '1rem' }}>
+                    <InfoLabel className="info-label">
+                      <EmailIcon fontSize="small" className="info-icon" />
+                      Email Address
+                    </InfoLabel>
+                    <InfoValue className="info-value">
+                      <a href={`mailto:${user.email}`} style={{ textDecoration: "none", color: "inherit" }}>
+                        {user.email}
+                      </a>
+                    </InfoValue>
+                  </InfoRow>
+                  
+                  <InfoRow>
+                    <InfoLabel className="info-label">
+                      <AccountCircleIcon fontSize="small" className="info-icon" />
+                      Account Type
+                    </InfoLabel>
+                    <Box>
+                      <UserTypeChip
+                        usertype={user.userType}
+                        icon={user.userType === 'company' ? <BusinessIcon /> : <PersonIcon />}
+                        label={user.userType}
+                      />
+                    </Box>
+                  </InfoRow>
+                </Box>
+              </Box>
             </Box>
 
             <Divider sx={{ marginY: '2rem' }} />
