@@ -35,6 +35,10 @@ import {
   SecondaryButton,
   LoadingContainer,
   ErrorContainer,
+  ProfileSection,
+  ProfileImageContainer,
+  ProfileName,
+  ProfileEmail,
 } from '../styles/userDisplayStyles';
 
 export default function UserDisplay() {
@@ -121,8 +125,63 @@ export default function UserDisplay() {
         <StyledCard elevation={0}>
           <CardContent sx={{ padding: '3rem' }}>
             <Title component="h1">
-              User Details
+              User Profile
             </Title>
+
+            <ProfileSection>
+              <ProfileImageContainer>
+                {user.profilePicture ? (
+                  <img 
+                    src={user.profilePicture} 
+                    alt={`${user.name}'s profile`}
+                    className="profile-image"
+                    onError={(e) => {
+                      // Fallback to placeholder if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const placeholder = target.nextElementSibling as HTMLElement;
+                      if (placeholder) placeholder.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <Box 
+                  className="profile-placeholder"
+                  style={{ 
+                    display: user.profilePicture ? 'none' : 'flex' 
+                  }}
+                >
+                  <PersonIcon fontSize="inherit" />
+                </Box>
+              </ProfileImageContainer>
+              
+              <ProfileName>
+                {user.name}
+              </ProfileName>
+              
+              <ProfileEmail>
+                {user.email}
+              </ProfileEmail>
+              
+              <Box sx={{ marginTop: '1rem' }}>
+                <UserTypeChip
+                  usertype={user.userType}
+                  icon={user.userType === 'company' ? <BusinessIcon /> : <PersonIcon />}
+                  label={user.userType}
+                />
+              </Box>
+            </ProfileSection>
+
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                marginBottom: '2rem', 
+                color: '#374151', 
+                fontWeight: 600,
+                fontSize: '1.25rem'
+              }}
+            >
+              Account Details
+            </Typography>
 
             <Box sx={{ marginBottom: '3rem' }}>
               <InfoRow>
