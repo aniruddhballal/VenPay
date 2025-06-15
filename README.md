@@ -270,3 +270,7 @@ then displayuser and edit profile pages. and while showing product requests, pay
 BTW NONE of the payment requests - company side - show images of all the products.
 
 the pfp is optional - so the display should be the default empty profile image or whatever they pick (dont have to ask while signup)
+
+65. another idea as im implementing the pfp feature - a page to scroll thru all vendors and all companies - and then view their products.
+right now, its a products page - but we can have vendors page too. vendors page with filtering products vs products page with filtering vendors.
+filtering prices. filtering avg star ratings.
