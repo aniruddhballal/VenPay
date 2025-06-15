@@ -453,3 +453,117 @@ export const ErrorContainer = styled(Alert)(({ theme }) => ({
     padding: '2rem 1rem',
   },
 }));
+
+export const ProfileSection = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginBottom: '3rem',
+  padding: '2rem',
+  borderRadius: '16px',
+  background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+  border: '1px solid #e5e7eb',
+  transition: 'all 0.3s ease',
+  
+  '&:hover': {
+    background: 'linear-gradient(135deg, #f1f5f9 0%, #ddd6fe 100%)',
+    boxShadow: '0 8px 25px -5px rgba(139, 92, 246, 0.15)',
+    transform: 'translateY(-2px)',
+  },
+  
+  [theme.breakpoints.down('sm')]: {
+    padding: '1.5rem',
+    marginBottom: '2rem',
+  },
+  
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': {
+      transform: 'none',
+    },
+  },
+}));
+
+export const ProfileImageContainer = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  marginBottom: '1.5rem',
+  
+  '& .profile-image': {
+    width: '120px',
+    height: '120px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '4px solid #ffffff',
+    boxShadow: '0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -3px rgba(0, 0, 0, 0.05)',
+    transition: 'all 0.3s ease',
+    
+    '&:hover': {
+      boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.2), 0 8px 20px -5px rgba(0, 0, 0, 0.1)',
+      transform: 'scale(1.05)',
+    },
+  },
+  
+  '& .profile-placeholder': {
+    width: '120px',
+    height: '120px',
+    borderRadius: '50%',
+    backgroundColor: '#e5e7eb',
+    border: '4px solid #ffffff',
+    boxShadow: '0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -3px rgba(0, 0, 0, 0.05)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#6b7280',
+    fontSize: '3rem',
+    transition: 'all 0.3s ease',
+    
+    '&:hover': {
+      backgroundColor: '#d1d5db',
+      boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.2), 0 8px 20px -5px rgba(0, 0, 0, 0.1)',
+      transform: 'scale(1.05)',
+    },
+  },
+  
+  [theme.breakpoints.down('sm')]: {
+    '& .profile-image, & .profile-placeholder': {
+      width: '100px',
+      height: '100px',
+    },
+    
+    '& .profile-placeholder': {
+      fontSize: '2.5rem',
+    },
+  },
+  
+  '@media (prefers-reduced-motion: reduce)': {
+    '& .profile-image, & .profile-placeholder': {
+      transition: 'none',
+      
+      '&:hover': {
+        transform: 'none',
+      },
+    },
+  },
+}));
+
+export const ProfileName = styled(Typography)(({ theme }) => ({
+  fontSize: '1.5rem',
+  fontWeight: 600,
+  color: '#1f2937',
+  textAlign: 'center',
+  marginBottom: '0.5rem',
+  
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1.25rem',
+  },
+}));
+
+export const ProfileEmail = styled(Typography)(({ theme }) => ({
+  fontSize: '1rem',
+  color: '#6b7280',
+  textAlign: 'center',
+  
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '0.875rem',
+  },
+}));
