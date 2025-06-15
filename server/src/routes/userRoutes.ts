@@ -7,7 +7,7 @@ const router = express.Router();
 // 👇 Add `protect` middleware here
 router.get("/:id", protect, async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await User.findById(req.params.id).select("name email userType");
+    const user = await User.findById(req.params.id).select("name email userType profilePicture");
 
     if (!user) {
       res.status(404).json({ error: "User not found" });
@@ -24,7 +24,7 @@ router.get("/:id", protect, async (req: Request, res: Response): Promise<void> =
 // userRoutes.ts
 router.put("/:id", protect, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, userType } = req.body;
+    const { name, email, userType, profilePicture} = req.body;
 
     // Optional: You might want to restrict updates to only the logged-in user
     if ((req as any).user._id.toString() !== req.params.id) {
@@ -42,6 +42,7 @@ router.put("/:id", protect, async (req: Request, res: Response): Promise<void> =
     if (name) user.name = name;
     if (email) user.email = email;
     if (userType) user.userType = userType;
+    if (profilePicture) user.profilePicture = profilePicture; // 👈 ADD THIS
 
     await user.save();
 
