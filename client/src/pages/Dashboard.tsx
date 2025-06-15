@@ -8,6 +8,7 @@ import {
   RequestPage,
   Payment,
   Inventory,
+  AccountCircle,
 } from "@mui/icons-material";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +29,8 @@ import {
   LoadingContainer,
   LoadingSpinner,
   StyledButton,
+  ProfileButton,
+  ProfileImage,
 } from "../styles/dashboardStyles";
 
 // Define RootState type for useSelector
@@ -38,6 +41,7 @@ interface RootState {
       email: string;
       name: string;
       userType: "vendor" | "company";
+      profilePicture?: string;
     } | null;
     isLoading: boolean;
     isInitialized: boolean;
@@ -136,9 +140,13 @@ export default function Dashboard() {
     </div>      
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       
-      <StyledButton buttontype="profile" onClick={goToProfile}>
-        Profile
-      </StyledButton>
+      <ProfileButton onClick={goToProfile}>
+        {user.profilePicture ? (
+          <ProfileImage src={user.profilePicture} alt={`${user.name}'s profile`} />
+        ) : (
+          <AccountCircle />
+        )}
+      </ProfileButton>
       <StyledButton buttontype="logout" onClick={handleLogout}>
         Logout
       </StyledButton>
