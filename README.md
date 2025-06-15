@@ -237,7 +237,7 @@ DONE I GUESS 32. WARNING TO SELF: time mismatch of the duration before the deadl
 38. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards
 
-40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
+DONE 40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
 
 41. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 42. the dashboard onload curves - dont randomise maybe?
@@ -260,6 +260,6 @@ DONE I GUESS 32. WARNING TO SELF: time mismatch of the duration before the deadl
 59. clear blank/whitespaces -> add designs -> compactify
 60. chatbox option -> very similar to notifications
 61. complexify the user/product tables
-61. complexify the user/product tables
 62. minimumprice limit in input/edit field of price
 63. make reviews as a drop down or something - let it optionally occupy space
+64. instead of having separate edit profile page - allow editing inline - just like product mgmt
