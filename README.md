@@ -268,3 +268,5 @@ implementing profile photo patch now: wait, let me think about where all this ch
 dashboard (profile button can be replaced with profile photo, same functionality onclick).
 then displayuser and edit profile pages. and while showing product requests, payment requests.
 BTW NONE of the payment requests - company side - show images of all the products.
+
+the pfp is optional - so the display should be the default empty profile image or whatever they pick (dont have to ask while signup)
