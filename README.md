@@ -260,4 +260,6 @@ DONE I GUESS 32. WARNING TO SELF: time mismatch of the duration before the deadl
 59. clear blank/whitespaces -> add designs -> compactify
 60. chatbox option -> very similar to notifications
 61. complexify the user/product tables
-62. 
+61. complexify the user/product tables
+62. minimumprice limit in input/edit field of price
+63. make reviews as a drop down or something - let it optionally occupy space
