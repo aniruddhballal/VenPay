@@ -1,3 +1,5 @@
+// ⚠️ DEV-ONLY: This script resets user passwords. DO NOT RUN in production!
+
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import User from "../models/User"; // adjust if needed
@@ -5,8 +7,8 @@ import User from "../models/User"; // adjust if needed
 const run = async () => {
   await mongoose.connect("mongodb://localhost:27017/venpay");
 
-  const email = "vendor@gmail.com"; // 🔁 Replace with the user’s email
-  const newPlainPassword = "password456"; // 🔁 Replace with the new password
+  const email = process.env.RESET_EMAIL!;
+  const newPlainPassword = process.env.RESET_PASSWORD!;
 
   const hashed = await bcrypt.hash(newPlainPassword, 12);
 
