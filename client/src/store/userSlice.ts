@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const fetchUserById = createAsyncThunk(
   "user/fetchById",
-  async (userId: string, thunkAPI) => {
+  async (userId: string) => {
     const res = await axios.get(`http://localhost:5000/api/users/${userId}`, { withCredentials: true });
     return res.data;
   }
