@@ -28,32 +28,27 @@ import {
   PasswordToggleCard, PasswordFieldsContainer, ActionButtonsContainer, FlexButton
 } from '../styles/editProfileStyles';
 
-import { useDispatch } from "react-redux";
-import { resetInitialized } from "../store/authSlice"; // Adjust path as needed
-
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  userType: "company" | "vendor";
-  profilePicture?: string;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { resetInitialized, setUser } from "../store/authSlice";
+import { fetchUserById, clearUser } from "../store/userSlice";
+import type { RootState, AppDispatch } from "../store"; // Adjust path as needed
 
 export default function EditProfile() {
-
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // User data states
-  const [user, setUser] = useState<User | null>(null);
+  // RTK selectors
+  const { currentUser, loading: userLoading, error: userError } = useSelector((state: RootState) => state.user);
+  const { user: authUser } = useSelector((state: RootState) => state.auth);
+  
+  // Form states - initialized from RTK store
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userType, setUserType] = useState<"company" | "vendor">("company");
   
-  // pfp states
+  // Profile picture states
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState<string>("");
   
@@ -67,34 +62,38 @@ export default function EditProfile() {
   const [changePassword, setChangePassword] = useState(false);
   
   // UI states
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [focusedField, setFocusedField] = useState<string>("");
 
+  // Fetch user data using RTK
   useEffect(() => {
     if (!id) {
       toast.error("User ID is missing.");
-      setLoading(false);
       return;
     }
     
-    axios
-      .get(`http://localhost:5000/api/users/${id}`, { withCredentials: true })
-      .then((res) => {
-        setUser(res.data);
-        setName(res.data.name);
-        setEmail(res.data.email);
-        setUserType(res.data.userType);
-        if (res.data.profilePicture) {
-          setProfilePicturePreview(res.data.profilePicture);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error("Failed to fetch user details.");
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
+    // Dispatch the async thunk to fetch user data
+    dispatch(fetchUserById(id as string));
+  }, [id, dispatch]);
+
+  // Update form fields when user data is loaded from RTK store
+  useEffect(() => {
+    if (currentUser) {
+      setName(currentUser.name || "");
+      setEmail(currentUser.email || "");
+      setUserType(currentUser.userType || "company");
+      if (currentUser.profilePicture) {
+        setProfilePicturePreview(currentUser.profilePicture);
+      }
+    }
+  }, [currentUser]);
+
+  // Handle RTK loading and error states
+  useEffect(() => {
+    if (userError) {
+      toast.error("Failed to fetch user details.");
+    }
+  }, [userError]);
 
   const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -157,12 +156,12 @@ export default function EditProfile() {
       return;
     }
 
-    // Check for chANGE IN user data
+    // Check for changes using RTK store data
     const hasChanged =
-      name !== user?.name ||
-      email !== user?.email ||
-      userType !== user?.userType ||
-      !!profilePicture || // pfp added check
+      name !== currentUser?.name ||
+      email !== currentUser?.email ||
+      userType !== currentUser?.userType ||
+      !!profilePicture ||
       (changePassword && currentPassword && newPassword);
 
     if (!hasChanged) {
@@ -187,8 +186,8 @@ export default function EditProfile() {
         formData.append('newPassword', newPassword);
       }
 
-      await axios.put(
-        `http://localhost:5000/api/users/${id}`,
+      const response = await axios.put(
+        `http://localhost:5000/api/users/${id as string}`,
         formData,
         {
           withCredentials: true,
@@ -200,7 +199,20 @@ export default function EditProfile() {
 
       toast.success("Profile updated successfully!");
       
-      dispatch(resetInitialized()); // this mod triggers user refetch
+      // Update both auth and user slices with new data
+      const updatedUser = response.data;
+      
+      // Update auth slice if this is the current authenticated user
+      if (authUser && authUser._id === id) {
+        dispatch(setUser(updatedUser));
+      }
+      
+      // Clear and refetch user data to ensure consistency
+      dispatch(clearUser());
+      dispatch(fetchUserById(id as string));
+      
+      // Reset initialization to trigger auth refetch if needed
+      dispatch(resetInitialized());
       
       navigate(`/dashboard`);
     } catch (err: any) {
@@ -216,7 +228,8 @@ export default function EditProfile() {
     navigate(`/user/${id}`);
   };
 
-  if (loading) {
+  // Loading state from RTK
+  if (userLoading) {
     return (
       <StyledContainer>
         <LoadingContainer>
@@ -234,7 +247,8 @@ export default function EditProfile() {
     );
   }
 
-  if (!user) {
+  // Error state from RTK
+  if (userError && !currentUser) {
     return (
       <StyledContainer>
         <ErrorContainer severity="error">
