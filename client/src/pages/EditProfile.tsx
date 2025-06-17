@@ -199,7 +199,9 @@ export default function EditProfile() {
       );
 
       toast.success("Profile updated successfully!");
-      dispatch(resetInitialized()); // To trigger user refetch
+      
+      dispatch(resetInitialized()); // this mod triggers user refetch
+      
       navigate(`/dashboard`);
     } catch (err: any) {
       console.error(err);
@@ -209,7 +211,6 @@ export default function EditProfile() {
       setSaving(false);
     }
   };
-
 
   const handleBack = () => {
     navigate(`/user/${id}`);
