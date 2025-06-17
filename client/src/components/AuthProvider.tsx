@@ -1,7 +1,7 @@
 // components/AuthProvider.tsx
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserRedux, setInitialized, setLoading } from '../store/authSlice';
+import { setUser, setInitialized, setLoading } from '../store/authSlice';
 import type { RootState } from '../store';
 import api from '../api';
 
@@ -21,10 +21,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             'X-Internal-Check': 'true',
           },
         });
-        dispatch(setUserRedux(response.data.user));
+        dispatch(setUser(response.data.user));
       } catch (error) {
         // No valid token/user, set to null
-        dispatch(setUserRedux(null));
+        dispatch(setUser(null));
       } finally {
         dispatch(setLoading(false));
         dispatch(setInitialized());

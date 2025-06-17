@@ -3,13 +3,7 @@ import { useEffect } from 'react';
 import ConnectingLines from './ConnectingLines'; // adjust path if needed
 
 import { useSelector, useDispatch } from "react-redux";
-import {
-  BusinessCenter,
-  RequestPage,
-  Payment,
-  Inventory,
-  AccountCircle,
-} from "@mui/icons-material";
+import { BusinessCenter, RequestPage, Payment, Inventory, AccountCircle } from "@mui/icons-material";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import ProductManagement from "./ProductManagement";
@@ -17,7 +11,7 @@ import ProductList from "./ProductList";
 import ProductRequests from "./ProductRequests";
 import PaymentRequests from "./PaymentRequests";
 import { toast } from "react-toastify";
-import { setUserRedux, logout, setLoading, setInitialized } from "../store/authSlice";
+import { setUser, logout, setLoading, setInitialized } from "../store/authSlice";
 
 import {
   DashboardContainer, DashboardHeader, DashboardSubheader, NavigationContainer, NavigationButton,
@@ -69,18 +63,18 @@ export default function Dashboard() {
             fetchedUser?.email &&
             (fetchedUser.userType === "vendor" || fetchedUser.userType === "company")
           ) {
-            dispatch(setUserRedux(fetchedUser));
+            dispatch(setUser(fetchedUser));
           } else {
             console.warn("User data incomplete or invalid:", fetchedUser);
             toast.error("Invalid user session. Please log in again.");
-            dispatch(setUserRedux(null));
+            dispatch(setUser(null));
             navigate("/login");
           }
         })
         .catch(err => {
           console.error("Auth check failed:", err);
           toast.error(err.response?.data?.error || "Authentication failed. Please log in again.");
-          dispatch(setUserRedux(null));
+          dispatch(setUser(null));
           navigate("/login");
         })
         .finally(() => {

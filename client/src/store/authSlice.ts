@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   userType: "vendor" | "company";
+  profilePicture?: string; // Add this if you want to include profile picture
 }
 
 interface AuthState {
@@ -25,12 +26,13 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUserRedux: (state, action: PayloadAction<User | null>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
       state.isInitialized = true;
     },
     logout: (state) => {
       state.user = null;
+      state.isInitialized = false; // Reset initialized state on logout
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -38,8 +40,11 @@ const authSlice = createSlice({
     setInitialized: (state) => {
       state.isInitialized = true;
     },
+    resetInitialized: (state) => {
+      state.isInitialized = false;
+    },
   },
 });
 
-export const { setUserRedux, logout, setLoading, setInitialized } = authSlice.actions;
+export const { setUser, logout, setLoading, setInitialized, resetInitialized } = authSlice.actions;
 export default authSlice.reducer;

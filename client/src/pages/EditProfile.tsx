@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux"; // Add this import
 import axios from "axios";
 import { toast } from "react-toastify";
 import { OutlinedInput } from '@mui/material';
@@ -21,9 +20,6 @@ import {
   VpnKey as VpnKeyIcon
 } from '@mui/icons-material';
 
-// Add this import for the Redux action
-import { setUserRedux } from "../store/authSlice";
-
 import { 
   StyledContainer, StyledCard, Title, StyledForm, FieldGroup, StyledSelect, StyledLoadingButton, 
   BackButton, LoadingContainer, ErrorContainer,
@@ -31,6 +27,9 @@ import {
   ProfilePictureContainer, ProfilePictureWrapper, StyledAvatar, CameraIconButton, HiddenFileInput,
   PasswordToggleCard, PasswordFieldsContainer, ActionButtonsContainer, FlexButton
 } from '../styles/editProfileStyles';
+
+import { useDispatch } from "react-redux";
+import { resetInitialized } from "../store/authSlice"; // Adjust path as needed
 
 interface User {
   _id: string;
@@ -41,9 +40,11 @@ interface User {
 }
 
 export default function EditProfile() {
+
+  const dispatch = useDispatch();
+
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // User data states
@@ -52,11 +53,11 @@ export default function EditProfile() {
   const [email, setEmail] = useState("");
   const [userType, setUserType] = useState<"company" | "vendor">("company");
   
-  // PFP states
+  // pfp states
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState<string>("");
   
-  // pw states
+  // Password states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -110,7 +111,7 @@ export default function EditProfile() {
       
       setProfilePicture(file);
       
-      // preview feature
+      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfilePicturePreview(e.target?.result as string);
@@ -173,7 +174,7 @@ export default function EditProfile() {
         formData.append('newPassword', newPassword);
       }
       
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:5000/api/users/${id}`,
         formData,
         { 
@@ -184,18 +185,11 @@ export default function EditProfile() {
         }
       );
       
-      // Redux updation
-      const updatedUser = {
-        _id: id!,
-        name: name,
-        email: email,
-        userType: userType,
-        profilePicture: response.data.profilePicture || profilePicturePreview
-      };
-      
-      dispatch(setUserRedux(updatedUser));
-      
       toast.success("Profile updated successfully!");
+
+      // Reset the initialized state so Dashboard re-fetches user data
+      dispatch(resetInitialized()); // Add this line
+
       navigate(`/dashboard`);
     } catch (err: any) {
       console.error(err);
@@ -253,7 +247,7 @@ export default function EditProfile() {
             </Title>
 
             <StyledForm onSubmit={handleSubmit}>
-              {/* PFP Section */}
+              {/* Profile Picture Section */}
               <ProfilePictureContainer>
                 <ProfilePictureWrapper>
                   <StyledAvatar
@@ -274,7 +268,7 @@ export default function EditProfile() {
                 </ProfilePictureWrapper>
               </ProfilePictureContainer>
 
-              {/* Basic Deets */}
+              {/* Basic Information */}
               <FieldGroup
                 focused={focusedField === 'name'}
                 hasValue={!!name}
@@ -359,7 +353,7 @@ export default function EditProfile() {
                   <StyledSelect
                     value={userType}
                     label="Account Type"
-                    onChange={(e) => setUserType(e.target.value as 'company' | 'vendor')}
+                    onChange={(e: any) => setUserType(e.target.value as 'company' | 'vendor')}
                     onFocus={() => setFocusedField('userType')}
                     onBlur={() => setFocusedField('')}
                     startAdornment={
@@ -398,7 +392,7 @@ export default function EditProfile() {
                 </FormControl>
               </FieldGroup>
 
-              {/* PW Section */}
+              {/* Password Section */}
               <Divider sx={{ my: 3 }}>
                 <Typography variant="body2" color="text.secondary">
                   Security Settings
