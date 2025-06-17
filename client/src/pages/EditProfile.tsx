@@ -152,44 +152,54 @@ export default function EditProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validatePassword()) {
       return;
     }
-    
+
+    // Check for chANGE IN user data
+    const hasChanged =
+      name !== user?.name ||
+      email !== user?.email ||
+      userType !== user?.userType ||
+      !!profilePicture || // pfp added check
+      (changePassword && currentPassword && newPassword);
+
+    if (!hasChanged) {
+      toast.info("No changes detected.");
+      return;
+    }
+
     setSaving(true);
-    
+
     try {
       const formData = new FormData();
       formData.append('name', name);
       formData.append('email', email);
       formData.append('userType', userType);
-      
+
       if (profilePicture) {
         formData.append('profilePicture', profilePicture);
       }
-      
+
       if (changePassword) {
         formData.append('currentPassword', currentPassword);
         formData.append('newPassword', newPassword);
       }
-      
+
       await axios.put(
         `http://localhost:5000/api/users/${id}`,
         formData,
-        { 
+        {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
       );
-      
+
       toast.success("Profile updated successfully!");
-
-      // Reset the initialized state so Dashboard re-fetches user data
-      dispatch(resetInitialized()); // Add this line
-
+      dispatch(resetInitialized()); // To trigger user refetch
       navigate(`/dashboard`);
     } catch (err: any) {
       console.error(err);
@@ -199,6 +209,7 @@ export default function EditProfile() {
       setSaving(false);
     }
   };
+
 
   const handleBack = () => {
     navigate(`/user/${id}`);
