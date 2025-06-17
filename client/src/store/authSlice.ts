@@ -1,4 +1,3 @@
-// store/authSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -13,11 +12,11 @@ interface User {
 interface AuthState {
   user: User | null;
   isLoading: boolean;
-  isInitialized: boolean; // Track if we've done initial auth check
+  isInitialized: boolean; // initial auth check tracking
 }
 
 const initialState: AuthState = {
-  user: null, // Start with null, no localStorage
+  user: null, // start with null
   isLoading: false,
   isInitialized: false,
 };
@@ -32,7 +31,7 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-      state.isInitialized = false; // Reset initialized state on logout
+      state.isInitialized = false;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
