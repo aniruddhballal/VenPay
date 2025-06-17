@@ -1,12 +1,6 @@
 import { styled } from '@mui/material/styles';
-import {
-  Container,
-  Card,
-  Typography,
-  Box,
-  Select,
-  Alert,
-} from '@mui/material';
+import { Container, Card, Typography, Box, Select, Alert,
+  Avatar, IconButton } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import type { TypographyProps } from '@mui/material';
 
@@ -455,3 +449,98 @@ export const ErrorContainer = styled(Alert)(({ theme }) => ({
     padding: '2rem 1rem',
   },
 }));
+
+// Add these exports to your existing styles/editProfileStyles.ts file
+// Profile Picture Container
+export const ProfilePictureContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  marginBottom: '2rem'
+});
+
+// Profile Picture Wrapper
+export const ProfilePictureWrapper = styled(Box)({
+  position: 'relative'
+});
+
+// Styled Avatar for Profile Picture
+export const StyledAvatar = styled(Avatar)({
+  width: 120,
+  height: 120,
+  cursor: 'pointer',
+  border: '4px solid #e5e7eb',
+  transition: 'opacity 0.2s ease',
+  '&:hover': {
+    opacity: 0.8
+  }
+});
+
+// Camera Icon Button
+export const CameraIconButton = styled(IconButton)({
+  position: 'absolute',
+  bottom: -8,
+  right: -8,
+  backgroundColor: '#3b82f6',
+  color: 'white',
+  width: 40,
+  height: 40,
+  '&:hover': {
+    backgroundColor: '#2563eb'
+  }
+});
+
+// Hidden File Input
+export const HiddenFileInput = styled('input')({
+  display: 'none'
+});
+
+// Security Section Divider Styles
+export const SecurityDivider = styled('div')({
+  margin: '1.5rem 0',
+  textAlign: 'center',
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    right: 0,
+    height: '1px',
+    backgroundColor: '#e5e7eb'
+  }
+});
+
+// Password Toggle Card
+export const PasswordToggleCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== 'active'
+})<{ active?: boolean }>(({ active }) => ({
+  padding: '1rem',
+  marginBottom: '1rem',
+  backgroundColor: active ? '#f8fafc' : '#fafafa',
+  border: active ? '2px solid #3b82f6' : '1px solid #e5e7eb',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    backgroundColor: active ? '#f1f5f9' : '#f3f4f6'
+  }
+}));
+
+// Password Fields Container
+export const PasswordFieldsContainer = styled(Box)({
+  marginTop: '1rem'
+});
+
+// Action Buttons Container
+export const ActionButtonsContainer = styled(Box)({
+  display: 'flex',
+  gap: '1rem',
+  marginTop: '2rem',
+  '@media (max-width: 600px)': {
+    flexDirection: 'column'
+  }
+});
+
+// Flex Button (for responsive buttons)
+export const FlexButton = styled(Box)({
+  flex: 1
+});

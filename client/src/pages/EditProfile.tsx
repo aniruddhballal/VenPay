@@ -14,11 +14,8 @@ import {
   CircularProgress, 
   Stack,
   Fade,
-  Avatar,
-  IconButton,
   InputAdornment,
-  Divider,
-  Card
+  Divider
 } from '@mui/material';
 import {
   Person as PersonIcon,
@@ -43,7 +40,17 @@ import {
   StyledLoadingButton, 
   BackButton,
   LoadingContainer, 
-  ErrorContainer 
+  ErrorContainer,
+  // New style imports
+  ProfilePictureContainer,
+  ProfilePictureWrapper,
+  StyledAvatar,
+  CameraIconButton,
+  HiddenFileInput,
+  PasswordToggleCard,
+  PasswordFieldsContainer,
+  ActionButtonsContainer,
+  FlexButton
 } from '../styles/editProfileStyles';
 
 interface User {
@@ -258,49 +265,25 @@ export default function EditProfile() {
 
             <StyledForm onSubmit={handleSubmit}>
               {/* Profile Picture Section */}
-              <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
-                <Box sx={{ position: 'relative' }}>
-                  <Avatar
+              <ProfilePictureContainer>
+                <ProfilePictureWrapper>
+                  <StyledAvatar
                     src={profilePicturePreview}
-                    sx={{ 
-                      width: 120, 
-                      height: 120,
-                      cursor: 'pointer',
-                      border: '4px solid #e5e7eb',
-                      '&:hover': {
-                        opacity: 0.8
-                      }
-                    }}
                     onClick={handleProfilePictureClick}
                   >
                     {!profilePicturePreview && <PersonIcon sx={{ fontSize: 60 }} />}
-                  </Avatar>
-                  <IconButton
-                    sx={{
-                      position: 'absolute',
-                      bottom: -8,
-                      right: -8,
-                      backgroundColor: '#3b82f6',
-                      color: 'white',
-                      width: 40,
-                      height: 40,
-                      '&:hover': {
-                        backgroundColor: '#2563eb'
-                      }
-                    }}
-                    onClick={handleProfilePictureClick}
-                  >
+                  </StyledAvatar>
+                  <CameraIconButton onClick={handleProfilePictureClick}>
                     <PhotoCameraIcon />
-                  </IconButton>
-                  <input
+                  </CameraIconButton>
+                  <HiddenFileInput
                     type="file"
                     ref={fileInputRef}
                     onChange={handleProfilePictureChange}
                     accept="image/*"
-                    style={{ display: 'none' }}
                   />
-                </Box>
-              </Box>
+                </ProfilePictureWrapper>
+              </ProfilePictureContainer>
 
               {/* Basic Information */}
               <FieldGroup
@@ -433,15 +416,8 @@ export default function EditProfile() {
                 </Typography>
               </Divider>
 
-              <Card 
-                sx={{ 
-                  p: 2, 
-                  mb: 2, 
-                  backgroundColor: changePassword ? '#f8fafc' : '#fafafa',
-                  border: changePassword ? '2px solid #3b82f6' : '1px solid #e5e7eb',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
+              <PasswordToggleCard 
+                active={changePassword}
                 onClick={() => setChangePassword(!changePassword)}
               >
                 <Stack direction="row" alignItems="center" spacing={2}>
@@ -455,11 +431,11 @@ export default function EditProfile() {
                     </Typography>
                   </Box>
                 </Stack>
-              </Card>
+              </PasswordToggleCard>
 
               {changePassword && (
                 <Fade in timeout={400}>
-                  <Box>
+                  <PasswordFieldsContainer>
                     <FieldGroup
                       focused={focusedField === 'currentPassword'}
                       hasValue={!!currentPassword}
@@ -486,16 +462,26 @@ export default function EditProfile() {
                         InputProps={{
                           notched: false,
                           startAdornment: (
-                            <VpnKeyIcon sx={{ color: 'action.active', mr: 1.5, paddingLeft: '20px', paddingRight: '125px'}} />
+                            <VpnKeyIcon sx={{ color: 'action.active', mr: 0, paddingLeft: '20px', paddingRight: '180px'}} />
                           ),
                           endAdornment: (
                             <InputAdornment position="end">
-                              <IconButton
+                              <CameraIconButton
                                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                edge="end"
+                                sx={{
+                                  paddingRight: '20px',
+                                  position: 'static',
+                                  backgroundColor: 'transparent',
+                                  color: 'action.active',
+                                  width: 'auto',
+                                  height: 'auto',
+                                  '&:hover': {
+                                    backgroundColor: 'action.hover'
+                                  }
+                                }}
                               >
                                 {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
+                              </CameraIconButton>
                             </InputAdornment>
                           ),
                         }}
@@ -528,16 +514,26 @@ export default function EditProfile() {
                         InputProps={{
                           notched: false,
                           startAdornment: (
-                            <LockIcon sx={{ color: 'action.active', mr: 1.5, paddingLeft: '20px', paddingRight: '125px'}} />
+                            <LockIcon sx={{ color: 'action.active', mr: 0, paddingLeft: '20px', paddingRight: '150px'}} />
                           ),
                           endAdornment: (
                             <InputAdornment position="end">
-                              <IconButton
+                              <CameraIconButton
                                 onClick={() => setShowNewPassword(!showNewPassword)}
-                                edge="end"
+                                sx={{
+                                  paddingRight: '20px',
+                                  position: 'static',
+                                  backgroundColor: 'transparent',
+                                  color: 'action.active',
+                                  width: 'auto',
+                                  height: 'auto',
+                                  '&:hover': {
+                                    backgroundColor: 'action.hover'
+                                  }
+                                }}
                               >
                                 {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
+                              </CameraIconButton>
                             </InputAdornment>
                           ),
                         }}
@@ -552,13 +548,13 @@ export default function EditProfile() {
                       <TextField
                         fullWidth
                         type={showConfirmPassword ? 'text' : 'password'}
-                        label="Confirm New Password"
+                        label="Confirmation"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         onFocus={() => setFocusedField('confirmPassword')}
                         onBlur={() => setFocusedField('')}
                         required
-                        placeholder="Confirm your new password"
+                        placeholder="Re-enter your new password"
                         error={confirmPassword.length > 0 && confirmPassword !== newPassword}
                         helperText={
                           confirmPassword.length > 0 && confirmPassword !== newPassword 
@@ -576,47 +572,61 @@ export default function EditProfile() {
                         InputProps={{
                           notched: false,
                           startAdornment: (
-                            <LockIcon sx={{ color: 'action.active', mr: 1.5, paddingLeft: '20px', paddingRight: '125px'}} />
+                            <LockIcon sx={{ color: 'action.active', mr: 0, paddingLeft: '20px', paddingRight: '150px'}} />
                           ),
                           endAdornment: (
                             <InputAdornment position="end">
-                              <IconButton
+                              <CameraIconButton
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                edge="end"
+                                sx={{
+                                  paddingRight: '20px',
+                                  position: 'static',
+                                  backgroundColor: 'transparent',
+                                  color: 'action.active',
+                                  width: 'auto',
+                                  height: 'auto',
+                                  '&:hover': {
+                                    backgroundColor: 'action.hover'
+                                  }
+                                }}
                               >
                                 {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
+                              </CameraIconButton>
                             </InputAdornment>
                           ),
                         }}
                       />
                     </FieldGroup>
-                  </Box>
+                  </PasswordFieldsContainer>
                 </Fade>
               )}
 
               {/* Action Buttons */}
-              <Stack direction="row" spacing={2} sx={{ marginTop: '2rem' }}>
-                <BackButton
-                  startIcon={<ArrowBackIcon />}
-                  onClick={handleBack}
-                  sx={{ flex: 1 }}
-                >
-                  Back to Profile
-                </BackButton>
+              <ActionButtonsContainer>
+                <FlexButton>
+                  <BackButton
+                    startIcon={<ArrowBackIcon />}
+                    onClick={handleBack}
+                    fullWidth
+                  >
+                    Back to Profile
+                  </BackButton>
+                </FlexButton>
                 
-                <StyledLoadingButton
-                  type="submit"
-                  loading={saving}
-                  loadingPosition="start"
-                  startIcon={<SaveIcon />}
-                  variant="contained"
-                  size="large"
-                  sx={{ flex: 1 }}
-                >
-                  {saving ? "Saving Changes..." : "Save Changes"}
-                </StyledLoadingButton>
-              </Stack>
+                <FlexButton>
+                  <StyledLoadingButton
+                    type="submit"
+                    loading={saving}
+                    loadingPosition="start"
+                    startIcon={<SaveIcon />}
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                  >
+                    {saving ? "Saving Changes..." : "Save Changes"}
+                  </StyledLoadingButton>
+                </FlexButton>
+              </ActionButtonsContainer>
             </StyledForm>
           </CardContent>
         </StyledCard>
