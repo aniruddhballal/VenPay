@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"; // Add this import
 import axios from "axios";
 import { toast } from "react-toastify";
 import { OutlinedInput } from '@mui/material';
@@ -20,6 +21,9 @@ import {
   VpnKey as VpnKeyIcon
 } from '@mui/icons-material';
 
+// Add this import for the Redux action
+import { setUserRedux } from "../store/authSlice";
+
 import { 
   StyledContainer, StyledCard, Title, StyledForm, FieldGroup, StyledSelect, StyledLoadingButton, 
   BackButton, LoadingContainer, ErrorContainer,
@@ -39,6 +43,7 @@ interface User {
 export default function EditProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // User data states
@@ -47,11 +52,11 @@ export default function EditProfile() {
   const [email, setEmail] = useState("");
   const [userType, setUserType] = useState<"company" | "vendor">("company");
   
-  // Profile picture states
+  // PFP states
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState<string>("");
   
-  // Password states
+  // pw states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -93,13 +98,11 @@ export default function EditProfile() {
   const handleProfilePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         toast.error("Please select a valid image file.");
         return;
       }
       
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error("Image size should be less than 5MB.");
         return;
@@ -107,7 +110,7 @@ export default function EditProfile() {
       
       setProfilePicture(file);
       
-      // Create preview
+      // preview feature
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfilePicturePreview(e.target?.result as string);
@@ -170,7 +173,7 @@ export default function EditProfile() {
         formData.append('newPassword', newPassword);
       }
       
-      await axios.put(
+      const response = await axios.put(
         `http://localhost:5000/api/users/${id}`,
         formData,
         { 
@@ -180,6 +183,17 @@ export default function EditProfile() {
           }
         }
       );
+      
+      // Redux updation
+      const updatedUser = {
+        _id: id!,
+        name: name,
+        email: email,
+        userType: userType,
+        profilePicture: response.data.profilePicture || profilePicturePreview
+      };
+      
+      dispatch(setUserRedux(updatedUser));
       
       toast.success("Profile updated successfully!");
       navigate(`/dashboard`);
@@ -239,7 +253,7 @@ export default function EditProfile() {
             </Title>
 
             <StyledForm onSubmit={handleSubmit}>
-              {/* Profile Picture Section */}
+              {/* PFP Section */}
               <ProfilePictureContainer>
                 <ProfilePictureWrapper>
                   <StyledAvatar
@@ -260,7 +274,7 @@ export default function EditProfile() {
                 </ProfilePictureWrapper>
               </ProfilePictureContainer>
 
-              {/* Basic Information */}
+              {/* Basic Deets */}
               <FieldGroup
                 focused={focusedField === 'name'}
                 hasValue={!!name}
@@ -384,7 +398,7 @@ export default function EditProfile() {
                 </FormControl>
               </FieldGroup>
 
-              {/* Password Section */}
+              {/* PW Section */}
               <Divider sx={{ my: 3 }}>
                 <Typography variant="body2" color="text.secondary">
                   Security Settings

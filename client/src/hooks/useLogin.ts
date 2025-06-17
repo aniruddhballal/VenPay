@@ -3,7 +3,7 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { setUser } from "../store/authSlice";
+import { setUserRedux } from "../store/authSlice";
 
 export const useLogin = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +21,7 @@ export const useLogin = () => {
       const res = await api.post("/auth/login", { email, password });
       toast.success(res.data.message || "Logged in!");
       const userRes = await api.get("/auth/me");
-      dispatch(setUser(userRes.data.user));
+      dispatch(setUserRedux(userRes.data.user));
       navigate("/dashboard");
     } catch (err: any) {
       const errorMsg = err.response?.data?.error || "Login failed";

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../api";
-import { setUser } from "../store/authSlice";
+import { setUserRedux } from "../store/authSlice";
 
 export function useRegister() {
   const [email, setEmail] = useState("");
@@ -27,7 +27,7 @@ export function useRegister() {
       toast.success(res.data.message || "Registration successful!");
 
       const userRes = await api.get("/auth/me");
-      dispatch(setUser(userRes.data.user));
+      dispatch(setUserRedux(userRes.data.user));
 
       navigate("/dashboard");
     } catch (err: any) {
