@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import connectDB from "./config/db";
 import authRoutes from "./routes/auth";
-import { rateLimiter } from "./middleware/rateLimiter";
+//import { rateLimiter } from "./middleware/rateLimiter";
 import productRoutes from "./routes/productRoutes";
 import productRequests from "./routes/productRequests";
 import paymentRequestRoutes from "./routes/paymentRequests";
@@ -25,7 +25,7 @@ app.use(
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-app.use(rateLimiter);
+//app.use(rateLimiter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
