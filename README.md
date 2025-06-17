@@ -277,4 +277,6 @@ filtering prices. filtering avg star ratings.
 
 66. delete old images - from cloudinary - after image updation.
 DONE DONE 67. add styles to editprofile page
-68. want dashboard to load with new username and deets after "save changes" from editprofile.
+DONE YAYYYY 68. want dashboard to load with new username and deets after "save changes" from editprofile.
+
+69. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
