@@ -283,3 +283,5 @@ DONE YAYYYY 68. want dashboard to load with new username and deets after "save c
 
 70. infitie loop - stacking pages - navigate -1
 71. cant access the editprofile of another user directly, but if you copy paste url, it isnt protected. it lets any logged in user edit it.
+72. add product card vs edit product card
+73. break productmanagement into MORE COMPONENTS MAN its 1700 lines or something

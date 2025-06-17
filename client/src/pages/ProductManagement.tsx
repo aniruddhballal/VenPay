@@ -737,11 +737,12 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       size="small"
                       variant="filled"
                       sx={{
-                        fontSize: '0.7rem',
-                        height: 24,
-                        borderColor: alpha('#667eea', 0.3),
-                        color: 'text.secondary'
-                      }}
+                      fontSize: { xs: '0.6rem', sm: '0.7rem' }, // Smaller on mobile
+                      height: { xs: 20, sm: 24 },
+                      borderColor: alpha('#667eea', 0.3),
+                      color: 'text.secondary',
+                      alignSelf: { xs: 'center', sm: 'auto' }
+                    }}
                     />
                   </Box>
                   
@@ -1242,10 +1243,11 @@ const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                         size="small"
                         variant="filled"
                         sx={{
-                          fontSize: '0.7rem',
-                          height: 24,
+                          fontSize: { xs: '0.6rem', sm: '0.7rem' }, // Smaller on mobile
+                          height: { xs: 20, sm: 24 },
                           borderColor: alpha('#667eea', 0.3),
-                          color: 'text.secondary'
+                          color: 'text.secondary',
+                          alignSelf: { xs: 'center', sm: 'auto' }
                         }}
                       />
                     </Box>
