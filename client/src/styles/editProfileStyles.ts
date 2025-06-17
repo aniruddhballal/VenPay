@@ -450,20 +450,16 @@ export const ErrorContainer = styled(Alert)(({ theme }) => ({
   },
 }));
 
-// Add these exports to your existing styles/editProfileStyles.ts file
-// Profile Picture Container
 export const ProfilePictureContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
   marginBottom: '2rem'
 });
 
-// Profile Picture Wrapper
 export const ProfilePictureWrapper = styled(Box)({
   position: 'relative'
 });
 
-// Styled Avatar for Profile Picture
 export const StyledAvatar = styled(Avatar)({
   width: 120,
   height: 120,
@@ -475,7 +471,6 @@ export const StyledAvatar = styled(Avatar)({
   }
 });
 
-// Camera Icon Button
 export const CameraIconButton = styled(IconButton)({
   position: 'absolute',
   bottom: -8,
@@ -489,12 +484,10 @@ export const CameraIconButton = styled(IconButton)({
   }
 });
 
-// Hidden File Input
 export const HiddenFileInput = styled('input')({
   display: 'none'
 });
 
-// Security Section Divider Styles
 export const SecurityDivider = styled('div')({
   margin: '1.5rem 0',
   textAlign: 'center',
@@ -510,7 +503,6 @@ export const SecurityDivider = styled('div')({
   }
 });
 
-// Password Toggle Card
 export const PasswordToggleCard = styled(Card, {
   shouldForwardProp: (prop) => prop !== 'active'
 })<{ active?: boolean }>(({ active }) => ({
@@ -525,12 +517,10 @@ export const PasswordToggleCard = styled(Card, {
   }
 }));
 
-// Password Fields Container
 export const PasswordFieldsContainer = styled(Box)({
   marginTop: '1rem'
 });
 
-// Action Buttons Container
 export const ActionButtonsContainer = styled(Box)({
   display: 'flex',
   gap: '1rem',
@@ -540,7 +530,6 @@ export const ActionButtonsContainer = styled(Box)({
   }
 });
 
-// Flex Button (for responsive buttons)
 export const FlexButton = styled(Box)({
   flex: 1
 });

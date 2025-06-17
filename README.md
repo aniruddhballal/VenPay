@@ -276,5 +276,5 @@ right now, its a products page - but we can have vendors page too. vendors page 
 filtering prices. filtering avg star ratings.
 
 66. delete old images - from cloudinary - after image updation.
-67. add styles to editprofile page
+DONE DONE 67. add styles to editprofile page
 68. want dashboard to load with new username and deets after "save changes" from editprofile.

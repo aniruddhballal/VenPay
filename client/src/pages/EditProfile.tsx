@@ -4,18 +4,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { OutlinedInput } from '@mui/material';
 import { 
-  Box, 
-  CardContent, 
-  Typography, 
-  TextField, 
-  MenuItem, 
-  FormControl, 
-  InputLabel, 
-  CircularProgress, 
-  Stack,
-  Fade,
-  InputAdornment,
-  Divider
+  Box, CardContent, Typography, TextField, MenuItem, FormControl, InputLabel,
+  CircularProgress, Stack, Fade, InputAdornment, Divider
 } from '@mui/material';
 import {
   Person as PersonIcon,
@@ -31,26 +21,11 @@ import {
 } from '@mui/icons-material';
 
 import { 
-  StyledContainer, 
-  StyledCard, 
-  Title, 
-  StyledForm, 
-  FieldGroup, 
-  StyledSelect, 
-  StyledLoadingButton, 
-  BackButton,
-  LoadingContainer, 
-  ErrorContainer,
+  StyledContainer, StyledCard, Title, StyledForm, FieldGroup, StyledSelect, StyledLoadingButton, 
+  BackButton, LoadingContainer, ErrorContainer,
   // New style imports
-  ProfilePictureContainer,
-  ProfilePictureWrapper,
-  StyledAvatar,
-  CameraIconButton,
-  HiddenFileInput,
-  PasswordToggleCard,
-  PasswordFieldsContainer,
-  ActionButtonsContainer,
-  FlexButton
+  ProfilePictureContainer, ProfilePictureWrapper, StyledAvatar, CameraIconButton, HiddenFileInput,
+  PasswordToggleCard, PasswordFieldsContainer, ActionButtonsContainer, FlexButton
 } from '../styles/editProfileStyles';
 
 interface User {

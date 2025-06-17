@@ -18,20 +18,11 @@ import ProductRequests from "./ProductRequests";
 import PaymentRequests from "./PaymentRequests";
 import { toast } from "react-toastify";
 import { setUser, logout, setLoading, setInitialized } from "../store/authSlice";
+
 import {
-  DashboardContainer,
-  DashboardHeader,
-  DashboardSubheader,
-  NavigationContainer,
-  NavigationButton,
-  NavigationButton2,
-  SectionContainer,
-  LoadingContainer,
-  LoadingSpinner,
-  StyledButton,
-  ProfileButton,
-  ProfileImage,
-} from "../styles/dashboardStyles";
+  DashboardContainer, DashboardHeader, DashboardSubheader, NavigationContainer, NavigationButton,
+  NavigationButton2, SectionContainer, LoadingContainer, LoadingSpinner, StyledButton,
+  ProfileButton, ProfileImage } from "../styles/dashboardStyles";
 
 // Define RootState type for useSelector
 interface RootState {
