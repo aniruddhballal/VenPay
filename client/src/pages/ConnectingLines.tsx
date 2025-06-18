@@ -182,7 +182,7 @@ const CurvedConnectingLines = () => {
     // Start messy line disappearance slightly after main line enhancement
     const disappearTimer = setTimeout(() => {
       setShouldDisappear(true);
-    }, 2800); // 0.5s after main line enhancement
+    }, 2500); // 0.5s after main line enhancement
 
     return () => {
       clearTimeout(timer);
