@@ -46,8 +46,8 @@ function ProfileProtectedRoute({ children }: { children: JSX.Element }) {
 
   // Check if the logged-in user is trying to edit their own profile
   if (id && user._id !== id) {
-    return <Navigate to={`/user/${id}`} replace />;
-  }
+    return <Navigate to={`/user/${id}`} replace />;   // redirects to that user's display page instead of the requested edit page
+  }                                                   // can redirect to one's own profile page > editprfile later?
  
   return children;
 }
