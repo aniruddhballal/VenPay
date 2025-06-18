@@ -13,20 +13,20 @@ export const useEditProfile = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // RTK selectors
+  // RTK
   const { currentUser, loading: userLoading, error: userError } = useSelector((state: RootState) => state.user);
   const { user: authUser } = useSelector((state: RootState) => state.auth);
   
-  // Form states - initialized from RTK store
+  // Form states - - -  initialized from redux
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userType, setUserType] = useState<"company" | "vendor">("company");
   
-  // Profile picture states
+  // pfp
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState<string>("");
   
-  // Password states
+  // pw
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,7 +35,7 @@ export const useEditProfile = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
   
-  // UI states
+  // overall UI states
   const [saving, setSaving] = useState(false);
   const [focusedField, setFocusedField] = useState<string>("");
 
