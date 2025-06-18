@@ -319,7 +319,7 @@ export default function EditProfile() {
                               <CameraIconButton
                                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                 sx={{
-                                  marginRight: '20px', // Use margin instead of padding for positioning
+                                  marginRight: '20px', // Use margin instead of padding for positioning - solves the shadow edge sticking issue
                                   position: 'static',
                                   backgroundColor: 'transparent',
                                   color: 'action.active',
