@@ -255,7 +255,7 @@ export default function UserDisplay() {
                 onClick={() => navigate(-1)}
                 sx={{ flex: 1 }}
               >
-                Go Back
+                Back to Dashboard
               </SecondaryButton>
             </Stack>
           </CardContent>

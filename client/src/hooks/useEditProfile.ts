@@ -199,7 +199,7 @@ export const useEditProfile = () => {
   };
 
   const handleBack = () => {
-    navigate(`/user/${id}`);
+    navigate(-1);
   };
 
   return {
