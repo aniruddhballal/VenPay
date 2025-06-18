@@ -260,7 +260,7 @@ export default function EditProfile() {
               </FieldGroup>
 
               {/* Password Section */}
-              <Divider sx={{ my: 3 }}>
+              <Divider sx={{ my: 0 }}>
                 <Typography variant="body2" color="text.secondary">
                   Security Settings
                 </Typography>
@@ -312,14 +312,14 @@ export default function EditProfile() {
                         InputProps={{
                           notched: false,
                           startAdornment: (
-                            <VpnKeyIcon sx={{ color: 'action.active', mr: 0, paddingLeft: '20px', paddingRight: '180px'}} />
+                            <VpnKeyIcon sx={{ color: 'action.active', mr: 0, paddingLeft: '20px', paddingRight: '175px'}} />
                           ),
                           endAdornment: (
                             <InputAdornment position="end">
                               <CameraIconButton
                                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                 sx={{
-                                  paddingRight: '20px',
+                                  marginRight: '20px', // Use margin instead of padding for positioning
                                   position: 'static',
                                   backgroundColor: 'transparent',
                                   color: 'action.active',
@@ -371,7 +371,7 @@ export default function EditProfile() {
                               <CameraIconButton
                                 onClick={() => setShowNewPassword(!showNewPassword)}
                                 sx={{
-                                  paddingRight: '20px',
+                                  marginRight: '20px',
                                   position: 'static',
                                   backgroundColor: 'transparent',
                                   color: 'action.active',
@@ -429,7 +429,7 @@ export default function EditProfile() {
                               <CameraIconButton
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 sx={{
-                                  paddingRight: '20px',
+                                  marginRight: '20px',
                                   position: 'static',
                                   backgroundColor: 'transparent',
                                   color: 'action.active',

@@ -480,7 +480,7 @@ export const CameraIconButton = styled(IconButton)({
   width: 40,
   height: 40,
   '&:hover': {
-    backgroundColor: '#2563eb'
+    backgroundColor: '#10b981'
   }
 });
 
@@ -510,10 +510,17 @@ export const PasswordToggleCard = styled(Card, {
   marginBottom: '1rem',
   backgroundColor: active ? '#f8fafc' : '#fafafa',
   border: active ? '2px solid #3b82f6' : '1px solid #e5e7eb',
+  borderRadius: '0.75rem', // Rounded corners (12px)
   cursor: 'pointer',
-  transition: 'all 0.2s ease',
+  transition: 'all 0.25s ease-in-out',
+  boxShadow: active ? '0 0 0 4px rgba(59, 130, 246, 0.2)' : '0 1px 2px rgba(0,0,0,0.05)',
   '&:hover': {
-    backgroundColor: active ? '#f1f5f9' : '#f3f4f6'
+    backgroundColor: active ? '#f1f5f9' : '#f3f4f6',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    transform: 'scale(1.01)' // Slight pop effect
+  },
+  '&:active': {
+    transform: 'scale(0.99)' // Pressed in effect
   }
 }));
 
@@ -524,7 +531,7 @@ export const PasswordFieldsContainer = styled(Box)({
 export const ActionButtonsContainer = styled(Box)({
   display: 'flex',
   gap: '1rem',
-  marginTop: '2rem',
+  marginTop: '0rem',
   '@media (max-width: 600px)': {
     flexDirection: 'column'
   }
