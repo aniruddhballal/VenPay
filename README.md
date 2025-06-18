@@ -240,11 +240,11 @@ DONE I GUESS 32. WARNING TO SELF: time mismatch of the duration before the deadl
 DONE 40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
 
 41. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
-42. the dashboard onload curves - dont randomise maybe?
+HMMM OKAY, IT LOOKS FINE NOW 42. the dashboard onload curves - dont randomise maybe?
 43. remove compile errors from connectinglines.tsx
-44. profile photo
+SMASHED! CRAZY WORK 44. profile photo
 45. multiple image products
-46. password change option
+YAYY DONE HAHAHA OLD ONLY 46. password change option
 47. infinite loop routing issue (dahsboard->profile->editprofile)
 48. notifications
 49. home page button
