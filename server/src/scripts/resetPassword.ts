@@ -4,8 +4,19 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import User from "../models/User"; // adjust if needed
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+console.log("Loaded MONGO_URI:", process.env.MONGO_URI);
+
 const run = async () => {
-  await mongoose.connect("mongodb://localhost:27017/venpay");
+  const uri = process.env.MONGO_URI;
+  if (!uri) {
+    throw new Error("MONGO_URI is not defined in environment variables");
+  }
+
+  await mongoose.connect(uri);
+  console.log("Connected to MongoDB");
 
   const email = process.env.RESET_EMAIL!;
   const newPlainPassword = process.env.RESET_PASSWORD!;
