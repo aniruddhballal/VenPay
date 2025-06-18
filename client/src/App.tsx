@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import type { RootState } from "./store";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -18,26 +19,47 @@ import type { JSX } from "react";
 // Protected route logic
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { user, isInitialized, isLoading } = useSelector((state: RootState) => state.auth);
-  
+ 
   if (!isInitialized || isLoading) {
     return <div>Loading...</div>; // Show loading while checking auth
   }
-  
+ 
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-  
+ 
+  return children;
+}
+
+// Profile-specific protected route that checks if user owns the profile
+function ProfileProtectedRoute({ children }: { children: JSX.Element }) {
+  const { user, isInitialized, isLoading } = useSelector((state: RootState) => state.auth);
+  const { id } = useParams<{ id: string }>();
+ 
+  if (!isInitialized || isLoading) {
+    return <div>Loading...</div>; // Show loading while checking auth
+  }
+ 
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Check if the logged-in user is trying to edit their own profile
+  if (id && user._id !== id) {
+    return <Navigate to={`/user/${id}`} replace />;
+  }
+ 
   return children;
 }
 
 // Redirect "/" based on login status
 function HomeRedirect() {
   const { user, isInitialized, isLoading } = useSelector((state: RootState) => state.auth);
-  
+ 
   if (!isInitialized || isLoading) {
     return <div>Loading...</div>; // Show loading while checking auth
   }
-  
+ 
   return <Navigate to={user ? "/dashboard" : "/login"} replace />;
 }
 
@@ -46,7 +68,6 @@ function App() {
     <Provider store={store}>
       <AuthProvider>
         <BrowserRouter>
-
           <Routes>
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/register" element={<Register />} />
@@ -78,13 +99,12 @@ function App() {
             <Route
               path="/edit-profile/:id"
               element={
-                <ProtectedRoute>
+                <ProfileProtectedRoute>
                   <EditProfile />
-                </ProtectedRoute>
+                </ProfileProtectedRoute>
               }
             />
           </Routes>
-
           <ToastContainer
             position="top-right"
             autoClose={5700}
@@ -98,6 +118,5 @@ function App() {
     </Provider>
   );
 }
-
 
 export default App;
