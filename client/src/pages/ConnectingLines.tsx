@@ -4,9 +4,9 @@ const CurvedConnectingLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [shouldDisappear, setShouldDisappear] = useState(false);
   const [shouldEnhanceMain, setShouldEnhanceMain] = useState(false);
-  const [paths, setPaths] = useState({ set1: [], set2: [] });
+  const [paths, setPaths] = useState<{ set1: string[]; set2: string[] }>({ set1: [], set2: [] });
   const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
-  const [pathSmoothness, setPathSmoothness] = useState({ set1: [], set2: [] });
+  const [pathSmoothness, setPathSmoothness] = useState<{ set1: string[]; set2: string[] }>({ set1: [], set2: [] });
 
   // CONFIGURATION: Number of messy background lines
   const NUM_MESSY_LINES = 5; // Modify this value to change the number of background lines
@@ -65,21 +65,8 @@ const CurvedConnectingLines = () => {
     return path;
   };
 
-  // Calculate path length for proper animation timing
-  const calculatePathLength = (pathString) => {
-    // Create a temporary SVG to measure path length
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', pathString);
-    svg.appendChild(path);
-    document.body.appendChild(svg);
-    const length = path.getTotalLength();
-    document.body.removeChild(svg);
-    return length;
-  };
-
   // Generate smooth messy paths with quadratic and cubic curves
-  const generateMessyPath = (isSet1 = true, mainPath) => {
+  const generateMessyPath = (isSet1: boolean = true) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 189 } : { x: 320, y: 189 };
     
@@ -153,8 +140,8 @@ const CurvedConnectingLines = () => {
     const mainPath2 = generateMainPath(false);
     
     // Generate messy paths with smooth curves using the configurable number
-    const messyPaths1 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(true, mainPath1));
-    const messyPaths2 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(false, mainPath2));
+    const messyPaths1 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(true));
+    const messyPaths2 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(false));
     
     // Combine paths (main first, then messy)
     const allPaths1 = [mainPath1, ...messyPaths1];
@@ -191,16 +178,16 @@ const CurvedConnectingLines = () => {
     };
   }, [NUM_MESSY_LINES]);
 
-  const renderPathSet = (pathArray, gradientId, baseDelay = 0, setName) => {
+    const renderPathSet = (pathArray: string[], gradientId: string, setName: 'set1' | 'set2') => {
     const survivingIndex = survivingIndices[setName];
     const pathTypesArray = pathSmoothness[setName];
-    
-    return pathArray.map((path, index) => {
+  
+    return pathArray.map((path: string, index: number) => {
       const isSurviving = index === survivingIndex;
       const pathType = pathTypesArray[index];
       const isMainPath = pathType === 'main';
       const shouldPathDisappear = shouldDisappear && !isSurviving;
-      
+
       // Calculate path length for proper stroke-dasharray animation
       let pathLength = 1000; // default fallback
       try {
@@ -306,10 +293,10 @@ const CurvedConnectingLines = () => {
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Set 1 - Upper flowing lines */}
-        {renderPathSet(paths.set1, 'gradient1', 0, 'set1')}
+        {renderPathSet(paths.set1, 'gradient1', 'set1')}
         
         {/* Set 2 - Lower flowing lines */}
-        {renderPathSet(paths.set2, 'gradient2', 0.1, 'set2')}
+        {renderPathSet(paths.set2, 'gradient2', 'set2')}
 
         <defs>
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
