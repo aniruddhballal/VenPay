@@ -159,7 +159,7 @@ const CurvedConnectingLines = () => {
     // Start animation immediately
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 100);
+    }, 0);
 
     // All paths complete after 2.5 seconds, then enhance main lines
     const enhanceTimer = setTimeout(() => {
@@ -249,7 +249,7 @@ const CurvedConnectingLines = () => {
           strokeWidth: strokeWidth,
           filter: filter,
           transitionDuration: '0.5s',
-          transitionDelay: '0s',
+          transitionDelay: '0.1s',
           transitionTimingFunction: 'ease-out',
           transitionProperty: 'stroke-width, opacity, filter'
         };
@@ -259,7 +259,7 @@ const CurvedConnectingLines = () => {
           strokeDasharray: `${pathLength}`,
           strokeDashoffset: isLoaded ? 0 : pathLength,
           opacity: isLoaded ? opacity : 0,
-          transitionDuration: '2.5s, 0.5s',
+          transitionDuration: '2.5s, 0s',
           transitionDelay: '0s, 0s', // No delay - all start together
           transitionTimingFunction: 'ease-out, ease-out',
           transitionProperty: 'stroke-dashoffset, opacity'
