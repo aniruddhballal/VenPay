@@ -1,12 +1,8 @@
  # VenPay - A B2B app that im currently building for fun(:
 HEAVILY (LEGIT MEAN IT) ramped up the 'VenPay0.0' Project
 
-Currently, the UI-UX is VERY BAD - was working on developing the required functionalities.
-Will update the frontend interface soon
+# but now i have a longer list of improv ideas for this project lol.
 
-# update: spent 4 days on the UI-UX - its decent now, interactive, convenient and smooth. i'll just update the files here now, but now i have a longer list of improv ideas for this project lol.
-
-#Refer to the "list of improvements to do.txt" for diary like entries - so you can understand where this app plans to reach
 # edit: i have appended the contents of the "list of improvements to do.txt" below (and deleted that file):
 
 list of improvements to do (SOME ARE ALREADY implemented, the others arent yet)
