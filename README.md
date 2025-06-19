@@ -1,4 +1,4 @@
- # VenPay
+ # VenPay - A B2B app that im currently building for fun(:
 HEAVILY (LEGIT MEAN IT) ramped up the 'VenPay0.0' Project
 
 Currently, the UI-UX is VERY BAD - was working on developing the required functionalities.
