@@ -241,11 +241,11 @@ DONE 40. translatex, translatey - make it go around the boxes - complete a round
 
 41. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 HMMM OKAY, IT LOOKS FINE NOW 42. the dashboard onload curves - dont randomise maybe?
-43. remove compile errors from connectinglines.tsx
+THIS IS DONE FINALLY 43. remove compile errors from connectinglines.tsx
 SMASHED! CRAZY WORK 44. profile photo
 45. multiple image products
 YAYY DONE HAHAHA OLD ONLY 46. password change option
-47. infinite loop routing issue (dahsboard->profile->editprofile)
+SORTED SIR! 47. infinite loop routing issue (dahsboard->profile->editprofile)
 48. notifications
 49. home page button
 50. dont disclose cloudinary link
@@ -286,4 +286,4 @@ DONE YAYYY FINALLY 71. cant access the editprofile of another user directly, but
 72. add product card vs edit product card
 73. break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
 
-74. CONNECTINGLINES.TSX - MAKE IT ERROR FREE - 
+DONE RE 74. CONNECTINGLINES.TSX - MAKE IT ERROR FREE - DONE DONE.
