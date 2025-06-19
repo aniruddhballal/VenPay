@@ -287,3 +287,5 @@ DONE YAYYY FINALLY 71. cant access the editprofile of another user directly, but
 73. break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
 
 DONE RE 74. CONNECTINGLINES.TSX - MAKE IT ERROR FREE - DONE DONE.
+
+75. combine paymentRequestsStyles-fromremainingcss.css along with PaymentRequests.tsx - and then resplit the styles. - understand what the buttonprops issue actually is.
