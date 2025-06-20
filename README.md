@@ -285,3 +285,5 @@ DONE YAYYY FINALLY 71. cant access the editprofile of another user directly, but
 DONE RE 74. CONNECTINGLINES.TSX - MAKE IT ERROR FREE - DONE DONE.
 
 DONE RESPLITTING TOO 75. combine paymentRequestsStyles-fromremainingcss.css along with PaymentRequests.tsx - and then resplit the styles. - understand what the buttonprops issue actually is. - COMBINATION DONE, RE-SPLITTING IS LEFT NOW.
+
+76. convert paymentRequestsStyles.ts into the other type of exporting? why is that not working?? 
