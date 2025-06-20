@@ -507,7 +507,7 @@ export const additionalPaymentRequestsStyles = `
   }
 
   .rating-review {
-    width: 100%;
+    width: 96%;
     margin-top: 1rem;
     padding: 0.75rem;
     border: 1px solid rgba(209, 213, 219, 0.8);
