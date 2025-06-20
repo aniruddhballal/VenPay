@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useMemo } from 'react';
 import { styled } from '@mui/material/styles';
-import { paymentRequestsStyles } from '../styles/paymentRequestsStyles';
+import { paymentRequestsStyles, additionalPaymentRequestsStyles } from '../styles/paymentRequestsStyles';
 
 import {Button} from '@mui/material';
 
@@ -171,6 +171,7 @@ export default function PaymentRequests() {
   return (
     <>
       <style>{paymentRequestsStyles}</style>
+      <style>{additionalPaymentRequestsStyles}</style>
       <div className="vendor-requests-container">
         <h3 className="requests-title">Payment Requests</h3>
 
@@ -351,11 +352,6 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                   [reqId]: { ...prev[reqId], rating: star },
                 }));
               }
-            }}
-            style={{ 
-              cursor: isReadOnly ? "default" : "pointer",
-              color: star <= currentRating ? "#ffd700" : "#ddd",
-              fontSize: "24px"
             }}
           >
             ★
@@ -556,21 +552,11 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                             }))
                           }
                           rows={3}
-                          style={{ width: "100%", marginTop: "10px", padding: "8px" }}
                         />
                         <button
                           className="rating-submit-button"
                           onClick={() => handleRatingSubmit(req)}
                           disabled={!ratingData[req._id]?.rating || ratingLoading[req._id]}
-                          style={{ 
-                            marginTop: "10px",
-                            padding: "8px 16px",
-                            backgroundColor: "#007bff",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: ratingLoading[req._id] ? "not-allowed" : "pointer"
-                          }}
                         >
                           {ratingLoading[req._id] ? "Submitting..." : "Submit Rating"}
                         </button>
