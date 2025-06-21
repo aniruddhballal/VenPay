@@ -986,11 +986,22 @@ Merged ProductList and ProductManagement up next
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 60px;
   height: 3px;
+  width: 205px; /* final width  - MODIFY THESE VALES AND MAYBE THE COLOURS AND STYLE THIS BETTER - DIFFERENT FOR EACH TYPE OF REQUEST
+                    ALSO I THINK THAT we can put all the accepted requests "inside" the title ka thingy. rn its just under i guess
+  */
   background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
 }
+
+.section-title:hover::after {
+  transform: scaleX(1);
+}
+
+/* HAHA ITS IN THE ONE ABOVE THIS */
 
 .request-card {
   border: 1px solid rgba(226, 232, 240, 0.8);
