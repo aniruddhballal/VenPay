@@ -293,10 +293,11 @@ DONE 78. first make the way all the requests come - side by side not one below t
 
 79. add loading screens instead of directly rendering some components by default
 80. add skeletons instead of loading screens
-81. stylise the tab interface for paymentrequests and implement the same for productrequests - partly done
+DONE 81. stylise the tab interface for paymentrequests and implement the same for productrequests
 
 82. tab interface the two parts of the dashboard too i guess.
 83. prompt user to add pfp if does nto exist
 84. make the underlines of the titles come auto animated after clicking on those tabs
 85. if requests of a particular type are empty - display a message saying that
 86. black button tab interface looks ugly highkey - modify it later.
+87. images of requested products not shown on company side - can compactify whole individual request card
