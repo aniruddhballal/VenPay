@@ -1,5 +1,5 @@
  # VenPay - A B2B app that im currently building for fun(:
-HEAVILY (LEGIT MEAN IT) ramped up the 'VenPay0.0' Project
+HEAVILY (LEGIT, I MEAN IT) ramped up the 'VenPay0.0' Project
 
 # but now i have a longer list of improv ideas for this project lol.
 
