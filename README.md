@@ -42,164 +42,163 @@ Tasks – completed, yet to be completed (priorities), discarded ideas, currentl
 - 40. https://www.theparisreview.org/blog/2019/07/16/the-crane-wife/
 - 41. https://press.uchicago.edu/ucp/books/book/chicago/A/bo209942751.html
 - 42. done with buffer, going to create separate pages for products and vendor/company profiles i guess.
-43. its hard to decide if i have to create the separate products page first or the user details first create a universal users page, where only people who have logged in can see the other persons profile. sth like Instagram and then when you view your own profile, you'll have the edit profile option. maybe i should create the individual products' page first but where do the users click on to land there? should i end up modifying the current product expand/hover card style?
-44. created the productdisplay page hoorayyy, it works - i gotta style it and stuff - later on. now, user display page??
-45. niceeeee, vendor page display is done on companyside - next is company page display on vendorside
-46. gotta modify so many codes on git tom morning - SO MCUH TO STYLE TOO - and make the products/users table contain more details.
-47. UP NEXT: reviews, star ratingssss. WOWWW company page display from vendors is done toooo! now only:
-48. styling of UserDisplay.tsx ProductDisplay.tsx
-49. make sure only logged in users can see other's profiles
-50. edit profile option
-51. add more fields in product and user schemas
-52. reviews/star ratings
-53. add that akon song that lucassfit used + that new thing/profile on consumerism
-54. done with point 49. logged users (used authMiddleware.ts to implement protected routes)
-55. now, profile edit option if its the same user
-56. and then add more fields in product/user table/schema (like reviews and stars)
-57. and then style the frontend
-58. edit profile takes you to a diff page yes but now, i need a editprofile page - right?
-59. YAYYY done with new profile page, new editprofile page - for all users. it shows any profile only if the person is logged into their account - and editprofile shows up only while displaying that user's details who is logged in currently
-60. added a "go to dashboard" button to go back from the userdisplay page to the dashboard page. 
-61. "save changes" on editprofile will take user right back to userdisplay page.
-62. NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
-63. so, done with point 3. Edit profile option
-64. although all these changes have no ui-ux css styling right now, have to work on that. will do that before creating products page now.
-65. gotta add more fields in user schema too.
-66. INLINE PRODUCT CARD - EDIT DETAILS IS CRAZYYYY - IMPLEMENT IT FOR PRODUCT IMAGE ALSO, then you can remove the whole top part of the vendor dashboard - Create product can be the last productcard out of all the rest. last mai empty template for product creation.
-67. done implementing for product image. i need to make the last part of the product cards gridlist into the create product option 
-68. yes, done with implementing the create product as the last product hover card in the gridlist. yayyy
+- 43. its hard to decide if i have to create the separate products page first or the user details first create a universal users page, where only people who have logged in can see the other persons profile. sth like Instagram and then when you view your own profile, you'll have the edit profile option. maybe i should create the individual products' page first but where do the users click on to land there? should i end up modifying the current product expand/hover card style?
+- 44. created the productdisplay page hoorayyy, it works - i gotta style it and stuff - later on. now, user display page??
+- 45. niceeeee, vendor page display is done on companyside - next is company page display on vendorside
+- 46. gotta modify so many codes on git tom morning - SO MCUH TO STYLE TOO - and make the products/users table contain more details.
+- 47. UP NEXT: reviews, star ratingssss. WOWWW company page display from vendors is done toooo! now only:
+- 48. styling of UserDisplay.tsx ProductDisplay.tsx
+- 49. make sure only logged in users can see other's profiles
+- 50. edit profile option
+- 51. add more fields in product and user schemas
+- 52. reviews/star ratings
+- 53. add that akon song that lucassfit used + that new thing/profile on consumerism
+- 54. done with point 49. logged users (used authMiddleware.ts to implement protected routes)
+- 55. now, profile edit option if its the same user
+- 56. and then add more fields in product/user table/schema (like reviews and stars)
+- 57. and then style the frontend
+- 58. edit profile takes you to a diff page yes but now, i need a editprofile page - right?
+- 59. YAYYY done with new profile page, new editprofile page - for all users. it shows any profile only if the person is logged into their account - and editprofile shows up only while displaying that user's details who is logged in currently
+- 60. added a "go to dashboard" button to go back from the userdisplay page to the dashboard page. 
+- 61. "save changes" on editprofile will take user right back to userdisplay page.
+- 62. NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
+- 63. so, done with point 3. Edit profile option
+- 64. although all these changes have no ui-ux css styling right now, have to work on that. will do that before creating products page now.
+- 65. gotta add more fields in user schema too.
+- 66. INLINE PRODUCT CARD - EDIT DETAILS IS CRAZYYYY - IMPLEMENT IT FOR PRODUCT IMAGE ALSO, then you can remove the whole top part of the vendor dashboard - Create product can be the last productcard out of all the rest. last mai empty template for product creation.
+- 67. done implementing for product image. i need to make the last part of the product cards gridlist into the create product option 
+- 68. yes, done with implementing the create product as the last product hover card in the gridlist. yayyy
 css styles to make better:
-69. the onclick field edit option - THIS REMAINS
-70. user profile and product styles - for editing and viewing both - THIS DONE
+- 69. the onclick field edit option - THIS REMAINS
+- 70. user profile and product styles - for editing and viewing both - THIS DONE
 new idea to implement + css styles:
-71. product page - reviews and star rating - YET TO ADD NEW FIELDS into schema - DONE
-72. sort index.css out and merge the three module.css files - UHH LATER
-73. OH THE MANUAL DEADLINE HAS NO CSS OR UIUX STUFF
+- 71. product page - reviews and star rating - YET TO ADD NEW FIELDS into schema - DONE
+- 72. sort index.css out and merge the three module.css files - UHH LATER
+- 73. OH THE MANUAL DEADLINE HAS NO CSS OR UIUX STUFF
 left with styling of:
-74. onfield click edit option
-75. manual deadline - DONE
-76. vendor link in company dashboard
-77. index.css + 3 module.css files - note to self, the css files are getting too messy, i think module files are the way to go - that would reduce complexity but the number of css files would growwww;
-78. modules done for the simpler, single use classnames - productrequests, paymentrequests, productmanagement, productlist - these are all put in one big remaining.css for further sorting on some other day i guess 
-79. there is an issue with who can see the product details - the reviews, comments - make it all public for logged in users. - DONE
-80. modified multiple react_css into react_mui
-81. learnt about react+mui dependency issues
+- 74. onfield click edit option
+- 75. manual deadline - DONE
+- 76. vendor link in company dashboard
+- 77. index.css + 3 module.css files - note to self, the css files are getting too messy, i think module files are the way to go - that would reduce complexity but the number of css files would growwww;
+- 78. modules done for the simpler, single use classnames - productrequests, paymentrequests, productmanagement, productlist - these are all put in one big remaining.css for further sorting on some other day i guess 
+- 79. there is an issue with who can see the product details - the reviews, comments - make it all public for logged in users. - DONE
+- 80. modified multiple react_css into react_mui
+- 81. learnt about react+mui dependency issues
 up next:
-82. onfield click edit option - not done yet
-83. vendor link in company dashboard - not done yet
-
-84. also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
-85. okay, the product display page looks too bad right now. ask it to maintain the theme, interactiveness, and colour and styling of the userdisplay and editprofile tsx files.
-86. gotta MUI-fy the dashboard page too
-87. HMM, or MUI-fy the sub contents of the dashboard page, let'see - the dark theme is getting to me. lighter is kinda better
-88. gotta match the details/delete button for all the products with the green, purple thingy.
-89. add go back to dashboard button after visiting the product page
+- 82. onfield click edit option - not done yet
+- 83. vendor link in company dashboard - not done yet
+- 84. also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
+- 85. okay, the product display page looks too bad right now. ask it to maintain the theme, interactiveness, and colour and styling of the userdisplay and editprofile tsx files.
+- 86. gotta MUI-fy the dashboard page too
+- 87. HMM, or MUI-fy the sub contents of the dashboard page, let'see - the dark theme is getting to me. lighter is kinda better
+- 88. gotta match the details/delete button for all the products with the green, purple thingy.
+- 89. add go back to dashboard button after visiting the product page
 umm here's a small summary of all the updates on the productmanagement page:
-90. inline editing UI is just too good now (except for image editing - will get back to this) - GOT BACK TO THIS FINALLY DONE.
-91. double expandable hover cards are now multi-level expandable (depends on what fields of the product details you are editing)
-92. auto-saving of product details when mouse leaves/stops hovering over the product card
-93. MUI-fied CSS obviously
-94. a lot of other small bugs, debugs wtv
+- 90. inline editing UI is just too good now (except for image editing - will get back to this) - GOT BACK TO THIS FINALLY DONE.
+- 91. double expandable hover cards are now multi-level expandable (depends on what fields of the product details you are editing)
+- 92. auto-saving of product details when mouse leaves/stops hovering over the product card
+- 93. MUI-fied CSS obviously
+- 94. a lot of other small bugs, debugs wtv
 TO SUMMARISE, crazy updation of the "updation process" lol
-95. YET TO Implement: features from ExpandProductCard onto AddProductCard - THIS
-96. NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
+- 95. YET TO Implement: features from ExpandProductCard onto AddProductCard - THIS
+- 96. NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
 note ps:
-97. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
-DONEEE! 98. issues with the calendar (on non-net30 payments)
-99. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
-DONE! 100. update image - better the ui
-101. cut stuff from reminaing.css that have no usage in any tsx file - ONGOING
-RESOLVED! 102. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
-DONE, I THINK. 103. add back to dashboard button on the productdetails page - add link to visit vendor profile from product details page
-104. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
-105. poem on cycle
-DONE 106. organise all the word docs into Incessantly.docx
-DONE KINDA 107. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
-DONE 108. on minimised screen, the price overflows out of the box - but name and desc dont. - DONE
-DONE 109. on user details page - add a mailto link - DONE
-DONE 110. user account deletion logic (cascaded) - lol, cru of user was there, no d until now eh4
-DONE 111. move the star rating to under the product image
-DONE 112. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
-113. global home button
-114. MUI-fy the datepickermodal.module.css
-DONE 115. change what the "go back" button does, depending on which page was visited before it
-116. add more fields in the product and user tables - phone number, address for the user table; product table can include additional images
-DONE 117. reminder to modify the product display page such that the whitespace under the product image gets filled with something else...
-DONE 118. clear password on wrong entry of password while trying to make payment, just like how it gets cleared on successful payment
-DONE 119. make payment button does not have the glassmorphism
-DONE 120. on vendor side - if payment has been cleared, remove amount due and deadlines
-DONE, IMPLEMETED SOMETHING BETTER 121. new idea, let deadline be, remove time left - on both, vendor and company side
-122. vendor side could also show the star rating for each of the product requests
-DONEEE YAYYY FINNALY(((: 123. collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - ideating how many "new" stuff are there in that category
-124. notifications of payment requests, payments, product requests, new products, product deletion. NOTIFICATIONS WILL BE A HUGE UPGRADE
-125. again, these are all on vendor side - so, company side??
-126. what happens if deadline passes by?!
-127. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
-DONE I GUESS 128. WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
-TAKEN CARE OF! 129. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
-130. filter products available by company, or when visiting vendor profile - show list of products
-KHATAM! 131. profile photo for all users.
-132. consider cropping in 1:1 ratio not the landscape 2:3 - on main pages and the product page - should do. a crop feature while uploading, that shows them how itll be cropped and shown in square/circle
-DONE! 133. reconsider the "back to dashboard" -> "back to profile" -> edit profile - change the routing !!
-134. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
-135. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards - WILL DO.
-DONE 136. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
-137. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
-HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
-THIS IS DONE FINALLY 139. remove compile errors from connectinglines.tsx
-SMASHED! CRAZY WORK 140. profile photo
-141. multiple image products
-YAYY DONE HAHAHA OLD ONLY 142. password change option
-SORTED SIR! 143. infinite loop routing issue (dahsboard->profile->editprofile)
-144. notifications
-145. home page button
-146. dont disclose cloudinary link
-147. image on display -> cropped/resized?
-148. filter products by vendors - like reviews can be filtered by companies
-YAYY MISSION ACCOMPLISHED 149. better the review giving UI
-THISSSS, DONE. 150. appearance of product/payment requests - annoying-slide-aall-the-way-to-the-bottom
-151. payment? crypto? blockchain?
-152. delayed payments -> charges/fees/penalties -> deadline extension option when deadline nears (change from 24h to 48h)
-153. same product -> lend-borrow/buy-sell -> not just buy-sell
-154. addproductcard ui from updateproductcard's
-155. clear blank/whitespaces -> add designs -> compactify
-156. chatbox option -> very similar to notifications
-157. complexify the user/product tables
-158. minimumprice limit in input/edit field of price
-159. make reviews as a drop down or something - let it optionally occupy space
-160. instead of having separate edit profile page - allow editing inline - just like product mgmt
-161. implementing profile photo patch now: wait, let me think about where all this change will ripple into...
-162. dashboard (profile button can be replaced with profile photo, same functionality onclick).
-163. then displayuser and edit profile pages. and while showing product requests, payment requests.
-164. BTW NONE of the payment requests - company side - show images of all the products.
-165. the pfp is optional - so the display should be the default empty profile image or whatever they pick (dont have to ask while signup)
-166. another idea as im implementing the pfp feature - a page to scroll thru all vendors and all companies - and then view their products.
-167. right now, its a products page - but we can have vendors page too. vendors page with filtering products vs products page with filtering vendors. filtering prices. filtering avg star ratings.
-168. delete old images - from cloudinary - after image updation.
-DONE DONE 169. add styles to editprofile page
-DONE YAYYYY 170. want dashboard to load with new username and deets after "save changes" from editprofile.
-171. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
-DONE DONEEEE 172. infinite loop - stacking pages - navigate -1
-DONE YAYYY FINALLY 173. cant access the editprofile of another user directly, but if you copy paste url, it isnt protected. it lets any logged in user edit it.
-174. add product card vs edit product card
-175. break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
-DONE RE 176. CONNECTINGLINES.TSX - MAKE IT ERROR FREE - DONE DONE.
-DONE RESPLITTING TOO 177. combine paymentRequestsStyles-fromremainingcss.css along with PaymentRequests.tsx - and then resplit the styles. - understand what the buttonprops issue actually is. - COMBINATION DONE, RE-SPLITTING IS LEFT NOW.
-178. convert paymentRequestsStyles.ts into the other type of exporting? why is that not working?? 
-179. animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
-DONE 180. first make the way all the requests come - side by side not one below the other - then do this.
-181. add loading screens instead of directly rendering some components by default
-182. add skeletons instead of loading screens
-DONE 183. stylise the tab interface for paymentrequests and implement the same for productrequests
-184. tab interface the two parts of the dashboard too i guess.
-185. prompt user to add pfp if does nto exist
-186. make the underlines of the titles come auto animated after clicking on those tabs
-DONE YAYY CHEERS SIMPLE 187. if requests of a particular type are empty - display a message saying that
-188. black button tab interface looks ugly highkey - modify it later.
-189. images of requested products not shown on company side - can compactify whole individual request card
-DONE 190. unify the tab styling for payment and product requests pages - same import same styles.ts
-191. sort the requests by earliest deadline first, or by companies/vendors - give user the option of filtering.
-192. please work on 189 - compactification, rearrangement, expansion, etc now - PLEASE DO THIS
-DONE, SORTED. 193. small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
-194. create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities. 
-195. an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYBE FILTER YES YES FILTER. 
+- 97. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
+- DONEEE! 98. issues with the calendar (on non-net30 payments)
+- 99. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
+- DONE! 100. update image - better the ui
+- 101. cut stuff from reminaing.css that have no usage in any tsx file - ONGOING
+- RESOLVED! 102. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
+- DONE, I THINK. 103. add back to dashboard button on the productdetails page - add link to visit vendor profile from product details page
+- 104. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
+- 105. poem on cycle
+- DONE 106. organise all the word docs into Incessantly.docx
+- DONE KINDA 107. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
+- DONE 108. on minimised screen, the price overflows out of the box - but name and desc dont. - DONE
+- DONE 109. on user details page - add a mailto link - DONE
+- DONE 110. user account deletion logic (cascaded) - lol, cru of user was there, no d until now eh4
+- DONE 111. move the star rating to under the product image
+- DONE 112. properly implement global redux for login - it uses a mix of tokens and cookies - double toast errors display
+- 113. global home button
+- 114. MUI-fy the datepickermodal.module.css
+- DONE 115. change what the "go back" button does, depending on which page was visited before it
+- 116. add more fields in the product and user tables - phone number, address for the user table; product table can include additional images
+- DONE 117. reminder to modify the product display page such that the whitespace under the product image gets filled with something else...
+- DONE 118. clear password on wrong entry of password while trying to make payment, just like how it gets cleared on successful payment
+- DONE 119. make payment button does not have the glassmorphism
+- DONE 120. on vendor side - if payment has been cleared, remove amount due and deadlines
+- DONE, IMPLEMETED SOMETHING BETTER 121. new idea, let deadline be, remove time left - on both, vendor and company side
+- 122. vendor side could also show the star rating for each of the product requests
+- DONEEE YAYYY FINNALY(((: 123. collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - - ideating how many "new" stuff are there in that category
+- 124. notifications of payment requests, payments, product requests, new products, product deletion. NOTIFICATIONS WILL BE A HUGE UPGRADE
+- 125. again, these are all on vendor side - so, company side??
+- 126. what happens if deadline passes by?!
+- 127. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
+- DONE I GUESS 128. WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
+- TAKEN CARE OF! 129. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
+- 130. filter products available by company, or when visiting vendor profile - show list of products
+- KHATAM! 131. profile photo for all users.
+- 132. consider cropping in 1:1 ratio not the landscape 2:3 - on main pages and the product page - should do. a crop feature while uploading, that shows them how itll be cropped and shown in square/circle
+- DONE! 133. reconsider the "back to dashboard" -> "back to profile" -> edit profile - change the routing !!
+- 134. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
+- 135. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards WILL DO.
+- DONE 136. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
+- 137. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
+- HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
+- THIS IS DONE FINALLY 139. remove compile errors from connectinglines.tsx
+- SMASHED! CRAZY WORK 140. profile photo
+- 141. multiple image products
+- YAYY DONE HAHAHA OLD ONLY 142. password change option
+- SORTED SIR! 143. infinite loop routing issue (dahsboard->profile->editprofile)
+- 144. notifications
+- 145. home page button
+- 146. dont disclose cloudinary link
+- 147. image on display -> cropped/resized?
+- 148. filter products by vendors - like reviews can be filtered by companies
+- YAYY MISSION ACCOMPLISHED 149. better the review giving UI
+- THISSSS, DONE. 150. appearance of product/payment requests - annoying-slide-aall-the-way-to-the-bottom
+- 151. payment? crypto? blockchain?
+- 152. delayed payments -> charges/fees/penalties -> deadline extension option when deadline nears (change from 24h to 48h)
+- 153. same product -> lend-borrow/buy-sell -> not just buy-sell
+- 154. addproductcard ui from updateproductcard's
+- 155. clear blank/whitespaces -> add designs -> compactify
+- 156. chatbox option -> very similar to notifications
+- 157. complexify the user/product tables
+- 158. minimumprice limit in input/edit field of price
+- 159. make reviews as a drop down or something - let it optionally occupy space
+- 160. instead of having separate edit profile page - allow editing inline - just like product mgmt
+- 161. implementing profile photo patch now: wait, let me think about where all this change will ripple into...
+- 162. dashboard (profile button can be replaced with profile photo, same functionality onclick).
+- 163. then displayuser and edit profile pages. and while showing product requests, payment requests.
+- 164. BTW NONE of the payment requests - company side - show images of all the products.
+- 165. the pfp is optional - so the display should be the default empty profile image or whatever they pick (dont have to ask while signup)
+- 166. another idea as im implementing the pfp feature - a page to scroll thru all vendors and all companies - and then view their products.
+- 167. right now, its a products page - but we can have vendors page too. vendors page with filtering products vs products page with filtering vendors. filtering prices. filtering avg star ratings.
+- 168. delete old images - from cloudinary - after image updation.
+- DONE DONE 169. add styles to editprofile page
+- DONE YAYYYY 170. want dashboard to load with new username and deets after "save changes" from editprofile.
+- 171. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+- DONE DONEEEE 172. infinite loop - stacking pages - navigate -1
+- DONE YAYYY FINALLY 173. cant access the editprofile of another user directly, but if you copy paste url, it isnt protected. it lets any logged in user edit it.
+- 174. add product card vs edit product card
+- 175. break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
+- DONE RE 176. CONNECTINGLINES.TSX - MAKE IT ERROR FREE - DONE DONE.
+- DONE RESPLITTING TOO 177. combine paymentRequestsStyles-fromremainingcss.css along with PaymentRequests.tsx - and then resplit the styles. - understand what the buttonprops issue actually is. - COMBINATION DONE, RE-SPLITTING IS LEFT NOW.
+- 178. convert paymentRequestsStyles.ts into the other type of exporting? why is that not working?? 
+- 179. animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
+- DONE 180. first make the way all the requests come - side by side not one below the other - then do this.
+- 181. add loading screens instead of directly rendering some components by default
+- 182. add skeletons instead of loading screens
+- DONE 183. stylise the tab interface for paymentrequests and implement the same for productrequests
+- 184. tab interface the two parts of the dashboard too i guess.
+- 185. prompt user to add pfp if does nto exist
+- 186. make the underlines of the titles come auto animated after clicking on those tabs
+- DONE YAYY CHEERS SIMPLE 187. if requests of a particular type are empty - display a message saying that
+- 188. black button tab interface looks ugly highkey - modify it later.
+- 189. images of requested products not shown on company side - can compactify whole individual request card
+- DONE 190. unify the tab styling for payment and product requests pages - same import same styles.ts
+- 191. sort the requests by earliest deadline first, or by companies/vendors - give user the option of filtering.
+- 192. please work on 189 - compactification, rearrangement, expansion, etc now - PLEASE DO THIS
+- DONE, SORTED. 193. small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
+- 194. create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities. 
+- 195. an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYBE FILTER YES YES FILTER. 
