@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import DatePickerModal from "./DatePickerModal"; // Import the separate component
+import DatePickerModal from "./DatePickerModal";
 import { useMemo } from 'react';
+
+import { tabStyles } from "../styles/requestsTabStyles";
 
 interface Transaction {
   _id: string;
@@ -37,6 +39,7 @@ export default function ProductRequests() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<Request | null>(null);
   const [deadlineMap, setDeadlineMap] = useState<Record<string, string>>({});
+  const [activeTab, setActiveTab] = useState('pending');
 
   useEffect(() => {
     axios
@@ -356,19 +359,52 @@ export default function ProductRequests() {
   };
 
   return (
+  <>
+    <style>{tabStyles}</style>
     <div className="vendor-requests-container">
       <h3 className="requests-title">Product Requests</h3>
-      
+     
       {requests.length === 0 ? (
         <p className="no-requests">No requests received yet.</p>
       ) : (
-        <>
-          <RequestSection title="Accepted Requests" data={grouped.accepted} />
-          <RequestSection title="Declined Requests" data={grouped.declined} />
-          <RequestSection title="Pending Requests" data={grouped.pending} />
-        </>
+        <div className="tabs-container">
+          <div className="tabs-header">
+            <button
+              className={`tab-button accepted ${activeTab === 'accepted' ? 'active' : ''}`}
+              onClick={() => setActiveTab('accepted')}
+            >
+              Accepted
+              <span className="tab-badge">{grouped.accepted.length}</span>
+            </button>
+            <button
+              className={`tab-button declined ${activeTab === 'declined' ? 'active' : ''}`}
+              onClick={() => setActiveTab('declined')}
+            >
+              Declined
+              <span className="tab-badge">{grouped.declined.length}</span>
+            </button>
+            <button
+              className={`tab-button pending ${activeTab === 'pending' ? 'active' : ''}`}
+              onClick={() => setActiveTab('pending')}
+            >
+              Pending
+              <span className="tab-badge">{grouped.pending.length}</span>
+            </button>
+          </div>
+         
+          <div className="tab-content">
+            {activeTab === 'accepted' && (
+              <RequestSection title="Accepted Requests" data={grouped.accepted} />
+            )}
+            {activeTab === 'declined' && (
+              <RequestSection title="Declined Requests" data={grouped.declined} />
+            )}
+            {activeTab === 'pending' && (
+              <RequestSection title="Pending Requests" data={grouped.pending} />
+            )}
+          </div>
+        </div>
       )}
-
       <DatePickerModal
         isOpen={showDatePicker}
         onClose={() => {
@@ -379,5 +415,6 @@ export default function ProductRequests() {
         title="Set Payment Deadline"
       />
     </div>
-  );
+  </>
+);
 }
