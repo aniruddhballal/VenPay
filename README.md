@@ -289,3 +289,4 @@ DONE RESPLITTING TOO 75. combine paymentRequestsStyles-fromremainingcss.css alon
 76. convert paymentRequestsStyles.ts into the other type of exporting? why is that not working?? 
 
 77. animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
+78. first make the way all the requests come - side by side not one below the other - then do this.
