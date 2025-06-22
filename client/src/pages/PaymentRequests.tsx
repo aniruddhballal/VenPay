@@ -148,7 +148,7 @@ const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonPro
 export default function PaymentRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('pending');
+  const [activeTab, setActiveTab] = useState('accepted');
 
   useEffect(() => {
     axios

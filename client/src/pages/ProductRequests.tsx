@@ -370,6 +370,13 @@ export default function ProductRequests() {
         <div className="tabs-container">
           <div className="tabs-header">
             <button
+              className={`tab-button pending ${activeTab === 'pending' ? 'active' : ''}`}
+              onClick={() => setActiveTab('pending')}
+            >
+              Pending
+              <span className="tab-badge">{grouped.pending.length}</span>
+            </button>
+            <button
               className={`tab-button accepted ${activeTab === 'accepted' ? 'active' : ''}`}
               onClick={() => setActiveTab('accepted')}
             >
@@ -383,16 +390,15 @@ export default function ProductRequests() {
               Declined
               <span className="tab-badge">{grouped.declined.length}</span>
             </button>
-            <button
-              className={`tab-button pending ${activeTab === 'pending' ? 'active' : ''}`}
-              onClick={() => setActiveTab('pending')}
-            >
-              Pending
-              <span className="tab-badge">{grouped.pending.length}</span>
-            </button>
           </div>
-         
           <div className="tab-content">
+            {activeTab === 'pending' && (
+              grouped.pending.length === 0 ? (
+                <p className="no-requests">No pending requests yet.</p>
+              ) : (
+                <RequestSection title="Pending Requests" data={grouped.pending} />
+              )
+            )}
             {activeTab === 'accepted' && (
               grouped.accepted.length === 0 ? (
                 <p className="no-requests">No accepted requests yet.</p>
@@ -405,13 +411,6 @@ export default function ProductRequests() {
                 <p>No declined requests yet.</p>
               ) : (
                 <RequestSection title="Declined Requests" data={grouped.declined} />
-              )
-            )}
-            {activeTab === 'pending' && (
-              grouped.pending.length === 0 ? (
-                <p className="no-requests">No pending requests yet.</p>
-              ) : (
-                <RequestSection title="Pending Requests" data={grouped.pending} />
               )
             )}
           </div>
