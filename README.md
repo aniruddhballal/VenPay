@@ -301,3 +301,4 @@ DONE 81. stylise the tab interface for paymentrequests and implement the same fo
 85. if requests of a particular type are empty - display a message saying that
 86. black button tab interface looks ugly highkey - modify it later.
 87. images of requested products not shown on company side - can compactify whole individual request card
+DONE 88. unify the tab styling for payment and product requests pages - same import same styles.ts
