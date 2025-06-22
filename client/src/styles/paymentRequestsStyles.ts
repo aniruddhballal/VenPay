@@ -173,6 +173,13 @@ export const paymentRequestsStyles = `
     box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
   }
 
+  .payment-loading {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+  }
+
   .payment-section {
     margin-top: 1.5rem;
     border-top: 1px solid rgba(226, 232, 240, 0.6);

@@ -538,123 +538,129 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
 
             {req.status === "accepted" && (
               <div className="payment-section">
-                {/* Only show payment details if payment is NOT cleared */}
-                {!isPaymentCleared && (
+                {/* Show loading state while data is being fetched */}
+                {(amountDueMap[req._id] === undefined || transactions[req._id] === undefined) ? (
+                  <div className="payment-loading">
+                    <p>Loading payment details...</p>
+                  </div>
+                ) : (
                   <>
-                    <p>
-                      <strong>Amount Due:</strong> ₹
-                      {amountDueMap[req._id] !== undefined
-                        ? amountDueMap[req._id].toFixed(2)
-                        : "Loading..."}
-                    </p>
+                    {/* Only show payment details if payment is NOT cleared */}
+                    {!isPaymentCleared && (
+                      <>
+                        <p>
+                          <strong>Amount Due:</strong> ₹{amountDueMap[req._id].toFixed(2)}
+                        </p>
 
-                    {req.paymentDeadline && (
-                      <p className={
-                        req.paymentDeadline && 
-                        new Date(req.paymentDeadline).getTime() - Date.now() < 24 * 60 * 60 * 1000 &&
-                        new Date(req.paymentDeadline).getTime() > Date.now()
-                          ? "deadline-urgent" 
-                          : ""
-                      }>
-                        <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
+                        {req.paymentDeadline && (
+                          <p className={
+                            req.paymentDeadline && 
+                            new Date(req.paymentDeadline).getTime() - Date.now() < 24 * 60 * 60 * 1000 &&
+                            new Date(req.paymentDeadline).getTime() > Date.now()
+                              ? "deadline-urgent" 
+                              : ""
+                          }>
+                            <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
+                          </p>
+                        )}
+
+                        <div className="payment-input-group">
+                          <input
+                            className="payment-input-amount"
+                            type="number"
+                            placeholder="Amount to pay"
+                            value={amounts[req._id] || ""}
+                            onChange={(e) => setAmounts({ ...amounts, [req._id]: e.target.value })}
+                            max={amountDueMap[req._id] ?? req.totalPrice}
+                            min={1}
+                          />
+                          <input
+                            className="payment-input-password"
+                            type="password"
+                            placeholder="Password"
+                            value={passwords[req._id] || ""}
+                            onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
+                          />
+                          <StyledButton
+                            variant="primary"
+                            onClick={() => handlePayment(req)}
+                          >
+                            Make Payment
+                          </StyledButton>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Show payment cleared message when payment is complete */}
+                    {isPaymentCleared && (
+                      <p className="paid-clear">
+                        {clearedBeforeDeadlineText || "✅ Payment cleared before deadline."}
                       </p>
                     )}
 
-                    <div className="payment-input-group">
-                      <input
-                        className="payment-input-amount"
-                        type="number"
-                        placeholder="Amount to pay"
-                        value={amounts[req._id] || ""}
-                        onChange={(e) => setAmounts({ ...amounts, [req._id]: e.target.value })}
-                        max={amountDueMap[req._id] ?? req.totalPrice}
-                        min={1}
-                      />
-                      <input
-                        className="payment-input-password"
-                        type="password"
-                        placeholder="Password"
-                        value={passwords[req._id] || ""}
-                        onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
-                      />
-                      <StyledButton
-                        variant="primary"
-                        onClick={() => handlePayment(req)}
-                      >
-                        Make Payment
-                      </StyledButton>
+                    <div className="transactions-list">
+                      <h5>Payment Transactions</h5>
+                      {transactions[req._id]?.length ? (
+                        <ul>
+                          {transactions[req._id].map((tx) => (
+                            <li key={tx._id}>
+                              Paid ₹{tx.amountPaid.toFixed(2)} by {tx.paidBy?.name || "Unknown user"} on{" "}
+                              {new Date(tx.paidAt || tx.createdAt).toLocaleString("en-IN", {
+                                timeZone: "Asia/Kolkata",
+                              })}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No payments made yet.</p>
+                      )}
                     </div>
-                  </>
-                )}
 
-                {/* Show payment cleared message when payment is complete */}
-                {isPaymentCleared && (
-                  <p className="paid-clear">
-                    {clearedBeforeDeadlineText || "✅ Payment cleared before deadline."}
-                  </p>
-                )}
-
-                <div className="transactions-list">
-                  <h5>Payment Transactions</h5>
-                  {transactions[req._id]?.length ? (
-                    <ul>
-                      {transactions[req._id].map((tx) => (
-                        <li key={tx._id}>
-                          Paid ₹{tx.amountPaid.toFixed(2)} by {tx.paidBy?.name || "Unknown user"} on{" "}
-                          {new Date(tx.paidAt || tx.createdAt).toLocaleString("en-IN", {
-                            timeZone: "Asia/Kolkata",
-                          })}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No payments made yet.</p>
-                  )}
-                </div>
-
-                {/* Product Rating Section - Only show when payment is cleared */}
-                {isPaymentCleared && (
-                  <div className="product-rating-section">
-                    <h5>Product Rating</h5>
-                    {hasExistingRating ? (
-                      <div className="existing-rating">
-                        <p><strong>Your Rating:</strong></p>
-                        {renderStarRating(req._id, hasExistingRating.rating, true)}
-                        <p><strong>Rating:</strong> {hasExistingRating.rating}/5</p>
-                        {hasExistingRating.review && (
-                          <p><strong>Your Review:</strong> "{hasExistingRating.review}"</p>
+                    {/* Product Rating Section - Only show when payment is cleared */}
+                    {isPaymentCleared && (
+                      <div className="product-rating-section">
+                        <h5>Product Rating</h5>
+                        {hasExistingRating ? (
+                          <div className="existing-rating">
+                            <p><strong>Your Rating:</strong></p>
+                            {renderStarRating(req._id, hasExistingRating.rating, true)}
+                            <p><strong>Rating:</strong> {hasExistingRating.rating}/5</p>
+                            {hasExistingRating.review && (
+                              <p><strong>Your Review:</strong> "{hasExistingRating.review}"</p>
+                            )}
+                            <p><strong>Rated on:</strong> {new Date(hasExistingRating.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
+                          </div>
+                        ) : (
+                          <div className="rating-form">
+                            <p>How would you rate this product?</p>
+                            {renderStarRating(req._id, ratingData[req._id]?.rating || 0)}
+                            <textarea
+                              className="rating-review"
+                              placeholder="Write a review (optional)..."
+                              value={ratingData[req._id]?.review || ""}
+                              onChange={(e) =>
+                                setRatingData((prev) => ({
+                                  ...prev,
+                                  [req._id]: { ...prev[req._id], review: e.target.value },
+                                }))
+                              }
+                              rows={3}
+                            />
+                            <button
+                              className="rating-submit-button"
+                              onClick={() => handleRatingSubmit(req)}
+                              disabled={!ratingData[req._id]?.rating || ratingLoading[req._id]}
+                            >
+                              {ratingLoading[req._id] ? "Submitting..." : "Submit Rating"}
+                            </button>
+                          </div>
                         )}
-                        <p><strong>Rated on:</strong> {new Date(hasExistingRating.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
-                      </div>
-                    ) : (
-                      <div className="rating-form">
-                        <p>How would you rate this product?</p>
-                        {renderStarRating(req._id, ratingData[req._id]?.rating || 0)}
-                        <textarea
-                          className="rating-review"
-                          placeholder="Write a review (optional)..."
-                          value={ratingData[req._id]?.review || ""}
-                          onChange={(e) =>
-                            setRatingData((prev) => ({
-                              ...prev,
-                              [req._id]: { ...prev[req._id], review: e.target.value },
-                            }))
-                          }
-                          rows={3}
-                        />
-                        <button
-                          className="rating-submit-button"
-                          onClick={() => handleRatingSubmit(req)}
-                          disabled={!ratingData[req._id]?.rating || ratingLoading[req._id]}
-                        >
-                          {ratingLoading[req._id] ? "Submitting..." : "Submit Rating"}
-                        </button>
                       </div>
                     )}
-                  </div>
+                  </>
                 )}
               </div>
-            )}
+            )}          
           </div>
         );
       })}
