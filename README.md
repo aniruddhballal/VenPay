@@ -298,7 +298,11 @@ DONE 81. stylise the tab interface for paymentrequests and implement the same fo
 82. tab interface the two parts of the dashboard too i guess.
 83. prompt user to add pfp if does nto exist
 84. make the underlines of the titles come auto animated after clicking on those tabs
-85. if requests of a particular type are empty - display a message saying that
+DONE YAYY CHEERS SIMPLE 85. if requests of a particular type are empty - display a message saying that
 86. black button tab interface looks ugly highkey - modify it later.
 87. images of requested products not shown on company side - can compactify whole individual request card
 DONE 88. unify the tab styling for payment and product requests pages - same import same styles.ts
+
+89. sort the requests by earliest deadline first, or by companies/vendors - give user the option of filtering.
+please work on 87 - compactification, rearrangement, expansion, etc now.
+90. small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
