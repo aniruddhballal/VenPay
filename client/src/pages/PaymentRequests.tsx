@@ -144,40 +144,67 @@ const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonPro
   }),
 }));
 
-// Add this to your existing styles or create new ones
 const tabStyles = `
   .tabs-container {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
   
   .tabs-header {
     display: flex;
-    border-bottom: 2px solid #e0e0e0;
-    margin-bottom: 20px;
+    background: #fafbfc;
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+    gap: 4px;
   }
   
   .tab-button {
-    padding: 12px 24px;
-    background: none;
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
-    color: #666;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-    margin-right: 8px;
+    color: #64748b;
+    border-radius: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    white-space: nowrap;
   }
   
-  .tab-button:hover {
-    color: #333;
-    background-color: #f5f5f5;
+  .tab-button:hover:not(.active) {
+    background: rgba(148, 163, 184, 0.1);
+    color: #475569;
+    transform: translateY(-1px);
   }
   
-  .tab-button.active {
-    color: #2196F3;
-    border-bottom-color: #2196F3;
-    background-color: #f8f9ff;
+  .tab-button.active.pending {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+    color: #92400e;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .tab-button.active.accepted {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+    color: #065f46;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .tab-button.active.declined {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+    color: #991b1b;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   
   .tab-content {
@@ -185,26 +212,79 @@ const tabStyles = `
   }
   
   .tab-badge {
-    background-color: #e0e0e0;
-    color: #666;
-    border-radius: 12px;
-    padding: 2px 8px;
-    font-size: 12px;
-    margin-left: 8px;
-    font-weight: normal;
+    background: rgba(148, 163, 184, 0.15);
+    color: #64748b;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 11px;
+    margin-left: 6px;
+    font-weight: 600;
+    min-width: 18px;
+    text-align: center;
+    transition: all 0.25s ease;
   }
   
-  .tab-button.active .tab-badge {
-    background-color: #2196F3;
-    color: white;
+  .tab-button.active.pending .tab-badge {
+    background: rgba(245, 158, 11, 0.2);
+    color: #92400e;
+  }
+  
+  .tab-button.active.accepted .tab-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: #065f46;
+  }
+  
+  .tab-button.active.declined .tab-badge {
+    background: rgba(239, 68, 68, 0.2);
+    color: #991b1b;
+  }
+
+  .tab-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  }
+
+  .tab-button:focus:not(:focus-visible) {
+    box-shadow: none;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .tabs-header {
+      padding: 4px;
+      gap: 2px;
+    }
+    
+    .tab-button {
+      min-width: 100px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    
+    .tab-badge {
+      font-size: 10px;
+      padding: 1px 4px;
+      margin-left: 4px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tabs-header {
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .tab-button {
+      min-width: unset;
+      width: 100%;
+    }
   }
 `;
 
 export default function PaymentRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
-const [activeTab, setActiveTab] = useState('pending'); // Default to pending
-
+  const [activeTab, setActiveTab] = useState('pending');
 
   useEffect(() => {
     axios
@@ -226,7 +306,7 @@ const [activeTab, setActiveTab] = useState('pending'); // Default to pending
 
   if (loading) return <div className="requests-loading">Loading requests...</div>;
 
-  return (
+return (
   <>
     <style>{paymentRequestsStyles}</style>
     <style>{additionalPaymentRequestsStyles}</style>
@@ -239,21 +319,21 @@ const [activeTab, setActiveTab] = useState('pending'); // Default to pending
         <div className="tabs-container">
           <div className="tabs-header">
             <button
-              className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
+              className={`tab-button ${activeTab === 'pending' ? 'active pending' : ''}`}
               onClick={() => setActiveTab('pending')}
             >
               Pending Requests
               <span className="tab-badge">{grouped.pending.length}</span>
             </button>
             <button
-              className={`tab-button ${activeTab === 'accepted' ? 'active' : ''}`}
+              className={`tab-button ${activeTab === 'accepted' ? 'active accepted' : ''}`}
               onClick={() => setActiveTab('accepted')}
             >
               Accepted Requests
               <span className="tab-badge">{grouped.accepted.length}</span>
             </button>
             <button
-              className={`tab-button ${activeTab === 'declined' ? 'active' : ''}`}
+              className={`tab-button ${activeTab === 'declined' ? 'active declined' : ''}`}
               onClick={() => setActiveTab('declined')}
             >
               Declined Requests
