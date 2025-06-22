@@ -207,15 +207,27 @@ return (
          
           <div className="tab-content">
             {activeTab === 'pending' && (
-              <RequestSection title="Pending Requests" data={grouped.pending} />
+              grouped.pending.length === 0 ? (
+                <p className="no-requests">No pending requests yet.</p>
+              ) : (
+                <RequestSection title="Pending Requests" data={grouped.pending} />
+              )
             )}
             {activeTab === 'accepted' && (
-              <RequestSection title="Accepted Requests" data={grouped.accepted} />
+              grouped.accepted.length === 0 ? (
+                <p className="no-requests">No accepted requests yet.</p>
+              ) : (
+                <RequestSection title="Accepted Requests" data={grouped.accepted} />
+              )
             )}
             {activeTab === 'declined' && (
-              <RequestSection title="Declined Requests" data={grouped.declined} />
+              grouped.declined.length === 0 ? (
+                <p className="no-requests">No declined requests yet.</p>
+              ) : (
+                <RequestSection title="Declined Requests" data={grouped.declined} />
+              )
             )}
-          </div>
+            </div>
         </div>
       )}
     </div>
