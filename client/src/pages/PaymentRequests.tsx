@@ -144,9 +144,67 @@ const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonPro
   }),
 }));
 
+// Add this to your existing styles or create new ones
+const tabStyles = `
+  .tabs-container {
+    margin-bottom: 20px;
+  }
+  
+  .tabs-header {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
+  }
+  
+  .tab-button {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    margin-right: 8px;
+  }
+  
+  .tab-button:hover {
+    color: #333;
+    background-color: #f5f5f5;
+  }
+  
+  .tab-button.active {
+    color: #2196F3;
+    border-bottom-color: #2196F3;
+    background-color: #f8f9ff;
+  }
+  
+  .tab-content {
+    min-height: 200px;
+  }
+  
+  .tab-badge {
+    background-color: #e0e0e0;
+    color: #666;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    margin-left: 8px;
+    font-weight: normal;
+  }
+  
+  .tab-button.active .tab-badge {
+    background-color: #2196F3;
+    color: white;
+  }
+`;
+
 export default function PaymentRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
+const [activeTab, setActiveTab] = useState('pending'); // Default to pending
+
 
   useEffect(() => {
     axios
@@ -169,25 +227,56 @@ export default function PaymentRequests() {
   if (loading) return <div className="requests-loading">Loading requests...</div>;
 
   return (
-    <>
-      <style>{paymentRequestsStyles}</style>
-      <style>{additionalPaymentRequestsStyles}</style>
-      <div className="vendor-requests-container">
-        <h3 className="requests-title">Payment Requests</h3>
-
-        {requests.length === 0 ? (
-          <p className="no-requests">No requests received yet.</p>
-        ) : (
-          <>
-            <RequestSection title="Accepted Requests" data={grouped.accepted} />
-            <RequestSection title="Declined Requests" data={grouped.declined} />
-            <RequestSection title="Pending Requests" data={grouped.pending} />
-          </>
-        )}
-      </div>
-    </>
-    
-  );
+  <>
+    <style>{paymentRequestsStyles}</style>
+    <style>{additionalPaymentRequestsStyles}</style>
+    <style>{tabStyles}</style>
+    <div className="vendor-requests-container">
+      <h3 className="requests-title">Payment Requests</h3>
+      {requests.length === 0 ? (
+        <p className="no-requests">No requests received yet.</p>
+      ) : (
+        <div className="tabs-container">
+          <div className="tabs-header">
+            <button
+              className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
+              onClick={() => setActiveTab('pending')}
+            >
+              Pending Requests
+              <span className="tab-badge">{grouped.pending.length}</span>
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'accepted' ? 'active' : ''}`}
+              onClick={() => setActiveTab('accepted')}
+            >
+              Accepted Requests
+              <span className="tab-badge">{grouped.accepted.length}</span>
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'declined' ? 'active' : ''}`}
+              onClick={() => setActiveTab('declined')}
+            >
+              Declined Requests
+              <span className="tab-badge">{grouped.declined.length}</span>
+            </button>
+          </div>
+          
+          <div className="tab-content">
+            {activeTab === 'pending' && (
+              <RequestSection title="Pending Requests" data={grouped.pending} />
+            )}
+            {activeTab === 'accepted' && (
+              <RequestSection title="Accepted Requests" data={grouped.accepted} />
+            )}
+            {activeTab === 'declined' && (
+              <RequestSection title="Declined Requests" data={grouped.declined} />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  </>
+);
 }
 
 function formatTimeLeft(deadline: string) {
