@@ -189,6 +189,7 @@ NOTE TO SELF: read this readme file - find out what are the old/new to-do's - ma
 
 note ps:
 1. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
+
 DONEEE! 2. issues with the calendar (on non-net30 payments)
 3. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 DONE! 4. update image - better the ui
@@ -304,5 +305,9 @@ DONE YAYY CHEERS SIMPLE 85. if requests of a particular type are empty - display
 DONE 88. unify the tab styling for payment and product requests pages - same import same styles.ts
 
 89. sort the requests by earliest deadline first, or by companies/vendors - give user the option of filtering.
-please work on 87 - compactification, rearrangement, expansion, etc now.
-90. small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
+please work on 87 - compactification, rearrangement, expansion, etc now - PLEASE DO THIS
+DONE, SORTED. 90. small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
+
+91. create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities. 
+
+92. an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYEB FILTER YES YES FILTER. 
