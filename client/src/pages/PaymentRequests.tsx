@@ -146,134 +146,176 @@ const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonPro
 
 const tabStyles = `
   .tabs-container {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
-  
+ 
   .tabs-header {
     display: flex;
-    background: #fafbfc;
-    border-radius: 12px;
-    padding: 6px;
-    margin-bottom: 24px;
-    border: 1px solid rgba(226, 232, 240, 0.5);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 8px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
-    gap: 4px;
+    gap: 6px;
   }
-  
+ 
   .tab-button {
     flex: 1;
-    min-width: 120px;
-    padding: 12px 16px;
-    background: transparent;
-    border: none;
+    min-width: 140px;
+    padding: 14px 20px;
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;
     font-size: 14px;
-    font-weight: 500;
-    color: #64748b;
-    border-radius: 8px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    color: rgb(255, 255, 255);
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     white-space: nowrap;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
   }
-  
+
+  /* Color-specific default backgrounds */
+  .tab-button.pending {
+    background: rgba(0, 0, 0, 1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+
+  .tab-button.accepted {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .tab-button.declined {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+ 
+  .tab-button:focus {
+    outline: none;
+  }
+ 
+  .tab-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+    z-index: 1;
+  }
+ 
+  .tab-button:hover::before {
+    left: 100%;
+  }
+ 
   .tab-button:hover:not(.active) {
-    background: rgba(148, 163, 184, 0.1);
-    color: #475569;
+    color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Enhanced hover states for color-specific buttons */
+  .tab-button.pending:hover:not(.active) {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .tab-button.accepted:hover:not(.active) {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .tab-button.declined:hover:not(.active) {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+ 
+  .tab-button.active.pending {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
   }
-  
-  .tab-button.active.pending {
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
-    color: #92400e;
-    border: 1px solid rgba(245, 158, 11, 0.25);
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-  
+ 
   .tab-button.active.accepted {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
-    color: #065f46;
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
-  
+ 
   .tab-button.active.declined {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
-    color: #991b1b;
-    border: 1px solid rgba(239, 68, 68, 0.25);
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
-  
+ 
   .tab-content {
     min-height: 200px;
   }
-  
+ 
   .tab-badge {
-    background: rgba(148, 163, 184, 0.15);
-    color: #64748b;
-    border-radius: 10px;
-    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.2);
+    color: rgb(255, 255, 255);
+    border-radius: 12px;
+    padding: 3px 8px;
     font-size: 11px;
-    margin-left: 6px;
-    font-weight: 600;
-    min-width: 18px;
+    margin-left: 8px;
+    font-weight: 700;
+    min-width: 20px;
     text-align: center;
-    transition: all 0.25s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
   }
-  
-  .tab-button.active.pending .tab-badge {
-    background: rgba(245, 158, 11, 0.2);
-    color: #92400e;
+ 
+  .tab-button.active .tab-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
-  
-  .tab-button.active.accepted .tab-badge {
-    background: rgba(16, 185, 129, 0.2);
-    color: #065f46;
-  }
-  
-  .tab-button.active.declined .tab-badge {
-    background: rgba(239, 68, 68, 0.2);
-    color: #991b1b;
-  }
-
-  .tab-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-  }
-
-  .tab-button:focus:not(:focus-visible) {
-    box-shadow: none;
-  }
-  
+ 
   /* Mobile responsiveness */
   @media (max-width: 768px) {
     .tabs-header {
-      padding: 4px;
-      gap: 2px;
+      padding: 6px;
+      gap: 4px;
     }
-    
+   
     .tab-button {
-      min-width: 100px;
-      padding: 10px 12px;
+      min-width: 110px;
+      padding: 12px 16px;
       font-size: 13px;
     }
-    
+   
     .tab-badge {
       font-size: 10px;
-      padding: 1px 4px;
-      margin-left: 4px;
+      padding: 2px 6px;
+      margin-left: 6px;
     }
   }
-  
+ 
   @media (max-width: 480px) {
     .tabs-header {
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
-    
+   
     .tab-button {
       min-width: unset;
       width: 100%;
@@ -319,28 +361,28 @@ return (
         <div className="tabs-container">
           <div className="tabs-header">
             <button
-              className={`tab-button ${activeTab === 'pending' ? 'active pending' : ''}`}
+              className={`tab-button pending ${activeTab === 'pending' ? 'active' : ''}`}
               onClick={() => setActiveTab('pending')}
             >
-              Pending Requests
+              Pending
               <span className="tab-badge">{grouped.pending.length}</span>
             </button>
             <button
-              className={`tab-button ${activeTab === 'accepted' ? 'active accepted' : ''}`}
+              className={`tab-button accepted ${activeTab === 'accepted' ? 'active' : ''}`}
               onClick={() => setActiveTab('accepted')}
             >
-              Accepted Requests
+              Accepted
               <span className="tab-badge">{grouped.accepted.length}</span>
             </button>
             <button
-              className={`tab-button ${activeTab === 'declined' ? 'active declined' : ''}`}
+              className={`tab-button declined ${activeTab === 'declined' ? 'active' : ''}`}
               onClick={() => setActiveTab('declined')}
             >
-              Declined Requests
+              Declined
               <span className="tab-badge">{grouped.declined.length}</span>
             </button>
           </div>
-          
+         
           <div className="tab-content">
             {activeTab === 'pending' && (
               <RequestSection title="Pending Requests" data={grouped.pending} />
