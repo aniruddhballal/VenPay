@@ -1,15 +1,10 @@
 export const paymentRequestsStyles = `
   .vendor-requests-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.3) inset;
-    animation: fadeInUp 0.6s ease-out;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    padding-bottom: 2rem;
+    position: relative;
+    animation: fadeIn 0.5s ease-in-out;
   }
 
   .requests-title {
