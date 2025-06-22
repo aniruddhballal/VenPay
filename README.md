@@ -189,15 +189,15 @@ NOTE TO SELF: read this readme file - find out what are the old/new to-do's - ma
 
 note ps:
 1. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
-2. issues with the calendar (on non-net30 payments) - DONE, RESOLVED!
+DONEEE! 2. issues with the calendar (on non-net30 payments)
 3. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
-4. update image - better the ui
-5. cut stuff from reminaing.css that have no usage in any tsx file
-6. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
-7. add back to dashboard button on the productdetails page - add link to visit vendor profile from product details page
-8. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects
+DONE! 4. update image - better the ui
+5. cut stuff from reminaing.css that have no usage in any tsx file - ONGOING
+RESOLVED! 6. find out why the code is still looking for deleted products' ids - check backend product deletion logic?
+DONE, I THINK. 7. add back to dashboard button on the productdetails page - add link to visit vendor profile from product details page
+8. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
 9. poem on cycle
-10. organise all the word docs into Incessantly.docx
+DONE 10. organise all the word docs into Incessantly.docx
 DONE KINDA 11. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
 DONE 12. on minimised screen, the price overflows out of the box - but name and desc dont. - DONE
 DONE 13. on user details page - add a mailto link - DONE
@@ -215,23 +215,23 @@ DONE 23. make payment button does not have the glassmorphism
 DONE 24. on vendor side - if payment has been cleared, remove amount due and deadlines
 DONE, IMPLEMETED SOMETHING BETTER 25. new idea, let deadline be, remove time left - on both, vendor and company side
 26. vendor side could also show the star rating for each of the product requests
-27. collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - ideating how many "new" stuff are there in that category
+DONEEE YAYYY FINNALY(((: 27. collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - ideating how many "new" stuff are there in that category
 28. notifications of payment requests, payments, product requests, new products, product deletion.
     NOTIFICATIONS WILL BE A HUGE UPGRADE
 29. again, these are all on vendor side - so, company side??
 30. what happens if deadline passes by?!
-31. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice)
+31. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
 DONE I GUESS 32. WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
-33. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
+TAKEN CARE OF! 33. rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
 
 34. filter products available by company, or when visiting vendor profile - show list of products
-35. profile photo for all users.
+KHATAM! 35. profile photo for all users.
 
-36. consider cropping in 1:1 ratio not the landscape 2:3 - on main pages and the product page
+36. consider cropping in 1:1 ratio not the landscape 2:3 - on main pages and the product page - should do. a crop feature while uploading, that shows them how itll be cropped and shown in square/circle
 
-37. reconsider the "back to dahsboard" -> "back to profile" -> edit profile - change the routing !!
+DONE! 37. reconsider the "back to dahsboard" -> "back to profile" -> edit profile - change the routing !!
 38. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
-39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards
+39. user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards - WILL DO.
 
 DONE 40. translatex, translatey - make it go around the boxes - complete a round around the box and stay as a border - on hover.
 
@@ -247,8 +247,8 @@ SORTED SIR! 47. infinite loop routing issue (dahsboard->profile->editprofile)
 50. dont disclose cloudinary link
 51. image on display -> cropped/resized?
 52. filter products by vendors - like reviews can be filtered by companies
-53. better the review giving UI
-54. appearance of product/payment requests - annoying-slide-aall-the-way-to-the-bottom
+YAYY MISSION ACCOMPLISHED 53. better the review giving UI
+THISSSS, DONE. 54. appearance of product/payment requests - annoying-slide-aall-the-way-to-the-bottom
 55. payment? crypto? blockchain?
 56. delayed payments -> charges/fees/penalties -> deadline extension option when deadline nears (change from 24h to 48h)
 57. same product -> lend-borrow/buy-sell -> not just buy-sell
