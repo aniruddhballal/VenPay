@@ -215,7 +215,13 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 <details>
 <summary>📚 Lessons, Tips & Summary</summary>
 
-- Use `immer` for safe state updates  
-- Keep components modular and reusable  
+- TASK 16: make sure any feature implemented on company side, also gets implemented on vendor side
+- TASK 24: so i think it boils down to - adding more fields in the product schema - and enabling the viewing of vendor/company profiles – separate viewing of each product’s image(s) and rating/ reviews
+- TASK 37: note to self: it is sometimes better to roll back into a previous version of your code, with lesser number of ideas having found implementation. But you know it’s a version that works. While developing, it is so crucial to have older versions of your code, and knowing when it is too late/too deep in a debug issue that started “after” you modified a safe version of your code and to roll back into this safer version and start over again. start afresh. Maybe re view your ideas that you wanted to implement, maybe its not that deep, maybe implement the same idea in a different way. But re start.
+- TASK 43: its hard to decide if i have to create the separate products page first or the user details first create a universal users page, where only people who have logged in can see the other persons profile. sth like Instagram and then when you view your own profile, you'll have the edit profile option. maybe i should create the individual products' page first but where do the users click on to land there? should i end up modifying the current product expand/hover card style?
+- TASK 77: index.css + 3 module.css files - note to self, the css files are getting too messy, i think module files are the way to go - that would reduce complexity but the number of css files would growwww;
+- TASK 81: learnt about react+mui dependency issues
+- TASK 84: also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
+- TASK 87: HMM, or MUI-fy the sub contents of the dashboard page, let'see - the dark theme is getting to me. lighter is kinda better
 
 </details>
