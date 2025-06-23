@@ -274,7 +274,7 @@ filtering prices. filtering avg star ratings.
 DONE DONE 67. add styles to editprofile page
 DONE YAYYYY 68. want dashboard to load with new username and deets after "save changes" from editprofile.
 
-69. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+PARTLY DONE 69. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
 
 DONE DONEEEE 70. infinite loop - stacking pages - navigate -1
 DONE YAYYY FINALLY 71. cant access the editprofile of another user directly, but if you copy paste url, it isnt protected. it lets any logged in user edit it.
