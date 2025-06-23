@@ -76,6 +76,7 @@ make payment button does not have the glassmorphism
 on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 121: new idea, let deadline be, remove time left - on both, vendor and company side
 - [x] TASK 123: collapsable "accepted"/"declined"/"pending" - which have a "number" of notification next to it - ideating how many "new" stuff are there in that category
+- [x] TASK 127: add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
 - [x] TASK 128: WARNING TO SELF: time mismatch of the duration before the deadline at which the payment was cleared - difference in vendor, company side
 - [x] TASK 129: rating button and review styles are very simple and are not user interactive - even for the vendor side (when he/she gives) and in general while viewing product details
 - [x] TASK 131: profile photo for all users.
@@ -134,7 +135,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 104: unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
 - [x] TASK 107: switch to redux, reduxtoolkit instead of local state management
 - [ ] TASK 125: again, these are all on vendor side - so, company side??
-- [x] TASK 127: add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
 - [ ] TASK 134: REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
