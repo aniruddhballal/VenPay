@@ -21,8 +21,15 @@ interface Request {
   status: "pending" | "accepted" | "declined";
   message?: string;
   createdAt: string;
-  productId: { _id: string; name: string };
-  vendorId: { name: string; email: string };
+  productId: {
+    _id: string;
+    name: string;
+    image?: string;
+  };
+  vendorId:{
+    name: string;
+    email: string;
+  };
   paymentDeadline?: string;
   quantity: number;
   unitPrice: number;
@@ -445,6 +452,13 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         return (
           <div key={req._id} className={`request-card status-${req.status}`}>
             <div className="request-info">
+              {req.productId?.image && (
+                  <img
+                    src={req.productId.image}
+                    alt={req.productId.name || "Product"}
+                    className="productRequestImage"
+                  />
+                )}
               <p>
                 <strong>Product:</strong> {req.productId?.name || "Deleted product"} 
               </p>                      
