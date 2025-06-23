@@ -309,3 +309,5 @@ DONE, SORTED. 90. small task: the order of appearance - accepted, pending, decli
 91. create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities. 
 
 92. an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYEB FILTER YES YES FILTER. 
+
+93. prompt user to complete profile setup?
