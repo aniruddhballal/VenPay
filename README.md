@@ -1,4 +1,4 @@
-## 🧠 Project Ideas & Tasks
+## 🧠 Project Tasks - Selfcheck points
 
 <details>
 <summary>✅ Completed Tasks</summary>
