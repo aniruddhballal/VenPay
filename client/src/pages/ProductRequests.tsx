@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import DatePickerModal from "./DatePickerModal";
 import { useMemo } from 'react';
-
+import api from "../api";
 import { tabStyles } from "../styles/requestsTabStyles";
 
 interface Transaction {
@@ -42,12 +42,11 @@ export default function ProductRequests() {
   const [activeTab, setActiveTab] = useState('pending');
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/requests/vendor", { withCredentials: true })
+    api
+      .get("/requests/vendor")
       .then((res) => setRequests(res.data))
       .catch((err) => {
-        console.error("Error loading vendor requests:", err);
-        toast.error("Failed to load requests.");
+        console.error("Error loading vendor requests:", err); // toast is already handled by api.ts interceptor
       });
   }, []);
 
@@ -60,12 +59,8 @@ export default function ProductRequests() {
       for (const req of requests.filter((r) => r.status === "accepted")) {
         try {
           const [txRes, amountRes] = await Promise.all([
-            axios.get(`http://localhost:5000/api/paymenttransactions/transactions/byProductRequest/${req._id}`, {
-              withCredentials: true,
-            }),
-            axios.get(`http://localhost:5000/api/paymentrequests/paymentRequestByProductRequest/${req._id}`, {
-              withCredentials: true,
-            }),
+            api.get(`/paymenttransactions/transactions/byProductRequest/${req._id}`),
+            api.get(`/paymentrequests/paymentRequestByProductRequest/${req._id}`)
           ]);
 
           txMap[req._id] = txRes.data;
@@ -92,17 +87,8 @@ export default function ProductRequests() {
     if (!request.message || request.message.trim() === "") {
       // Direct accept for net30
       try {
-        await axios.put(
-          `http://localhost:5000/api/requests/${request._id}`,
-          { status: "accepted" },
-          { withCredentials: true }
-        );
-
-        await axios.post(
-          `http://localhost:5000/api/paymentrequests/${request._id}`,
-          {},
-          { withCredentials: true }
-        );
+        await api.put(`/requests/${request._id}`, { status: "accepted" });
+        await api.post(`/paymentrequests/${request._id}`, {});
 
         setRequests((prev) =>
           prev.map((req) => (req._id === request._id ? { ...req, status: "accepted" } : req))
@@ -127,17 +113,9 @@ export default function ProductRequests() {
     const paymentDeadline = new Date(istDateStr);
 
     try {
-      await axios.put(
-        `http://localhost:5000/api/requests/${currentRequest._id}`,
-        { status: "accepted" },
-        { withCredentials: true }
-      );
+      await api.put(`/requests/${currentRequest._id}`, { status: "accepted" });
 
-      await axios.post(
-        `http://localhost:5000/api/paymentrequests/${currentRequest._id}`,
-        { deadline: paymentDeadline },
-        { withCredentials: true }
-      );
+      await api.post(`/paymentrequests/${currentRequest._id}`, { deadline: paymentDeadline });
 
       setRequests((prev) =>
         prev.map((req) => (req._id === currentRequest._id ? { ...req, status: "accepted" } : req))
@@ -154,7 +132,7 @@ export default function ProductRequests() {
 
   const updateStatus = async (id: string, status: "declined") => {
     try {
-      await axios.put(`http://localhost:5000/api/requests/${id}`, { status }, { withCredentials: true });
+      await api.put(`/requests/${id}`, { status });
       setRequests((prev) =>
         prev.map((req) => (req._id === id ? { ...req, status } : req))
       );
