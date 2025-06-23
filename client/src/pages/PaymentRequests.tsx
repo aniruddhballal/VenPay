@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { paymentRequestsStyles, additionalPaymentRequestsStyles } from '../styles/paymentRequestsStyles';
 import { tabStyles } from "../styles/requestsTabStyles";
-
+import api from "../api";
 import {Button} from '@mui/material';
 
 interface Transaction {
@@ -33,7 +33,7 @@ interface ProductRating {
   _id: string;
   productId: string;
   companyId: string;
-  productRequestId: string; // Added this field
+  productRequestId: string;
   date: string;
   rating: number;
   review?: string;
@@ -45,11 +45,9 @@ interface StyledButtonProps {
   [key: string]: any;
 }
 
-// Single unified styled button
 const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonProps) => (
   <Button {...props} />
 ))(({ theme, variant }) => ({
-  // Base styles common to both buttons
   fontWeight: 600,
   width: '40px',
   textTransform: 'uppercase',
@@ -57,7 +55,6 @@ const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonPro
   overflow: 'hidden',
   color: 'white',
   
-  // Shared ::before pseudo-element
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -80,7 +77,6 @@ const StyledButton = styled(({ variant = 'original', ...props }: StyledButtonPro
     left: '100%',
   },
 
-  // Variant-specific styles
   ...(variant === 'original' && {
     padding: '0rem 1rem',
     borderRadius: '12px',
@@ -151,13 +147,11 @@ export default function PaymentRequests() {
   const [activeTab, setActiveTab] = useState('accepted');
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/requests/company/full", { withCredentials: true })
+    api
+      .get("/requests/company/full")
       .then((res) => setRequests(res.data))
       .catch((err: any) => {
-        console.error(err);
-        const message = err.response?.data?.error || "Failed to load product requests.";
-        toast.error(message);
+        console.error(err);     //manually handle errors if needed here, api.ts does toast already?
       })
       .finally(() => setLoading(false));
   }, []);
@@ -264,16 +258,10 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
       if (req.status !== "accepted") return;
 
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/paymenttransactions/transactions/byProductRequest/${req._id}`,
-          { withCredentials: true }
-        );
+        const res = await api.get(`/paymenttransactions/transactions/byProductRequest/${req._id}`);
         setTransactions((prev) => ({ ...prev, [req._id]: res.data }));
 
-        const paymentRes = await axios.get(
-          `http://localhost:5000/api/paymentrequests/paymentRequestByProductRequest/${req._id}`,
-          { withCredentials: true }
-        );
+        const paymentRes = await api.get(`/paymentrequests/paymentRequestByProductRequest/${req._id}`);
         const amountDue = paymentRes.data.amountDue;
         setAmountDueMap((prev) => ({ ...prev, [req._id]: amountDue }));
 
@@ -281,10 +269,7 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
         if (amountDue <= 0) {
           try {
             // Changed endpoint to get rating by product request ID instead of product ID
-            const ratingRes = await axios.get(
-              `http://localhost:5000/api/productratings/productrequest/${req._id}`,
-              { withCredentials: true }
-            );
+            const ratingRes = await api.get(`/productratings/productrequest/${req._id}`);
             if (ratingRes.data) {
               setExistingRatings((prev) => ({ ...prev, [req._id]: ratingRes.data }));
             }
@@ -316,11 +301,7 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
     }
 
     try {
-      const paymentResponse = await axios.post(
-        `http://localhost:5000/api/paymenttransactions/${req._id}`,
-        { amount, password },
-        { withCredentials: true }
-      );
+      const paymentResponse = await api.post(`/paymenttransactions/${req._id}`, { amount, password });
 
       // Update amount due
       const newAmountDue = (amountDueMap[req._id] ?? req.totalPrice) - amount;
