@@ -116,42 +116,99 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <details>
 <summary>🚧 Ongoing</summary>
 
-- [ ] TASK 3. overall UI
-- [ ] TASK 9. giving discounts and star ratings/credits for companies/vendors for keeping integrity.
-- [ ] TASK 13. IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
-- [ ] TASK 18. check if background can be made better - colour grading and scheming
-- [ ] TASK 22. add images for the products - add more details for each product
-- [ ] TASK 48. styling of UserDisplay.tsx ProductDisplay.tsx
-- [ ] TASK 57. and then style the frontend
-- [ ] TASK 62. NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
-- [ ] TASK 76. vendor link in company dashboard
-- [ ] TASK 83. vendor link in company dashboard - not done yet
-- [ ] TASK 95. YET TO Implement: features from ExpandProductCard onto AddProductCard - THIS
-- [ ] TASK 96. NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
-- [ ] TASK 97. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
-- [ ] TASK 99. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
-- [ ] TASK 101. cut stuff from reminaing.css that have no usage in any tsx file - ONGOING
-- [ ] TASK 104. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
-- [ ] TASK 107. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
-- [ ] TASK 125. again, these are all on vendor side - so, company side??
-- [ ] TASK 127. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
-- [ ] TASK 134. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
-- [ ] TASK 137. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
+- [ ] TASK 3: overall UI
+- [ ] TASK 9: giving discounts and star ratings/credits for companies/vendors for keeping integrity.
+- [ ] TASK 13: IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
+- [ ] TASK 18: check if background can be made better - colour grading and scheming
+- [ ] TASK 22: add images for the products - add more details for each product
+- [ ] TASK 48: styling of UserDisplay.tsx ProductDisplay.tsx
+- [ ] TASK 57: and then style the frontend
+- [ ] TASK 62: NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
+- [ ] TASK 76: vendor link in company dashboard
+- [ ] TASK 83: vendor link in company dashboard - not done yet
+- [ ] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard - THIS
+- [ ] TASK 96: NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
+- [ ] TASK 97: a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
+- [ ] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
+- [ ] TASK 101: cut stuff from reminaing.css that have no usage in any tsx file - ONGOING
+- [ ] TASK 104: unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
+- [ ] TASK 107: switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
+- [ ] TASK 125: again, these are all on vendor side - so, company side??
+- [ ] TASK 127: add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
+- [ ] TASK 134: REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
+- [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
-- [ ] TASK 163. then displayuser and edit profile pages. and while showing product requests, payment requests.
-- [ ] TASK 171. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
-- [ ] TASK 178. convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
-- [ ] TASK 179. animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
-- [ ] TASK 188. black button tab interface looks ugly highkey - modify it later.
-- [ ] TASK 194. create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
+- [ ] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
+- [ ] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+- [ ] TASK 178: convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
+- [ ] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
+- [ ] TASK 188: black button tab interface looks ugly highkey - modify it later.
+- [ ] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
 
 </details>
 
 <details>
 <summary>🕒 Yet to Start</summary>
 
-- [ ] Vendor analytics tab  
-- [ ] Stripe integration  
+- [ ] TASK 1: sort and filter the accepted product requests
+- [ ] TASK 2: sort and filter the type of requests (based on products)
+- [ ] TASK 4: payment gateway integration
+- [ ] TASK 5: soonest payment first
+- [ ] TASK 7: overdue payments
+- [ ] TASK 10: switch to mongodb atlas? check if i should be having all the database stuff in compass ka localhost 120710 something or if it is better to have it connected to that VendorManagement thing that i created (maybe create a new one)
+- [ ] TASK 11: i think, we can have individual payment requests ke liye ek ek button and then at the bottom of the page, we can have "all displayed payment requests" ko clear karne ke liye ek button and we can use filters and sort and stuff to change whats displayed on the page so we can kinda group the payments and pay in bulk.
+- [ ] TASK 14: features like sort, and search/filter by vendor/company
+- [ ] TASK 15: autoscroll to high priority payments, set priorities to payments (defaulting to the deadlines), but editable
+- [ ] TASK 19: filter/search options
+- [ ] TASK 20: company and vendor - total profits/total due/total income/total paid
+- [ ] TASK 21: credit rating scores for companies and vendors
+- [ ] TASK 26: can add more metadata about all the products -
+- [ ] TASK 40: https://www.theparisreview.org/blog/2019/07/16/the-crane-wife/
+- [ ] TASK 41: https://press.uchicago.edu/ucp/books/book/chicago/A/bo209942751.html
+- [ ] TASK 51: add more fields in product and user schemas
+- [ ] TASK 65: gotta add more fields in user schema too.
+- [ ] TASK 105: poem on cycle
+- [ ] TASK 113: global home button
+- [ ] TASK 114: MUI-fy the datepickermodal.module.css
+- [ ] TASK 116: add more fields in the product and user tables - phone number, address for the user table; product table can include additional images
+- [ ] TASK 124: notifications of payment requests, payments, product requests, new products, product deletion. NOTIFICATIONS WILL BE A HUGE UPGRADE
+- [ ] TASK 126: what happens if deadline passes by?!
+- [ ] TASK 130: filter products available by company, or when visiting vendor profile - show list of products
+- [ ] TASK 132: consider cropping in 1:1 ratio not the landscape 2:3 - on main pages and the product page - should do. a crop feature while uploading, that shows them how itll be cropped and shown in square/circle
+- [ ] TASK 135: user profile picture + eye icon->open image in new tab->DONT EXPOSE CLOUDINARY LINK + resize the images in hover product cards - WILL DO.
+- [ ] TASK 141: multiple image products
+- [ ] TASK 144: notifications
+- [ ] TASK 145: home page button
+- [ ] TASK 146: dont disclose cloudinary link
+- [ ] TASK 147: image on display -> cropped/resized?
+- [ ] TASK 148: filter products by vendors - like reviews can be filtered by companies
+- [ ] TASK 151: payment? crypto? blockchain?
+- [ ] TASK 152: delayed payments -> charges/fees/penalties -> deadline extension option when deadline nears (change from 24h to 48h)
+- [ ] TASK 153: same product -> lend-borrow/buy-sell -> not just buy-sell
+- [ ] TASK 154: addproductcard ui from updateproductcard's
+- [ ] TASK 155: clear blank/whitespaces -> add designs -> compactify
+- [ ] TASK 156: chatbox option -> very similar to notifications
+- [ ] TASK 157: complexify the user/product tables
+- [ ] TASK 158: minimumprice limit in input/edit field of price
+- [ ] TASK 159: make reviews as a drop down or something - let it optionally occupy space
+- [ ] TASK 160: instead of having separate edit profile page - allow editing inline - just like product mgmt
+- [ ] TASK 164: BTW NONE of the payment requests - company side - show images of all the products.
+- [ ] TASK 165: the pfp is optional - so the display should be the default empty profile image or whatever they pick (dont have to ask while signup)
+- [ ] TASK 166: another idea as im implementing the pfp feature - a page to scroll thru all vendors and all companies - and then view their products.
+- [ ] TASK 167: right now, its a products page - but we can have vendors page too. vendors page with filtering products vs products page with filtering vendors. filtering prices. filtering avg star ratings.
+- [ ] TASK 168: delete old images - from cloudinary - after image updation.
+- [ ] TASK 174: add product card vs edit product card
+- [ ] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
+- [ ] TASK 181: add loading screens instead of directly rendering some components by default
+- [ ] TASK 182: add skeletons instead of loading screens
+- [ ] TASK 184: tab interface the two parts of the dashboard too i guess.
+- [ ] TASK 185: prompt user to add pfp if does nto exist
+- [ ] TASK 186: make the underlines of the titles come auto animated after clicking on those tabs
+- [ ] TASK 189: images of requested products not shown on company side - can compactify whole individual request card
+- [ ] TASK 191: sort the requests by earliest deadline first, or by companies/vendors - give user the option of filtering.
+- [ ] TASK 192: please work on 189 - compactification, rearrangement, expansion, etc now - PLEASE DO THIS
+- [ ] TASK 195: an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYBE FILTER YES YES FILTER.
+- [ ] TASK 196: prompt user to complete profile setup?
 
 </details>
 
