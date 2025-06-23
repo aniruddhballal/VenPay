@@ -138,8 +138,8 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 134: REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
-- [xx] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
-- [xx] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+- [x] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
+- [x] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
 - [ ] TASK 178: convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
 - [x] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
 - [ ] TASK 188: black button tab interface looks ugly highkey - modify it later.
