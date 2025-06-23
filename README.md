@@ -260,8 +260,8 @@ THISSSS, DONE. 54. appearance of product/payment requests - annoying-slide-aall-
 64. instead of having separate edit profile page - allow editing inline - just like product mgmt
 
 implementing profile photo patch now: wait, let me think about where all this change will ripple into...
-dashboard (profile button can be replaced with profile photo, same functionality onclick).
-then displayuser and edit profile pages. and while showing product requests, payment requests.
+DONE - dashboard (profile button can be replaced with profile photo, same functionality onclick).
+PARTIALLY - (LEFT out on product display etc) then displayuser and edit profile pages. and while showing product requests, payment requests.
 BTW NONE of the payment requests - company side - show images of all the products.
 
 the pfp is optional - so the display should be the default empty profile image or whatever they pick (dont have to ask while signup)
