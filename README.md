@@ -116,8 +116,34 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <details>
 <summary>🚧 Ongoing</summary>
 
-- [ ] Refactor Redux store  
-- [ ] Improve mobile responsiveness  
+- [ ] TASK 3. overall UI
+- [ ] TASK 9. giving discounts and star ratings/credits for companies/vendors for keeping integrity.
+- [ ] TASK 13. IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
+- [ ] TASK 18. check if background can be made better - colour grading and scheming
+- [ ] TASK 22. add images for the products - add more details for each product
+- [ ] TASK 48. styling of UserDisplay.tsx ProductDisplay.tsx
+- [ ] TASK 57. and then style the frontend
+- [ ] TASK 62. NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
+- [ ] TASK 76. vendor link in company dashboard
+- [ ] TASK 83. vendor link in company dashboard - not done yet
+- [ ] TASK 95. YET TO Implement: features from ExpandProductCard onto AddProductCard - THIS
+- [ ] TASK 96. NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
+- [ ] TASK 97. a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
+- [ ] TASK 99. add new product card - edit features - expansion level bug + lack of features that updateproductcard has
+- [ ] TASK 101. cut stuff from reminaing.css that have no usage in any tsx file - ONGOING
+- [ ] TASK 104. unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
+- [ ] TASK 107. switch to redux, reduxtoolkit instead of local state management - ONGOINGGG
+- [ ] TASK 125. again, these are all on vendor side - so, company side??
+- [ ] TASK 127. add a view password option while login/signup, reenter password while signing up, edit password in the edit profile page (enter twice) - PARTLY DONE - editprofile page, not on the login-signup form.
+- [ ] TASK 134. REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
+- [ ] TASK 137. component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
+HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
+- [ ] TASK 163. then displayuser and edit profile pages. and while showing product requests, payment requests.
+- [ ] TASK 171. user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+- [ ] TASK 178. convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
+- [ ] TASK 179. animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
+- [ ] TASK 188. black button tab interface looks ugly highkey - modify it later.
+- [ ] TASK 194. create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
 
 </details>
 
