@@ -145,6 +145,10 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 188: black button tab interface looks ugly highkey - modify it later.
 - [x] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
 - [x] TASK 197: Make use of centralised axios - api.ts
+- [x] TASK 198: display rating in vendor dashboard - product requests
+- [x] TASK 199: display product image in company dashboard - payment requests
+- [x] TASK 200: link to vendor's profile in company's payment requests section
+- [x] TASK 201: link to company's profile in vendor's product requests section
 
 </details>
 
