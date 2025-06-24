@@ -3,8 +3,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useMemo } from 'react';
 import { styled } from '@mui/material/styles';
-import { paymentRequestsStyles, additionalPaymentRequestsStyles } from '../styles/paymentRequestsStyles';
+import { paymentRequestsStyles } from '../styles/paymentRequestsStyles';
 import { tabStyles } from "../styles/requestsTabStyles";
+import  {reviewStyles} from "../styles/reviewStyles"
 import api from "../api";
 import {Button} from '@mui/material';
 
@@ -174,7 +175,7 @@ export default function PaymentRequests() {
 return (
   <>
     <style>{paymentRequestsStyles}</style>
-    <style>{additionalPaymentRequestsStyles}</style>
+    <style>{reviewStyles}</style>
     <style>{tabStyles}</style>
     <div className="vendor-requests-container">
       <h3 className="requests-title">Payment Requests</h3>
