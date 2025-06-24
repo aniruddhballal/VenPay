@@ -20,12 +20,12 @@ export const tabStyles = `
     flex: 1;
     min-width: 140px;
     padding: 14px 20px;
-    background: rgb(0, 0, 0);
+    background: rgb(255, 255, 255);
     border: 1px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -39,18 +39,21 @@ export const tabStyles = `
 
   /* Color-specific default backgrounds */
   .tab-button.pending {
-    background: rgba(0, 0, 0, 1);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    background: rgb(245, 159, 11, 0.1);
+    color: rgb(245, 159, 11);
+    border: 2px dashed rgba(245, 158, 11, 0.2);
   }
 
   .tab-button.accepted {
-    background: rgb(0, 0, 0);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: rgb(16, 185, 129, 0.1);
+    color: rgb(16, 185, 129);
+    border: 2px dashed rgba(16, 185, 129, 0.2);
   }
 
   .tab-button.declined {
-    background: rgb(0, 0, 0);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: rgb(239, 68, 68, 0.1);
+    color: rgb(239, 68, 68);
+    border: 2px dashed rgba(239, 68, 68, 0.2);
   }
  
   .tab-button:focus {
@@ -81,18 +84,21 @@ export const tabStyles = `
 
   /* Enhanced hover states for color-specific buttons */
   .tab-button.pending:hover:not(.active) {
-    background: rgb(0, 0, 0);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: rgb(255, 255, 255);
+    color: rgb(245, 159, 11);
+    border: 2px solid rgb(245, 159, 11);
   }
 
   .tab-button.accepted:hover:not(.active) {
-    background: rgb(0, 0, 0);
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background: rgb(255, 255, 255);
+    color: rgb(16, 185, 129);
+    border: 2px solid rgb(16, 185, 129);
   }
 
   .tab-button.declined:hover:not(.active) {
-    background: rgb(0, 0, 0);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgb(255, 255, 255);
+    color: rgb(239, 68, 68);
+    border: 2px solid rgb(239, 68, 68);
   }
  
   .tab-button.active.pending {
@@ -124,7 +130,7 @@ export const tabStyles = `
   }
  
   .tab-badge {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     color: rgb(255, 255, 255);
     border-radius: 12px;
     padding: 3px 8px;
