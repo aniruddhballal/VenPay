@@ -103,6 +103,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 193: small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
 - [x] TASK 198: display rating in vendor dashboard - product requests
 - [x] TASK 199: display product image in company dashboard - payment requests
+- [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
 
 </details>
 
@@ -152,8 +153,8 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 201: link to company's profile in vendor's product requests section
 - [ ] TASK 202: the No rating found error - completed payment request which does not have a rating yet
 - [x] TASK 204: check if the components like reviews and other details dont show false/wrong data while theyre actually loading - add loading screens or skeletons.
-- [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
 - [x] TASK 206: check all the browser error logs and the the gap in the heading of the reiews - it will all be changed when i compactify stuff. this is first to do man! annd, the deprecated warnings and the migration upgrade errors.
+- [x] TASK 207: reviewStyles.ts improv
 
 </details>
 
