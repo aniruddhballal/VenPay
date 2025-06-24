@@ -99,6 +99,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 180: first make the way all the requests come - side by side not one below the other - then do this.
 - [x] TASK 183: stylise the tab interface for paymentrequests and implement the same for productrequests
 - [x] TASK 187: if requests of a particular type are empty - display a message saying that
+- [x] TASK 188: black button tab interface looks ugly highkey - modify it later.
 - [x] TASK 190: unify the tab styling for payment and product requests pages - same import same styles.ts
 - [x] TASK 193: small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
 - [x] TASK 198: display rating in vendor dashboard - product requests
@@ -145,7 +146,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
 - [ ] TASK 178: convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
 - [x] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
-- [ ] TASK 188: black button tab interface looks ugly highkey - modify it later.
 - [x] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
 - [x] TASK 197: Make use of centralised axios - api.ts
 
