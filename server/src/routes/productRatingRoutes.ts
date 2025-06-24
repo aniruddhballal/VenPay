@@ -17,16 +17,12 @@ router.get("/productrequest/:productRequestId", protect, async (req, res) => {
       return;
     }
 
-    // Check if user is a company
-    if ((req as any).user.userType !== "company") {
-      res.status(403).json({ error: "Only companies can access ratings" });
-      return;
-    }
-
     const existingRating = await ProductRating.findOne({
       productRequestId: new mongoose.Types.ObjectId(productRequestId),
-      companyId: new mongoose.Types.ObjectId(companyId),
-    });
+      //companyId: new mongoose.Types.ObjectId(companyId),        // this was restricting the vendor from viewing his/her own product ka review
+        })                         // maybe i should modify it so that the company who gave review + vendor who owns product can view it.
+      .populate("productId")
+      .populate("companyId", "name"); // this is needed to get the company details that you want to print in the frontend 
 
     if (!existingRating) {
       res.status(404).json({ error: "No rating found" });

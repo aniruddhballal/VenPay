@@ -5,6 +5,7 @@ import DatePickerModal from "./DatePickerModal";
 import { useMemo } from 'react';
 import api from "../api";
 import { tabStyles } from "../styles/requestsTabStyles";
+import  {reviewStyles} from "../styles/reviewStyles"
 
 interface Transaction {
   _id: string;
@@ -31,6 +32,16 @@ interface Request {
   totalPrice?: number;
 }
 
+interface ProductRating {
+  _id: string;
+  productId: string;
+  companyId: string;
+  productRequestId: string;
+  date: string;
+  rating: number;
+  review?: string;
+}
+
 export default function ProductRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [amountDueMap, setAmountDueMap] = useState<Record<string, number>>({});
@@ -39,6 +50,7 @@ export default function ProductRequests() {
   const [currentRequest, setCurrentRequest] = useState<Request | null>(null);
   const [deadlineMap, setDeadlineMap] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState('pending');
+  const [ratingsMap, setRatingsMap] = useState<Record<string, ProductRating>>({});
 
   useEffect(() => {
     api
@@ -54,6 +66,7 @@ export default function ProductRequests() {
       const txMap: Record<string, Transaction[]> = {};
       const dueMap: Record<string, number> = {};
       const deadlineMap: Record<string, string> = {};
+      const ratingsMap: Record<string, ProductRating> = {};
 
       for (const req of requests.filter((r) => r.status === "accepted")) {
         try {
@@ -67,6 +80,20 @@ export default function ProductRequests() {
           if (amountRes.data.paymentDeadline) {
             deadlineMap[req._id] = amountRes.data.paymentDeadline;
           }
+
+          // Fetch rating if payment is cleared
+          if (amountRes.data.amountDue <= 0) {
+            try {
+              const ratingRes = await api.get(`/productratings/productrequest/${req._id}`);
+              
+              if (ratingRes.data) {
+                ratingsMap[req._id] = ratingRes.data;
+              }
+            } catch (ratingErr: any) {
+              // No rating found, which is fine
+              console.log(`No rating found for product request ${req._id}`);
+            }
+          }
           
         } catch (err) {
           console.error("Error loading payment info for request", req._id, err);
@@ -77,6 +104,7 @@ export default function ProductRequests() {
       setTransactions(txMap);
       setAmountDueMap(dueMap);
       setDeadlineMap(deadlineMap);
+      setRatingsMap(ratingsMap);
     };
 
     fetchData();
@@ -155,6 +183,21 @@ export default function ProductRequests() {
     return `${days}d ${hours}h ${minutes}m`;
   }
 
+  const renderStarRating = (rating: number) => {
+    return (
+      <div className="star-rating readonly">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            className={`star ${star <= rating ? "filled" : ""} readonly`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   function RequestSection({ title, data }: { title: string; data: Request[] }) {
     if (data.length === 0) return null;
 
@@ -174,6 +217,8 @@ export default function ProductRequests() {
             : null;
 
           const timeLeft = deadlineMap[req._id] ? formatTimeLeft(deadlineMap[req._id]) : null;
+          const isPaymentCleared = amountDueMap[req._id] !== undefined && amountDueMap[req._id] <= 0;
+          const productRating = ratingsMap[req._id];
 
           // Calculate cleared before deadline text
           const lastTx = transactions[req._id]?.[transactions[req._id].length - 1];
@@ -303,9 +348,34 @@ export default function ProductRequests() {
                       <p>No payments made yet.</p>
                     )}
                   </div>
-                </div>
-              )}
-              
+
+                  {/* Product Rating Section - Only show when payment is cleared */}
+                  {isPaymentCleared && (
+                    <div className="product-rating-section">
+                      <h5>Customer Rating</h5>
+                      {productRating ? (
+                        <div className="existing-rating">
+                            {renderStarRating(productRating.rating)}
+                            <p><strong>Rating:</strong> {productRating.rating}/5</p>
+                              {productRating.review && (
+                              <div>
+                                <p><strong>Customer Review:</strong></p>
+                                <p>"{productRating.review}"</p>
+                              </div>
+                            )}
+                            <p>
+                              <strong>Rated on:</strong> {new Date(productRating.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="rating-form">
+                            <p>No rating provided by the customer yet.</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    </div>
+                  )} 
               {req.status === "pending" && (
                 <div className="vendor-actions">
                   <button onClick={() => handleAccept(req)} className="btn accept-btn">
@@ -328,7 +398,6 @@ export default function ProductRequests() {
     );
   }
 
-
   const grouped = {
     accepted: requests.filter((r) => r.status === "accepted"),
     declined: requests.filter((r) => r.status === "declined"),
@@ -338,6 +407,7 @@ export default function ProductRequests() {
   return (
   <>
     <style>{tabStyles}</style>
+    <style>{reviewStyles}</style>
     <div className="vendor-requests-container">
       <h3 className="requests-title">Product Requests</h3>
      
