@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef} from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 
 import { ExpandCard } from "../components/ExpandCard";
 import { AddProductCard } from "../components/AddProductCard";
+import api from "../api";
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
@@ -30,16 +30,14 @@ const ProductManagement = () => {
 
   // Restore your original useEffect for fetching from backend:
   useEffect(() => {
-     axios
-       .get("http://localhost:5000/api/products/my", { withCredentials: true })
-       .then((res) => {
-         setProducts(res.data);
-       })
-       .catch((err) => {
-         console.error("Failed to fetch products:", err);
-         toast.warn(err.response?.data?.error || "Failed to fetch products.");
-       })
-       .finally(() => setLoading(false));
+     api
+      .get("/products/my")
+      .then((res) => setProducts(res.data))
+      .catch((err) => {
+        console.error("Failed to fetch products:", err);
+        // toast.warn is optional — api.ts already shows a toast for most errors
+      })
+      .finally(() => setLoading(false));
     
   }, []);
 
@@ -93,15 +91,14 @@ const ProductManagement = () => {
     formData.append("image", selectedImage);
 
     try {
-       const res = await axios.post(
-         `http://localhost:5000/api/products/upload-image/${productId}`,
-         formData,
-         {
-           headers: { "Content-Type": "multipart/form-data" },
-           withCredentials: true,
-         }
-       );
-      // // Update product image url locally in products list
+       const res = await api.post(
+        `/products/upload-image/${productId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" }
+        }
+      );
+      // Update product image url locally in products list
        setProducts((prev) =>
          prev.map((p) => (p._id === productId ? { ...p, image: res.data.image } : p))
        );
@@ -119,11 +116,7 @@ const ProductManagement = () => {
   const handleFieldUpdate = async (id: string, field: string, value: string | number) => {
     try {
       const updateData = { [field]: value };
-      await axios.put(
-        `http://localhost:5000/api/products/${id}`,
-        updateData,
-        { withCredentials: true }
-      );
+      await api.put(`/products/${id}`, updateData);
       
       setProducts(prev => 
         prev.map(p => p._id === id ? { ...p, [field]: value } : p)
@@ -158,21 +151,15 @@ const ProductManagement = () => {
     };
 
     try {
-      let res: any;
       if (editingId) {
-        res = await axios.put(
-          `http://localhost:5000/api/products/${editingId}`,
-          productData,
-          { withCredentials: true }
-        );
+        const res = await api.put(`/products/${editingId}`, productData);
         
         if (selectedImage) {
           await uploadImage(editingId);
           
           // Fetch the updated product data with image URL
-          const updatedProduct = await axios.get(`http://localhost:5000/api/products/${editingId}`, {
-            withCredentials: true,
-          });
+          const updatedProduct = await api.get(`/products/${editingId}`);
+
           setProducts(products.map((p) => (p._id === editingId ? updatedProduct.data : p)));
           toast.success("Product with image updated!");
         } else {
@@ -183,18 +170,15 @@ const ProductManagement = () => {
         
       } else {
         // Create the product first
-        res = await axios.post("http://localhost:5000/api/products/", productData, {
-          withCredentials: true,
-        });
+        const res = await api.post("/products/", productData);
         
         // Upload image if selected (before adding to state)
         if (selectedImage) {
           await uploadImage(res.data._id);
           
           // Fetch the updated product data with image URL
-          const updatedProduct = await axios.get(`http://localhost:5000/api/products/${res.data._id}`, {
-            withCredentials: true,
-          });
+          const updatedProduct = await api.get(`/products/${res.data._id}`);
+
           setProducts([...products, updatedProduct.data]);
           toast.success("Product with image created!");
         } else {
@@ -228,15 +212,13 @@ const ProductManagement = () => {
            label: "Yes",
            onClick: async () => {
              try {
-               await axios.delete(`http://localhost:5000/api/products/${id}`, {
-                 withCredentials: true,
-               });
-               setProducts((prev) => prev.filter((p) => p._id !== id));
-               toast.success("Product deleted successfully.");
-             } catch (err: any) {
-               console.error("Failed to delete product:", err);
-               toast.error(err.response?.data?.error || "Failed to delete product.");
-             }
+              await api.delete(`/products/${id}`);
+              setProducts((prev) => prev.filter((p) => p._id !== id));
+              toast.success("Product deleted successfully.");
+            } catch (err) {
+              // optional: error toast is already handled by api.ts
+              console.error("Failed to delete product:", err);
+            }
            },
          },
          {
