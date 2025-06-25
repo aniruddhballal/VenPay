@@ -1,13 +1,37 @@
-import React, { useEffect, useState, useRef} from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
+// components/ExpandCard.tsx
+import React from "react";
 import { useNavigate } from "react-router-dom";
-
-import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip, alpha,
-  IconButton, Avatar, CircularProgress } from '@mui/material';
-import { Check, Close, Edit, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
+import {
+  Box,
+  TextField,
+  Typography,
+  Paper,
+  Fade,
+  Grow,
+  Chip,
+  Tooltip,
+  alpha,
+  IconButton,
+  Avatar,
+  CircularProgress
+} from '@mui/material';
+import {
+  Check,
+  Close,
+  Edit,
+  CameraAlt,
+  AddPhotoAlternate
+} from '@mui/icons-material';
 
 import { StyledButton } from "./StyledButton";
+import {
+  useProductEditor,
+  useNameEditor,
+  usePriceEditor,
+  useDescriptionEditor,
+  useImageEditor,
+  useCardInteractions
+} from '../hooks/useProductEditor';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
@@ -20,251 +44,83 @@ interface Product {
   image?: string;
 }
 
-// Updated ExpandCard component with hover-based resizing
-export const ExpandCard = ({ product, onDelete, onFieldUpdate }: { 
-  product: Product; 
+interface ExpandCardProps {
+  product: Product;
   onDelete: (id: string) => void;
   onFieldUpdate: (id: string, field: string, value: string | number) => void;
+}
+
+export const ExpandCard: React.FC<ExpandCardProps> = ({
+  product,
+  onDelete,
+  onFieldUpdate
 }) => {
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingPrice, setIsEditingPrice] = useState(false);
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const [isEditingImage, setIsEditingImage] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); // New hover state
-  const [editedName, setEditedName] = useState(product.name);
-  const [editedPrice, setEditedPrice] = useState(product.price.toString());
-  const [editedDescription, setEditedDescription] = useState(product.description);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const imageInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
-  const descriptionInputRef = useRef<HTMLInputElement | null>(null);
-  const fileSelectedRef = useRef(false);
 
-  // Calculate the appropriate height and styling based on states
-  const getCardStyles = () => {
-    if (isHovered) {      // removed the isEditing condition because new saveAllWhenNotHovering() is there now
-      // Full expansion when hovering
-      return {
-        height: 'auto',
-        minHeight: '480px',
-        maxHeight: 'none',
-        transform: 'scale(1.02)',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
-        zIndex: 10,
-      };
-    } else {
-      return {
-        height: 'auto',
-        minHeight: '320px',
-        maxHeight: '320px',
-        transform: 'scale(1)',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-        zIndex: 1,
-      };
-    }
-  };
+  // Main product editor hook
+  const editorState = useProductEditor({ product, onFieldUpdate });
 
-  const handleVisitProduct = () => {
-    navigate(`/product/${product._id}`);
-  };
+  // Individual editor hooks
+  const nameEditor = useNameEditor(
+    product,
+    editorState.editedName,
+    editorState.setEditedName,
+    editorState.setIsEditingName,
+    onFieldUpdate
+  );
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete(product._id);
-  };
+  const priceEditor = usePriceEditor(
+    product,
+    editorState.editedPrice,
+    editorState.setEditedPrice,
+    editorState.setIsEditingPrice,
+    onFieldUpdate
+  );
 
-  // Name editing handlers
-  const handleNameClick = () => {
-    setIsEditingName(true);
-    setEditedName(product.name);
-  };
+  const descriptionEditor = useDescriptionEditor(
+    product,
+    editorState.editedDescription,
+    editorState.setEditedDescription,
+    editorState.setIsEditingDescription,
+    onFieldUpdate
+  );
 
-  const handleNameSave = async () => {
-    if (editedName.trim() !== product.name && editedName.trim() !== '') {
-      await onFieldUpdate(product._id, 'name', editedName.trim());
-    }
-    setIsEditingName(false);
-  };
+  const imageEditor = useImageEditor(
+    product,
+    editorState.selectedImage,
+    editorState.previewUrl,
+    editorState.uploadingImage,
+    editorState.imageInputRef,
+    editorState.fileSelectedRef,
+    editorState.setIsEditingImage,
+    editorState.setSelectedImage,
+    editorState.setPreviewUrl,
+    editorState.setUploadingImage,
+    onFieldUpdate
+  );
 
-  const handleNameCancel = () => {
-    setEditedName(product.name);
-    setIsEditingName(false);
-  };
+  // Card interaction hooks
+  const cardInteractions = useCardInteractions(
+    editorState.isEditingName,
+    editorState.isEditingPrice,
+    editorState.isEditingDescription,
+    nameEditor.handleNameSave,
+    priceEditor.handlePriceSave,
+    descriptionEditor.handleDescriptionSave,
+    onDelete,
+    navigate,
+    product._id
+  );
 
-  const handleNameKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleNameSave();
-    } else if (e.key === 'Escape') {
-      handleNameCancel();
-    }
-  };
-
-  // Price editing handlers
-  const handlePriceClick = () => {
-    setIsEditingPrice(true);
-    setEditedPrice(product.price.toString());
-  };
-
-  useEffect(() => {
-    if (isEditingDescription && descriptionInputRef.current) {
-      const input = descriptionInputRef.current;
-      const length = input.value.length;
-      input.setSelectionRange(length, length);
-      input.focus();
-    }
-  }, [isEditingDescription]);
-
-  const handlePriceSave = async () => {
-    const newPrice = parseFloat(editedPrice);
-    if (!isNaN(newPrice) && newPrice !== product.price && newPrice >= 0) {
-      await onFieldUpdate(product._id, 'price', newPrice);
-    }
-    setIsEditingPrice(false);
-  };
-
-  const handlePriceCancel = () => {
-    setEditedPrice(product.price.toString());
-    setIsEditingPrice(false);
-  };
-
-  const handlePriceKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handlePriceSave();
-    } else if (e.key === 'Escape') {
-      handlePriceCancel();
-    }
-  };
-
-  // Description editing handlers
-  const handleDescriptionClick = () => {
-    setIsEditingDescription(true);
-    setEditedDescription(product.description);
-  };
-
-  const handleDescriptionSave = async () => {
-    if (editedDescription.trim() !== product.description && editedDescription.trim() !== '') {
-      await onFieldUpdate(product._id, 'description', editedDescription.trim());
-    }
-    setIsEditingDescription(false);
-  };
-
-  const handleDescriptionCancel = () => {
-    setEditedDescription(product.description);
-    setIsEditingDescription(false);
-  };
-
-  const handleDescriptionKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleDescriptionSave();
-    } else if (e.key === 'Escape') {
-      handleDescriptionCancel();
-    }
-  };
-
-  // Image editing handlers
-  const handleImageClick = () => {
-    setIsEditingImage(true);
-    if (imageInputRef.current) {
-      imageInputRef.current.click();
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    fileSelectedRef.current = true;
-    if (e.target.files && e.target.files[0]) {
-      console.log("selected one")
-      console.log(e.target.files[0].name)
-      setSelectedImage(e.target.files[0]);
-      const url = URL.createObjectURL(e.target.files[0]);
-      setPreviewUrl(url);
-    }
-  };
-
-  const handleImageSave = async () => {
-    console.log("here, you clickews!")
-    if (!selectedImage) {
-      setIsEditingImage(false);
-      return;
-    }
-
-    setUploadingImage(true);
-    const formData = new FormData();
-    formData.append("image", selectedImage);
-
-    try {
-      const res = await axios.post(
-        `http://localhost:5000/api/products/upload-image/${product._id}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
-      );
-      
-      await onFieldUpdate(product._id, 'image', res.data.image);
-      toast.success("Product image updated!");
-      
-      setSelectedImage(null);
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-        setPreviewUrl("");
-      }
-      if (imageInputRef.current) {
-        imageInputRef.current.value = "";
-      }
-    } catch (err: any) {
-      console.error("Failed to upload image:", err);
-      toast.error(err.response?.data?.error || "Failed to upload image.");
-    } finally {
-      setUploadingImage(false);
-      setIsEditingImage(false);
-    }
-  };
-
-  const handleImageCancel = () => {
-    setSelectedImage(null);
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl("");
-    }
-    if (imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
-    setIsEditingImage(false);
-  };
-
-  const saveAllEdits = async () => {
-    if (isEditingName) {
-      await handleNameSave();
-    }
-    if (isEditingPrice) {
-      await handlePriceSave();
-    }
-    if (isEditingDescription) {
-      await handleDescriptionSave();
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
-
-  const cardStyles = getCardStyles();
+  const cardStyles = cardInteractions.getCardStyles();
 
   return (
     <div 
       className="expand-card-compact"
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => cardInteractions.setIsHovered(true)}
       onMouseLeave={() => {
-        setIsHovered(false)
-        saveAllEdits();
+        cardInteractions.setIsHovered(false);
+        cardInteractions.saveAllEdits();
       }} 
       style={{
         ...cardStyles,
@@ -273,7 +129,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         overflow: 'hidden',
       }}
     >
-
+      {/* Image Section */}
       <Box 
         className="image-section" 
         sx={{
@@ -297,7 +153,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
           }
         }}
-        onClick={handleImageClick}
+        onClick={imageEditor.handleImageClick}
       >
         {/* Background Image or Upload Placeholder */}
         <Box
@@ -319,7 +175,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             } : {}
           }}
         >
-          {/* Upload placeholder content - only shown when no image */}
+          {/* Upload placeholder content */}
           {!product.image && (
             <>
               <Avatar
@@ -373,7 +229,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
           )}
         </Box>
 
-        {/* Edit Overlay - only shown on hover when image exists */}
+        {/* Edit Overlay */}
         {product.image && (
           <Box
             className="edit-overlay"
@@ -426,8 +282,8 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         )}
 
         {/* Image Editing Modal Overlay */}
-        {isEditingImage && selectedImage && (
-          <Grow in={isEditingImage} timeout={300}>
+        {editorState.isEditingImage && editorState.selectedImage && (
+          <Grow in={editorState.isEditingImage} timeout={300}>
             <Box 
               sx={{ 
                 position: 'absolute',
@@ -435,113 +291,111 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                 zIndex: 10,
                 borderRadius: 3,
                 overflow: 'hidden',
-                background: `url(${previewUrl}) center/cover no-repeat`,
+                background: `url(${editorState.previewUrl}) center/cover no-repeat`,
                 border: '2px solid #667eea',
                 boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)',
               }}
             >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  gap: 2,
+                  background: alpha('#667eea', 0.15),
+                  backdropFilter: 'blur(2px)',
+                }}
+              >
+                <Tooltip title="Save image" arrow>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      imageEditor.handleImageSave();
+                    }}
+                    disabled={editorState.uploadingImage}
+                    size="large"
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      background: alpha('#ffffff', 0.95),
+                      color: '#2563eb',
+                      border: '2px solid rgba(37, 99, 235, 0.3)',
+                      backdropFilter: 'blur(8px)',
+                      '&:hover': {
+                        background: alpha('#ffffff', 1),
+                        transform: 'scale(1.1)',
+                        boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)',
+                      },
+                      '&:disabled': {
+                        background: alpha('#f5f5f5', 0.9),
+                        color: '#9ca3af',
+                      }
+                    }}
+                  >
+                    {editorState.uploadingImage ? (
+                      <CircularProgress size={24} />
+                    ) : (
+                      <Check sx={{ fontSize: 24 }} />
+                    )}
+                  </IconButton>
+                </Tooltip>
 
-                {/* Action buttons overlay */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    inset: 0,
-                    zIndex: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    gap: 2,
-                    background: alpha('#667eea', 0.15),
-                    backdropFilter: 'blur(2px)',
-                  }}
-                >
-                  <Tooltip title="Save image" arrow>
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleImageSave();
-                      }}
-                      disabled={uploadingImage}
-                      size="large"
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        background: alpha('#ffffff', 0.95),
-                        color: '#2563eb',
-                        border: '2px solid rgba(37, 99, 235, 0.3)',
-                        backdropFilter: 'blur(8px)',
-                        '&:hover': {
-                          background: alpha('#ffffff', 1),
-                          transform: 'scale(1.1)',
-                          boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)',
-                        },
-                        '&:disabled': {
-                          background: alpha('#f5f5f5', 0.9),
-                          color: '#9ca3af',
-                        }
-                      }}
-                    >
-                      {uploadingImage ? (
-                        <CircularProgress size={24} />
-                      ) : (
-                        <Check sx={{ fontSize: 24 }} />
-                      )}
-                    </IconButton>
-                  </Tooltip>
-
-                  <Tooltip title="Cancel" arrow>
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleImageCancel();
-                      }}
-                      disabled={uploadingImage}
-                      size="large"
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        background: alpha('#ffffff', 0.95),
-                        color: '#dc2626',
-                        border: '2px solid rgba(220, 38, 38, 0.3)',
-                        backdropFilter: 'blur(8px)',
-                        '&:hover': {
-                          background: alpha('#ffffff', 1),
-                          transform: 'scale(1.1)',
-                          boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
-                        },
-                        '&:disabled': {
-                          background: alpha('#f5f5f5', 0.9),
-                          color: '#9ca3af',
-                        }
-                      }}
-                    >
-                      <Close sx={{ fontSize: 24 }} />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
+                <Tooltip title="Cancel" arrow>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      imageEditor.handleImageCancel();
+                    }}
+                    disabled={editorState.uploadingImage}
+                    size="large"
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      background: alpha('#ffffff', 0.95),
+                      color: '#dc2626',
+                      border: '2px solid rgba(220, 38, 38, 0.3)',
+                      backdropFilter: 'blur(8px)',
+                      '&:hover': {
+                        background: alpha('#ffffff', 1),
+                        transform: 'scale(1.1)',
+                        boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
+                      },
+                      '&:disabled': {
+                        background: alpha('#f5f5f5', 0.9),
+                        color: '#9ca3af',
+                      }
+                    }}
+                  >
+                    <Close sx={{ fontSize: 24 }} />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </Box>
           </Grow>
         )}
         
         <input
           type="file"
-          ref={imageInputRef}
+          ref={editorState.imageInputRef}
           accept="image/*"
-          onChange={handleImageChange}
+          onChange={imageEditor.handleImageChange}
           style={{ display: 'none' }}
         />
-
       </Box>
       
       <div className="content">
+        {/* Name Section */}
         <div 
           className="basic-info" 
           style={{ 
             marginBottom: '0px', 
             display: 'flex', 
             flexDirection: 'column',
-            alignItems: 'flex-start' // optional: aligns left
+            alignItems: 'flex-start'
           }}
         >
           <Box 
@@ -553,14 +407,14 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
-            {isEditingName ? (
-              <Grow in={isEditingName} timeout={300}>
+            {editorState.isEditingName ? (
+              <Grow in={editorState.isEditingName} timeout={300}>
                 <Box>
                   <TextField
                     fullWidth
-                    value={editedName}
-                    onChange={(e) => setEditedName(e.target.value)}
-                    onKeyDown={handleNameKeyPress}
+                    value={editorState.editedName}
+                    onChange={(e) => editorState.setEditedName(e.target.value)}
+                    onKeyDown={nameEditor.handleNameKeyPress}
                     autoFocus
                     variant="outlined"
                     placeholder="Enter product name..."
@@ -593,7 +447,6 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     }}
                   />
                   
-                  {/* Show additional controls when editing name */}
                   <Box sx={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
@@ -604,19 +457,19 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     transition: 'all 0.3s ease'
                   }}>
                     <Typography variant="caption" color="text.secondary">
-                      {editedName.length}/{MAX_NAME_LENGTH} characters
+                      {editorState.editedName.length}/{MAX_NAME_LENGTH} characters
                     </Typography>
                     <Chip
                       label="Enter to save • Esc to cancel"
                       size="small"
                       variant="filled"
                       sx={{
-                      fontSize: { xs: '0.6rem', sm: '0.7rem' }, // Smaller on mobile
-                      height: { xs: 20, sm: 24 },
-                      borderColor: alpha('#667eea', 0.3),
-                      color: 'text.secondary',
-                      alignSelf: { xs: 'center', sm: 'auto' }
-                    }}
+                        fontSize: { xs: '0.6rem', sm: '0.7rem' },
+                        height: { xs: 20, sm: 24 },
+                        borderColor: alpha('#667eea', 0.3),
+                        color: 'text.secondary',
+                        alignSelf: { xs: 'center', sm: 'auto' }
+                      }}
                     />
                   </Box>
                   
@@ -624,7 +477,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     <Tooltip title="Save changes (Enter)" arrow>
                       <StyledButton
                         variant="original"
-                        onClick={handleNameSave}
+                        onClick={nameEditor.handleNameSave}
                         startIcon={<Check />}
                         sx={{
                           flex: 1,
@@ -652,11 +505,10 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       </StyledButton>
                     </Tooltip>
 
-
                     <Tooltip title="Cancel editing (Esc)" arrow>
                       <StyledButton
                         variant="original"
-                        onClick={handleNameCancel}
+                        onClick={nameEditor.handleNameCancel}
                         startIcon={<Close />}
                         sx={{
                           flex: 1,
@@ -687,9 +539,9 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                 </Box>
               </Grow>
             ) : (
-              <Fade in={!isEditingName} timeout={200}>
+              <Fade in={!editorState.isEditingName} timeout={200}>
                 <Paper
-                  onClick={handleNameClick}
+                  onClick={nameEditor.handleNameClick}
                   elevation={0}
                   sx={{
                     p: 0,
@@ -780,8 +632,8 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             )}
           </Box>
           
-          {isEditingPrice ? (
-            <Grow in={isEditingPrice} timeout={300}>
+          {editorState.isEditingPrice ? (
+            <Grow in={editorState.isEditingPrice} timeout={300}>
               <Box sx={{ px: { xs: 0, sm: 0 }, width: '100%'  }}> {/* Added responsive padding */}
                 <TextField
                   fullWidth
@@ -790,9 +642,9 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     step: "1",
                     min: "0"
                   }}
-                  value={editedPrice}
-                  onChange={(e) => setEditedPrice(e.target.value)}
-                  onKeyDown={handlePriceKeyPress}
+                  value={editorState.editedPrice}
+                  onChange={(e) => editorState.setEditedPrice(e.target.value)}
+                  onKeyDown={priceEditor.handlePriceKeyPress}
                   autoFocus
                   variant="outlined"
                   placeholder="Enter product price..."
@@ -876,7 +728,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   <Tooltip title="Save changes (Enter)" arrow>
                     <StyledButton
                       variant="original"
-                      onClick={handlePriceSave}
+                      onClick={priceEditor.handlePriceSave}
                       startIcon={<Check />}
                       sx={{
                         flex: 1,
@@ -908,7 +760,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   <Tooltip title="Cancel editing (Esc)" arrow>
                     <StyledButton
                       variant="original"
-                      onClick={handlePriceCancel}
+                      onClick={priceEditor.handlePriceCancel}
                       startIcon={<Close />}
                       sx={{
                         flex: 1,
@@ -940,9 +792,9 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
               </Box>
             </Grow>
           ) : (
-            <Fade in={!isEditingPrice} timeout={200}>
+            <Fade in={!editorState.isEditingPrice} timeout={200}>
               <Paper
-                onClick={handlePriceClick}
+                onClick={priceEditor.handlePriceClick}
                 elevation={0}
                 sx={{
                   p: { xs: 1, sm: 0 }, // Add padding on mobile
@@ -1050,21 +902,21 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
             position: 'relative',
             mt: 0,
             mb: 0,
-            overflow: isEditingDescription && !isHovered ? 'hidden' : 'visible',
+            overflow: editorState.isEditingDescription && !cardInteractions.isHovered ? 'hidden' : 'visible',
             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-          {isEditingDescription ? (
-            <Grow in={isEditingDescription} timeout={300}>
+          {editorState.isEditingDescription ? (
+            <Grow in={editorState.isEditingDescription} timeout={300}>
               <Box>
                 <TextField
-                  inputRef={descriptionInputRef}
+                  inputRef={editorState.descriptionInputRef}
                   fullWidth
                   multiline
                   rows={4}
-                  value={editedDescription}
-                  onChange={(e) => setEditedDescription(e.target.value)}
-                  onKeyDown={handleDescriptionKeyPress}
+                  value={editorState.editedDescription}
+                  onChange={(e) => editorState.setEditedDescription(e.target.value)}
+                  onKeyDown={descriptionEditor.handleDescriptionKeyPress}
                   autoFocus
                   variant="outlined"
                   placeholder="Enter product description..."
@@ -1098,19 +950,19 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                 />
                 
                 {/* Show additional controls only when hovered while editing */}
-                {isHovered && (
+                {cardInteractions.isHovered && (
                   <>
                     <Box sx={{ 
                       display: 'flex', 
                       justifyContent: 'space-between', 
                       alignItems: 'center',
                       mb: 0,
-                      opacity: isHovered ? 1 : 0,
-                      transform: isHovered ? 'translateY(0)' : 'translateY(-10px)',
+                      opacity: cardInteractions.isHovered ? 1 : 0,
+                      transform: cardInteractions.isHovered ? 'translateY(0)' : 'translateY(-10px)',
                       transition: 'all 0.3s ease'
                     }}>
                       <Typography variant="caption" color="text.secondary">
-                        {editedDescription.length}/{MAX_DESCRIPTION_LENGTH} characters
+                        {editorState.editedDescription.length}/{MAX_DESCRIPTION_LENGTH} characters
                       </Typography>
                       <Chip
                         label="Enter to save • Esc to cancel"
@@ -1130,7 +982,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       <Tooltip title="Save changes (Enter)" arrow>
                         <StyledButton
                           variant="original"
-                          onClick={handleDescriptionSave}
+                          onClick={descriptionEditor.handleDescriptionSave}
                           startIcon={<Check />}
                           sx={{
                             flex: 1,
@@ -1160,7 +1012,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                       <Tooltip title="Cancel editing (Esc)" arrow>
                         <StyledButton
                           variant="original"
-                          onClick={handleDescriptionCancel}
+                          onClick={descriptionEditor.handleDescriptionCancel}
                           startIcon={<Close />}
                           sx={{
                             flex: 1,
@@ -1193,9 +1045,9 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
               </Box>
             </Grow>
           ) : (
-            <Fade in={!isEditingDescription} timeout={200}>
+            <Fade in={!editorState.isEditingDescription} timeout={200}>
               <Paper
-                onClick={handleDescriptionClick}
+                onClick={descriptionEditor.handleDescriptionClick}
                 elevation={0}
                 sx={{
                   p: 0,
@@ -1207,7 +1059,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                   overflow: 'hidden',
                   transition: 'all 0.3s ease',
                   // Limit height when not editing to prevent overflow
-                  maxHeight: isHovered ? '100px' : '60px',
+                  maxHeight: cardInteractions.isHovered ? '100px' : '60px',
                   minHeight: '60px',
                   '&:hover .edit-indicator': {
                     opacity: 1,
@@ -1231,7 +1083,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
-                    WebkitLineClamp: isHovered ? 3 : 2,
+                    WebkitLineClamp: cardInteractions.isHovered ? 3 : 2,
                     WebkitBoxOrient: 'vertical',
                   }}
                 >
@@ -1289,7 +1141,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
         <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'rem' }}>
           <StyledButton
             variant="primary"
-            onClick={handleVisitProduct}
+            onClick={cardInteractions.handleVisitProduct}
             sx={{
               fontSize: '0.875rem',
             }}
@@ -1299,7 +1151,7 @@ export const ExpandCard = ({ product, onDelete, onFieldUpdate }: {
 
           <StyledButton
             variant="danger"
-            onClick={handleDelete}
+            onClick={cardInteractions.handleDelete}
             sx={{
               fontSize: '0.875rem',
             }}
