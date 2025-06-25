@@ -158,7 +158,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 207: reviewStyles.ts improv
 - [x] TASK 208: break the ExpandCard component further
 - [x] TASK 209: after task 208, refer and stylise the AddProductCard component too
-
+- [x] TASK 214: further simplify and disintegrate the remaining.css
 
 </details>
 
