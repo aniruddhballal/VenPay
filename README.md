@@ -149,7 +149,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 178: convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
 - [ ] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
 - [ ] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
-- [ ] TASK 197: Make use of centralised axios - api.ts
+- [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [ ] TASK 200: link to vendor's profile in company's payment requests section
 - [ ] TASK 201: link to company's profile in vendor's product requests section
 - [ ] TASK 202: the No rating found error - completed payment request which does not have a rating yet
