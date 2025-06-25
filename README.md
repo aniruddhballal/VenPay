@@ -156,6 +156,8 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 204: check if the components like reviews and other details dont show false/wrong data while theyre actually loading - add loading screens or skeletons.
 - [ ] TASK 206: check all the browser error logs and the the gap in the heading of the reiews - it will all be changed when i compactify stuff. this is first to do man! annd, the deprecated warnings and the migration upgrade errors.
 - [ ] TASK 207: reviewStyles.ts improv
+- [x] TASK 208: break the ExpandCard component further
+- [x] TASK 209: after task 208, refer and stylise the AddProductCard component too
 
 
 </details>
@@ -221,6 +223,9 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 195: an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYBE FILTER YES YES FILTER.
 - [ ] TASK 196: prompt user to complete profile setup?
 - [ ] TASK 203: individual product requests page - have a compact list of all the product requests in the dashboard - or maybe expandable hover card types.
+- [ ] TASK 210: Payment integration - check UPI business, normal UPI
+- [ ] TASK 212: Organisation account -> individual accounts -> for different sectors of the same org.
+- [ ] TASK 213: Delete account option
 
 </details>
 
@@ -235,5 +240,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - TASK 81: learnt about react+mui dependency issues
 - TASK 84: also, gotta make some real app like tariq said - not some to do - also learn more on reducer, react, redux, states, refreshing, mgmt all that
 - TASK 87: HMM, or MUI-fy the sub contents of the dashboard page, let'see - the dark theme is getting to me. lighter is kinda better
+- TASK 211: what sets this app apart from the rest of them? what about the companies and vendors that 'meet' here but then proceed to have offline or irl or other modes of conversations? revenue model/source? who are vendors? who are companies? what can be sold, what can be bought? who monitors? rules and regulations? this app would fight against all the IT teams of all the individual organisations. this aims to streamline and consolidate and display the company's whole finance income-outcome-overtheday-past-futurescope - etc: modelled based on the namma yatri website: https://nammayatri.in/open - define what a product is. the dashboard should contain data analytics and insights type of details, not jump into productmgmt, or display, or payments. purchase/sales dept of organisations. 
 
 </details>
