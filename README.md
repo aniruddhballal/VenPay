@@ -125,36 +125,38 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 9: giving discounts and star ratings/credits for companies/vendors for keeping integrity.
 - [ ] TASK 13: IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
 - [ ] TASK 18: check if background can be made better - colour grading and scheming
-- [x] TASK 22: add multiple images for the products - add more details for each product
-- [x] TASK 48: styling of UserDisplay.tsx ProductDisplay.tsx
+- [ ] TASK 22: add multiple images for the products - add more details for each product
+- [ ] TASK 48: styling of UserDisplay.tsx ProductDisplay.tsx
 - [ ] TASK 57: and then style the frontend
 - [ ] TASK 62: NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
 - [ ] TASK 76: vendor link in company dashboard
 - [ ] TASK 83: vendor link in company dashboard - not done yet
-- [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
-- [x] TASK 96: NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
+- [ ] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
+- [ ] TASK 96: NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
 - [ ] TASK 97: a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
 - [ ] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 - [ ] TASK 101: cut stuff from reminaing.css that have no usage in any tsx file
-- [x] TASK 104: unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
-- [x] TASK 107: switch to redux, reduxtoolkit instead of local state management
+- [ ] TASK 104: unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
+- [ ] TASK 107: switch to redux, reduxtoolkit instead of local state management
 - [ ] TASK 125: again, these are all on vendor side - so, company side??
 - [ ] TASK 134: REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
-- [x] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
-- [x] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+- [x] TASK 154: addproductcard ui from updateproductcard's
+- [ ] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
+- [ ] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
+- [x] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
 - [ ] TASK 178: convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
-- [x] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
-- [x] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
-- [x] TASK 197: Make use of centralised axios - api.ts
-
-- [x] TASK 200: link to vendor's profile in company's payment requests section
-- [x] TASK 201: link to company's profile in vendor's product requests section
+- [ ] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
+- [ ] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
+- [ ] TASK 197: Make use of centralised axios - api.ts
+- [ ] TASK 200: link to vendor's profile in company's payment requests section
+- [ ] TASK 201: link to company's profile in vendor's product requests section
 - [ ] TASK 202: the No rating found error - completed payment request which does not have a rating yet
-- [x] TASK 204: check if the components like reviews and other details dont show false/wrong data while theyre actually loading - add loading screens or skeletons.
-- [x] TASK 206: check all the browser error logs and the the gap in the heading of the reiews - it will all be changed when i compactify stuff. this is first to do man! annd, the deprecated warnings and the migration upgrade errors.
-- [x] TASK 207: reviewStyles.ts improv
+- [ ] TASK 204: check if the components like reviews and other details dont show false/wrong data while theyre actually loading - add loading screens or skeletons.
+- [ ] TASK 206: check all the browser error logs and the the gap in the heading of the reiews - it will all be changed when i compactify stuff. this is first to do man! annd, the deprecated warnings and the migration upgrade errors.
+- [ ] TASK 207: reviewStyles.ts improv
+
 
 </details>
 
@@ -196,7 +198,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 151: payment? crypto? blockchain?
 - [ ] TASK 152: delayed payments -> charges/fees/penalties -> deadline extension option when deadline nears (change from 24h to 48h)
 - [ ] TASK 153: same product -> lend-borrow/buy-sell -> not just buy-sell
-- [ ] TASK 154: addproductcard ui from updateproductcard's
 - [ ] TASK 155: clear blank/whitespaces -> add designs -> compactify
 - [ ] TASK 156: chatbox option -> very similar to notifications
 - [ ] TASK 157: complexify the user/product tables
@@ -209,7 +210,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 167: right now, its a products page - but we can have vendors page too. vendors page with filtering products vs products page with filtering vendors. filtering prices. filtering avg star ratings.
 - [ ] TASK 168: delete old images - from cloudinary - after image updation.
 - [ ] TASK 174: add product card vs edit product card
-- [ ] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
 - [ ] TASK 181: add loading screens instead of directly rendering some components by default
 - [ ] TASK 182: add skeletons instead of loading screens
 - [ ] TASK 184: tab interface the two parts of the dashboard too i guess.
