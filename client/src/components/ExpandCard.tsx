@@ -1,37 +1,13 @@
 // components/ExpandCard.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  TextField,
-  Typography,
-  Paper,
-  Fade,
-  Grow,
-  Chip,
-  Tooltip,
-  alpha,
-  IconButton,
-  Avatar,
-  CircularProgress
-} from '@mui/material';
-import {
-  Check,
-  Close,
-  Edit,
-  CameraAlt,
-  AddPhotoAlternate
-} from '@mui/icons-material';
+import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip, alpha,
+  IconButton, Avatar, CircularProgress } from '@mui/material';
+import { Check, Close, Edit, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
 
 import { StyledButton } from "./StyledButton";
-import {
-  useProductEditor,
-  useNameEditor,
-  usePriceEditor,
-  useDescriptionEditor,
-  useImageEditor,
-  useCardInteractions
-} from '../hooks/useProductEditor';
+import { useProductEditor, useNameEditor, usePriceEditor, useDescriptionEditor,
+  useImageEditor, useCardInteractions } from '../hooks/useProductEditor';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
