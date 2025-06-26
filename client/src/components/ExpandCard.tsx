@@ -7,7 +7,7 @@ import { Check, Close, Edit, CameraAlt, AddPhotoAlternate } from '@mui/icons-mat
 
 import { StyledButton } from "./StyledButton";
 import { useProductEditor, useNameEditor, usePriceEditor, useDescriptionEditor,
-  useImageEditor, useCardInteractions } from '../hooks/useProductEditor';
+  useImageEditor, useCardInteractions } from '../hooks/useEditor';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
