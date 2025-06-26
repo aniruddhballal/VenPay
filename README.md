@@ -106,6 +106,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 199: display product image in company dashboard - payment requests
 - [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
 - [x] TASK 217: ISSUE WITH PRODUCT CREATION AINNOWAY - NO PRODUCT IMAGE?! works on "update product image" tho - check backend routes - done, apparently random backend one-off issue
+- [x] TASK 218: Hook Barrel: break useProductEditor.ts hook into its subcomponents
 
 </details>
 
@@ -162,7 +163,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 209: after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 214: further simplify and disintegrate the remaining.css
 - [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?)
-- [x] TASK 218: Hook Barrel: break useProductEditor.ts hook into its subcomponents
 </details>
 
 <details>
