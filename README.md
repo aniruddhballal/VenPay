@@ -123,6 +123,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 
 - [ ] TASK 3: overall UI
 - [ ] TASK 9: giving discounts and star ratings/credits for companies/vendors for keeping integrity.
+- [x] TASK 10: switch to mongodb atlas? check if i should be having all the database stuff in compass ka localhost 120710 something or if it is better to have it connected to that VendorManagement thing that i created (maybe create a new one)
 - [ ] TASK 13: IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
 - [ ] TASK 18: check if background can be made better - colour grading and scheming
 - [ ] TASK 22: add multiple images for the products - add more details for each product
@@ -159,7 +160,9 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 208: break the ExpandCard component further
 - [x] TASK 209: after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 214: further simplify and disintegrate the remaining.css
-- [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?) 
+- [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?)
+- [x] TASK 217: ISSUE WITH PRODUCT CREATION AINNOWAY - NO PRODUCT IMAGE?! works on "update product image" tho - check backend routes.
+
 </details>
 
 <details>
@@ -170,7 +173,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 4: payment gateway integration
 - [ ] TASK 5: soonest payment first
 - [ ] TASK 7: overdue payments
-- [ ] TASK 10: switch to mongodb atlas? check if i should be having all the database stuff in compass ka localhost 120710 something or if it is better to have it connected to that VendorManagement thing that i created (maybe create a new one)
 - [ ] TASK 11: i think, we can have individual payment requests ke liye ek ek button and then at the bottom of the page, we can have "all displayed payment requests" ko clear karne ke liye ek button and we can use filters and sort and stuff to change whats displayed on the page so we can kinda group the payments and pay in bulk.
 - [ ] TASK 14: features like sort, and search/filter by vendor/company
 - [ ] TASK 15: autoscroll to high priority payments, set priorities to payments (defaulting to the deadlines), but editable
@@ -226,6 +228,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 210: Payment integration - check UPI business, normal UPI
 - [ ] TASK 212: Organisation account -> individual accounts -> for different sectors of the same org.
 - [ ] TASK 213: Delete account option
+- [ ] TASK 216: Check pinterest fintech colour theming etc
 
 </details>
 
