@@ -1,7 +1,7 @@
 // components/ExpandCard.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip, alpha,
+import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip,
   IconButton, Avatar, CircularProgress } from '@mui/material';
 import { Check, Close, Edit, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
 
