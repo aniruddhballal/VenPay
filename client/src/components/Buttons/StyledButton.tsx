@@ -43,8 +43,9 @@ export const StyledButton = styled(({ variant = 'original', ...props }: StyledBu
 
   // Variant-specific styles
   ...(variant === 'original' && {
+    background: 'linear-gradient(135deg, #059669, #047857)', // ✅ green gradient
     padding: '0rem 1rem',
-    borderRadius: '12px',
+    borderRadius: '6px',
     fontSize: '0.875rem',
     transition: 'all 0.3s ease',
     '&:disabled': {
