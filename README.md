@@ -111,6 +111,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 222: Review and sort TASK 218'S Hook Barrel (Product Editor hooks) 
 - [x] TASK 224: Export the login hook hooks/index.ts
 - [x] TASK 225: Export the register hook hooks/index.ts
+- [x] TASK 227: Premature editing state activation: Image edit - onclick - it reloads preview before selecting image
 
 </details>
 
@@ -171,7 +172,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 220: Reduce number of exports from expandCardStyles.ts
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 226: Redundant styling in expandCardStyles.ts
-- [x] TASK 227: Premature editing state activation: Image edit - onclick - it reloads preview before selecting image
 
 </details>
 
