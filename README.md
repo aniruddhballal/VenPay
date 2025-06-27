@@ -168,6 +168,8 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 219: Inline hover edit UI can be wayyyyy better.
 - [x] TASK 220: Review and analyse expandCardStyles.ts
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
+- [x] TASK 224: Export the login hook hooks/index.ts
+- [x] TASK 225: Export the register hook hooks/index.ts
 
 </details>
 
