@@ -175,10 +175,12 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 - [x] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 - [x] TASK 154: addproductcard ui from updateproductcard's
+- [x] TASK 158: minimumprice limit in input/edit field of price
 - [x] TASK 174: add product card vs edit product card
 - [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
-- [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ] after task 208, refer and stylise the AddProductCard component too
+- [x] TASK 209: [ SAME AS TASKS - 95, 99, 154, 174, 235 ] after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
+- [x] TASK 240: rename expandcard to updateproduct, addproductcard to createproduct - unify the styles
 
 </details>
 
@@ -223,7 +225,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 155: clear blank/whitespaces -> add designs -> compactify
 - [ ] TASK 156: chatbox option -> very similar to notifications
 - [ ] TASK 157: complexify the user/product tables
-- [ ] TASK 158: minimumprice limit in input/edit field of price
 - [ ] TASK 159: make reviews as a drop down or something - let it optionally occupy space
 - [ ] TASK 160: instead of having separate edit profile page - allow editing inline - just like product mgmt
 - [ ] TASK 164: BTW NONE of the payment requests - company side - show images of all the products.
