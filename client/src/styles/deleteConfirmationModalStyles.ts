@@ -67,9 +67,9 @@ export const deleteConfirmationModalStyles = {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)',
+      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)',
       transform: 'translateX(-100%)',
-      animation: 'shimmer 3s ease-in-out infinite',
+      animation: 'shimmer 2.5s ease-in-out infinite',
       zIndex: 2,
     },
     '@keyframes pulse': {
@@ -128,14 +128,24 @@ export const deleteConfirmationModalStyles = {
     '&::before': {
       content: '""',
       position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(239, 68, 68, 0.2)',
+      top: '-8px',
+      left: '-8px',
+      right: '-8px',
+      bottom: '-8px',
+      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.4), rgba(239, 68, 68, 0.1), transparent)',
       borderRadius: '50%',
-      filter: 'blur(16px)',
-      animation: 'pulse 2s ease-in-out infinite',
+      animation: 'glow 2s ease-in-out infinite alternate',
+      zIndex: -1,
+    },
+    '@keyframes glow': {
+      '0%': { 
+        opacity: 0.6,
+        transform: 'scale(1)',
+      },
+      '100%': { 
+        opacity: 1,
+        transform: 'scale(1.1)',
+      },
     },
   } as SxProps<Theme>,
 
@@ -151,15 +161,24 @@ export const deleteConfirmationModalStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 8px 25px rgba(239, 68, 68, 0.15)',
+    boxShadow: '0 8px 25px rgba(239, 68, 68, 0.15), 0 0 20px rgba(239, 68, 68, 0.1)',
+    animation: 'iconPulse 2s ease-in-out infinite',
+    '@keyframes iconPulse': {
+      '0%, 100%': { 
+        boxShadow: '0 8px 25px rgba(239, 68, 68, 0.15), 0 0 20px rgba(239, 68, 68, 0.1)',
+      },
+      '50%': { 
+        boxShadow: '0 8px 25px rgba(239, 68, 68, 0.25), 0 0 30px rgba(239, 68, 68, 0.2)',
+      },
+    },
   } as SxProps<Theme>,
 
   modalContent: {
-    padding: '0 32px 32px 32px',
+    padding: '0 32px',
     position: 'relative',
     zIndex: 10,
     '@media (max-width: 480px)': {
-      padding: '0 20px 20px 20px',
+      padding: '0 20px',
     },
   } as SxProps<Theme>,
 
@@ -175,21 +194,39 @@ export const deleteConfirmationModalStyles = {
 
   messageContainer: {
     textAlign: 'center',
-    marginBottom: '32px',
+    marginBottom: '40px',
   } as SxProps<Theme>,
 
   message: {
     color: '#475569',
-    marginBottom: '8px',
+    marginBottom: '12px',
     fontSize: '16px',
-    margin: '0 0 8px 0',
+    margin: '0 0 12px 0',
     fontWeight: '500',
   } as SxProps<Theme>,
 
   subtitle: {
-    color: '#64748b',
+    color: '#dc2626',
     fontSize: '14px',
     margin: 0,
+    fontWeight: '600',
+    background: 'linear-gradient(135deg, rgba(254, 242, 242, 0.8), rgba(255, 228, 230, 0.6))',
+    padding: '8px 16px',
+    borderRadius: '8px',
+    border: '1px solid rgba(239, 68, 68, 0.2)',
+    display: 'inline-block',
+    boxShadow: '0 2px 8px rgba(239, 68, 68, 0.1)',
+    animation: 'warningPulse 3s ease-in-out infinite',
+    '@keyframes warningPulse': {
+      '0%, 100%': { 
+        backgroundColor: 'rgba(254, 242, 242, 0.8)',
+        borderColor: 'rgba(239, 68, 68, 0.2)',
+      },
+      '50%': { 
+        backgroundColor: 'rgba(255, 228, 230, 0.9)',
+        borderColor: 'rgba(239, 68, 68, 0.3)',
+      },
+    },
   } as SxProps<Theme>,
 
   modalActions: {
@@ -197,8 +234,10 @@ export const deleteConfirmationModalStyles = {
     gap: '16px',
     position: 'relative',
     zIndex: 10,
+    padding: '0 0 32px 0',
     '@media (max-width: 480px)': {
       flexDirection: 'column',
+      padding: '0 0 20px 0',
     },
   } as SxProps<Theme>,
 
