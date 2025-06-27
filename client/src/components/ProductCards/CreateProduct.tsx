@@ -47,7 +47,6 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
   isSubmitting,
   uploadingImage,
   fileInputRef,
-  editingId,
   onCancel
 }) => {
   // Edit states
@@ -378,15 +377,15 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
 
         {/* Action Buttons */}
         <Box sx={actionButtonStyles.container}>
-  <StyledButton
-    variant="primary"
-    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onSubmit(e)}
-    disabled={!isFormValid() || isSubmitting}
-    sx={{ 
-      fontSize: '0.875rem',
-      opacity: (isFormValid() && !isSubmitting) ? 1 : 0.6,
-    }}
-  >
+          <StyledButton
+            variant="primary"
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => onSubmit(e)}
+            disabled={!isFormValid() || isSubmitting}
+            sx={{ 
+              fontSize: '0.875rem',
+              opacity: (isFormValid() && !isSubmitting) ? 1 : 0.6,
+            }}
+          >
             <Save sx={{ fontSize: 16, marginRight: 1 }} />
             {isSubmitting ? 'Creating...' : 'Create Product'}
           </StyledButton>
