@@ -94,6 +94,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 170: want dashboard to load with new username and deets after "save changes" from editprofile.
 - [x] TASK 172: infinite loop - stacking pages - navigate -1
 - [x] TASK 173: cant access the editprofile of another user directly, but if you copy paste url, it isnt protected. it lets any logged in user edit it.
+- [x] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
 - [x] TASK 176: CONNECTINGLINES.TSX - MAKE IT ERROR FREE.
 - [x] TASK 177: combine paymentRequestsStyles-fromremainingcss.css along with PaymentRequests.tsx - and then resplit the styles. - understand what the buttonprops issue actually is. - COMBINATION DONE, RE-SPLITTING IS LEFT NOW.
 - [x] TASK 180: first make the way all the requests come - side by side not one below the other - then do this.
@@ -161,7 +162,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 158: minimumprice limit in input/edit field of price
 - [ ] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
 - [ ] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
-- [x] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
+- [ ] TASK 174: add product card vs edit product card
 - [ ] TASK 178: convert paymentRequestsStyles.ts into the other type of exporting? why is that not working??
 - [ ] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
 - [ ] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
@@ -232,7 +233,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 166: another idea as im implementing the pfp feature - a page to scroll thru all vendors and all companies - and then view their products.
 - [ ] TASK 167: right now, its a products page - but we can have vendors page too. vendors page with filtering products vs products page with filtering vendors. filtering prices. filtering avg star ratings.
 - [ ] TASK 168: delete old images - from cloudinary - after image updation.
-- [ ] TASK 174: add product card vs edit product card
 - [ ] TASK 181: add loading screens instead of directly rendering some components by default
 - [ ] TASK 182: add skeletons instead of loading screens
 - [ ] TASK 184: tab interface the two parts of the dashboard too i guess.
