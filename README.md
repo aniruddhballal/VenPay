@@ -128,6 +128,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 229: Review for any leftover redundancy in expandCardStyles.ts
 - [x] TASK 232: Faulty cancel button styles - expandCardStyles.ts
 - [x] TASK 233: Center the character count + hint
+- [x] TASK 236: Organisational - sort file structure - components vs pages, styles etc
 - [x] TASK 237: Delete product confirmation modal - can be improved/stylised
 
 </details>
@@ -177,8 +178,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 174: add product card vs edit product card
 - [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ] after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
-- [x] TASK 236: Organisational - sort file structure - components vs pages, styles etc
-
 
 </details>
 
