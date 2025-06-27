@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 import { ExpandCard } from "../ProductCards/UpdateProduct";
 import { AddProductCard } from "../ProductCards/CreateProduct";
-import api from "../../api";
+import api from "../../api/api";
 
 import DeleteConfirmationModal from '../Modals/DeleteConfirmationModal';
 

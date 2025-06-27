@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { paymentRequestsStyles } from '../../styles/paymentRequestsStyles';
 import { tabStyles } from "../../styles/requestsTabStyles";
 import  {reviewStyles} from "../../styles/reviewStyles"
-import api from "../../api";
+import api from "../../api/api";
 import {Button} from '@mui/material';
 
 interface Transaction {

@@ -4,7 +4,7 @@ import AnimatedLines from '../components/Partials/AnimatedLines'; // adjust path
 
 import { useSelector, useDispatch } from "react-redux";
 import { BusinessCenter, RequestPage, Payment, Inventory, AccountCircle } from "@mui/icons-material";
-import api from "../api";
+import api from "../api/api";
 import { useNavigate } from "react-router-dom";
 import ProductManagement from "../components/Partials/ProductManagement";
 import ProductList from "../components/Partials/ProductList";
