@@ -1,5 +1,4 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { Box, Typography, Grow, Tooltip, IconButton, Avatar, CircularProgress } from '@mui/material';
 import { Check, Close, CameraAlt, AddPhotoAlternate, Save } from '@mui/icons-material';
 
@@ -12,109 +11,90 @@ import {
   priceStyles,
   descriptionStyles,
   actionButtonStyles
-} from '../../styles/updateProductStyles';
+} from '../../styles/expandCardStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
 
-interface CreateProductData {
+interface CreateProductForm {
   name: string;
   description: string;
-  price: number;
+  price: string;
   image?: string;
 }
 
 interface CreateProductProps {
-  onCreate: (productData: CreateProductData) => void;
-  onCancel?: () => void;
+  form: CreateProductForm;
+  onFormChange: (field: string, value: string) => void;
+  onSubmit: () => void;
+  onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedImage: File | null;
+  previewUrl: string;
+  isSubmitting: boolean;
+  uploadingImage: boolean;
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  editingId: string | null;
+  onCancel: () => void;
 }
 
 export const CreateProduct: React.FC<CreateProductProps> = ({
-  onCreate,
+  form,
+  onFormChange,
+  onSubmit,
+  onImageChange,
+  selectedImage,
+  previewUrl,
+  isSubmitting,
+  uploadingImage,
+  fileInputRef,
+  editingId,
   onCancel
 }) => {
-  const navigate = useNavigate();
-
-  // Form state
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState<string>("");
-  
   // Edit states
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingPrice, setIsEditingPrice] = useState(false);
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const [isEditingImage, setIsEditingImage] = useState(false);
+  const [isEditingName, setIsEditingName] = React.useState(false);
+  const [isEditingPrice, setIsEditingPrice] = React.useState(false);
+  const [isEditingDescription, setIsEditingDescription] = React.useState(false);
+  const [isEditingImage, setIsEditingImage] = React.useState(false);
   
   // UI states
-  const [isHovered, setIsHovered] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [isHovered, setIsHovered] = React.useState(false);
   
   // Refs
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
-  const fileSelectedRef = useRef(false);
+  const descriptionInputRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Validation
   const isFormValid = () => {
-    const priceNum = parseFloat(price);
-    return name.trim().length > 0 && !isNaN(priceNum) && priceNum > 0 && description.trim().length > 0;
+    const priceNum = parseFloat(form.price);
+    return form.name.trim().length > 0 && !isNaN(priceNum) && priceNum > 0 && form.description.trim().length > 0;
   };
 
   // Image handlers
   const handleImageClick = () => {
     if (isEditingImage) return;
-    imageInputRef.current?.click();
+    fileInputRef.current?.click();
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-      setIsEditingImage(true);
-      fileSelectedRef.current = true;
-    }
-  };
-
-  const handleImageSave = async () => {
-    if (selectedImage) {
-      setUploadingImage(true);
-      try {
-        // Convert to base64 or handle file upload here
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          setImage(result);
-          setIsEditingImage(false);
-          setUploadingImage(false);
-        };
-        reader.readAsDataURL(selectedImage);
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        setUploadingImage(false);
-      }
-    }
+  const handleImageSave = () => {
+    setIsEditingImage(false);
   };
 
   const handleImageCancel = () => {
-    setSelectedImage(null);
-    setPreviewUrl("");
     setIsEditingImage(false);
-    if (imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
+    onFormChange('image', '');
   };
+
+  // React to image selection
+  React.useEffect(() => {
+    if (selectedImage && previewUrl) {
+      setIsEditingImage(true);
+    }
+  }, [selectedImage, previewUrl]);
 
   // Field handlers
   const handleNameClick = () => setIsEditingName(true);
   const handleNameSave = () => setIsEditingName(false);
   const handleNameCancel = () => {
-    setName("");
+    onFormChange('name', '');
     setIsEditingName(false);
   };
   const handleNameKeyPress = (e: React.KeyboardEvent) => {
@@ -125,7 +105,7 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
   const handlePriceClick = () => setIsEditingPrice(true);
   const handlePriceSave = () => setIsEditingPrice(false);
   const handlePriceCancel = () => {
-    setPrice("");
+    onFormChange('price', '');
     setIsEditingPrice(false);
   };
   const handlePriceKeyPress = (e: React.KeyboardEvent) => {
@@ -136,32 +116,12 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
   const handleDescriptionClick = () => setIsEditingDescription(true);
   const handleDescriptionSave = () => setIsEditingDescription(false);
   const handleDescriptionCancel = () => {
-    setDescription("");
+    onFormChange('description', '');
     setIsEditingDescription(false);
   };
   const handleDescriptionKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && e.ctrlKey) handleDescriptionSave();
     if (e.key === 'Escape') handleDescriptionCancel();
-  };
-
-  // Main actions
-  const handleCreate = () => {
-    if (isFormValid()) {
-      onCreate({
-        name: name.trim(),
-        description: description.trim(),
-        price: parseFloat(price),
-        image: image
-      });
-    }
-  };
-
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    } else {
-      navigate(-1);
-    }
   };
 
   const saveAllEdits = () => {
@@ -202,9 +162,9 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
         onClick={handleImageClick}
       >
         {/* Background Image or Upload Placeholder */}
-        <Box sx={imageStyles.backgroundOrPlaceholder(image)}>
+        <Box sx={imageStyles.backgroundOrPlaceholder(form.image || previewUrl)}>
           {/* Upload placeholder content */}
-          {!image && (
+          {!form.image && !previewUrl && (
             <>
               <Avatar className="upload-icon" sx={imageStyles.uploadAvatar}>
                 <AddPhotoAlternate sx={{ fontSize: 32 }} />
@@ -276,9 +236,9 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
 
         <input
           type="file"
-          ref={imageInputRef}
+          ref={fileInputRef}
           accept="image/*"
-          onChange={handleImageChange}
+          onChange={onImageChange}
           style={{ display: 'none' }}
         />
       </Box>
@@ -287,14 +247,14 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
         <div className="basic-info" style={nameStyles.container}>
           {/* Name Field */}
           <InlineEditField
-            value={name}
-            editedValue={name}
+            value={form.name}
+            editedValue={form.name}
             isEditing={isEditingName}
             isHovered={isHovered}
             onEdit={handleNameClick}
             onSave={handleNameSave}
             onCancel={handleNameCancel}
-            onValueChange={setName}
+            onValueChange={(value) => onFormChange('name', value)}
             onKeyDown={handleNameKeyPress}
             inputType="text"
             placeholder="Enter product name..."
@@ -302,10 +262,10 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             displayComponent={
               <Typography variant="h6" className="name-text" sx={{
                 ...nameStyles.displayText,
-                color: name ? 'inherit' : '#999',
-                fontStyle: name ? 'normal' : 'italic'
+                color: form.name ? 'inherit' : '#999',
+                fontStyle: form.name ? 'normal' : 'italic'
               }}>
-                {name || "Click to add product name"}
+                {form.name || "Click to add product name"}
               </Typography>
             }
             editLabel="Click to add name"
@@ -316,14 +276,14 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
           
           {/* Price Field */}
           <InlineEditField
-            value={price}
-            editedValue={price}
+            value={form.price}
+            editedValue={form.price}
             isEditing={isEditingPrice}
             isHovered={isHovered}
             onEdit={handlePriceClick}
             onSave={handlePriceSave}
             onCancel={handlePriceCancel}
-            onValueChange={setPrice}
+            onValueChange={(value) => onFormChange('price', value)}
             onKeyDown={handlePriceKeyPress}
             inputType="number"
             placeholder="Enter product price..."
@@ -332,10 +292,10 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             displayComponent={
               <Typography variant="h6" className="price-text" sx={{
                 ...priceStyles.displayText,
-                color: price ? 'inherit' : '#999',
-                fontStyle: price ? 'normal' : 'italic'
+                color: form.price ? 'inherit' : '#999',
+                fontStyle: form.price ? 'normal' : 'italic'
               }}>
-                {price ? `₹${parseFloat(price).toFixed(2)}` : "Click to add price"}
+                {form.price ? `₹${parseFloat(form.price).toFixed(2)}` : "Click to add price"}
               </Typography>
             }
             editLabel="Click to add price"
@@ -352,14 +312,14 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
           sx={descriptionStyles.container(isEditingDescription, isHovered)}
         >
           <InlineEditField
-            value={description}
-            editedValue={description}
+            value={form.description}
+            editedValue={form.description}
             isEditing={isEditingDescription}
             isHovered={isHovered}
             onEdit={handleDescriptionClick}
             onSave={handleDescriptionSave}
             onCancel={handleDescriptionCancel}
-            onValueChange={setDescription}
+            onValueChange={(value) => onFormChange('description', value)}
             onKeyDown={handleDescriptionKeyPress}
             inputType="textarea"
             placeholder="Enter product description..."
@@ -371,11 +331,11 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
                 className="desc-text"
                 sx={{
                   ...descriptionStyles.typography(isHovered),
-                  color: description ? 'inherit' : '#999',
-                  fontStyle: description ? 'normal' : 'italic'
+                  color: form.description ? 'inherit' : '#999',
+                  fontStyle: form.description ? 'normal' : 'italic'
                 }}
               >
-                {description || "Click to add product description"}
+                {form.description || "Click to add product description"}
               </Typography>
             }
             editLabel="Click to add description"
@@ -389,19 +349,20 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
         <Box sx={actionButtonStyles.container}>
           <StyledButton
             variant="primary"
-            onClick={handleCreate}
-            disabled={!isFormValid()}
+            onClick={onSubmit}
+            disabled={!isFormValid() || isSubmitting}
             sx={{ 
               fontSize: '0.875rem',
-              opacity: isFormValid() ? 1 : 0.6
+              opacity: (isFormValid() && !isSubmitting) ? 1 : 0.6
             }}
           >
             <Save sx={{ fontSize: 16, marginRight: 1 }} />
-            Create Product
+            {isSubmitting ? 'Creating...' : 'Create Product'}
           </StyledButton>
           <StyledButton
             variant="original"
-            onClick={handleCancel}
+            onClick={onCancel}
+            disabled={isSubmitting}
             sx={{ fontSize: '0.875rem' }}
           >
             Cancel
