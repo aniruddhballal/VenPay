@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef} from "react";
 import { toast } from "react-toastify";
-import { confirmAlert } from "react-confirm-alert";
 
 import { ExpandCard } from "../components/ExpandCard";
 import { AddProductCard } from "../components/AddProductCard";
@@ -216,6 +215,7 @@ const handleDelete = (id: string) => {
 
 // 4. Add these helper functions:
 const confirmDelete = async () => {
+  console.log('confirmDelete was called');
   if (!selectedProductId) return;
   
   setIsDeleting(true);
@@ -286,102 +286,342 @@ return (
       )}
     </div>
 
-    {/* Glassmorphic Delete Modal */}
-    {showDeleteModal && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+{/* Glassmorphic Delete Modal */}
+{showDeleteModal && (
+  <div 
+    style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 9999,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '1rem',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+      animation: 'fadeIn 0.3s ease-out'
+    }}
+  >
+    {/* Backdrop - Click to close */}
+    <div 
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        cursor: 'pointer'
+      }}
+      onClick={closeDeleteModal}
+    />
+    
+    {/* Modal */}
+    <div 
+      style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '400px',
+        margin: '0 1rem',
+        borderRadius: '1.5rem',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+        overflow: 'hidden',
+        animation: 'scaleIn 0.3s ease-out',
+        transform: 'scale(1)'
+      }}
+    >
+      {/* Animated Background Gradient */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(135deg, rgba(255, 99, 99, 0.1), rgba(255, 165, 0, 0.1), rgba(255, 192, 203, 0.1))',
+          animation: 'pulse 3s ease-in-out infinite'
+        }}
+      />
+      
+      {/* Shimmer Effect */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+          transform: 'translateX(-100%)',
+          animation: 'shimmer 3s ease-in-out infinite'
+        }}
+      />
+      
+      {/* Content */}
+      <div style={{ position: 'relative', zIndex: 10, padding: '2rem' }}>
+        {/* Close Button */}
+        <button
           onClick={closeDeleteModal}
-        ></div>
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem',
+            padding: '0.5rem',
+            borderRadius: '50%',
+            background: 'transparent',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.7)',
+            cursor: 'pointer',
+            fontSize: '1.2rem',
+            transition: 'all 0.2s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+onMouseEnter={(e) => {
+  const target = e.target as HTMLElement;
+  target.style.background = 'rgba(255, 255, 255, 0.1)';
+  target.style.color = '#fff';
+}}
+onMouseLeave={(e) => {
+  const target = e.target as HTMLElement;
+  target.style.background = 'transparent';
+  target.style.color = 'rgba(255, 255, 255, 0.7)';
+}}
+
+        >
+          ✕
+        </button>
         
-        {/* Modal */}
-        <div className="relative transform transition-all duration-300">
-          <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl max-w-md w-full mx-4">
-            {/* Animated background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-orange-500/10 to-pink-500/10 animate-pulse"></div>
-            
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 -translate-x-full animate-[shimmer_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-            
-            {/* Content */}
-            <div className="relative z-10 p-8">
-              {/* Close button */}
-              <button
-                onClick={closeDeleteModal}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors duration-200 text-gray-400 hover:text-white"
+        {/* Warning Icon */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+          <div style={{ position: 'relative' }}>
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(255, 99, 99, 0.3)',
+                borderRadius: '50%',
+                filter: 'blur(1rem)',
+                animation: 'pulse 2s ease-in-out infinite'
+              }}
+            />
+            <div 
+              style={{
+                position: 'relative',
+                padding: '1rem',
+                background: 'rgba(255, 99, 99, 0.2)',
+                borderRadius: '50%',
+                border: '1px solid rgba(255, 99, 99, 0.3)'
+              }}
+            >
+              <svg 
+                style={{ width: '2rem', height: '2rem', color: '#ff6363' }} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                ✕
-              </button>
-              
-              {/* Icon */}
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-red-500/30 rounded-full blur-xl animate-pulse"></div>
-                  <div className="relative p-4 bg-red-500/20 rounded-full border border-red-400/30">
-                    <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Title */}
-              <h2 className="text-2xl font-bold text-white text-center mb-4">
-                Confirm Deletion
-              </h2>
-              
-              {/* Message */}
-              <div className="text-center mb-8">
-                <p className="text-gray-300 mb-2">
-                  Are you sure you want to delete this product?
-                </p>
-                <p className="text-gray-400 text-sm mt-2">
-                  This action cannot be undone.
-                </p>
-              </div>
-              
-              {/* Buttons */}
-              <div className="flex gap-4">
-                <button
-                  onClick={cancelDelete}
-                  disabled={isDeleting}
-                  className="flex-1 px-6 py-3 rounded-xl backdrop-blur-md bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 disabled:opacity-50 font-medium"
-                >
-                  No
-                </button>
-                
-                <button
-                  onClick={confirmDelete}
-                  disabled={isDeleting}
-                  className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-medium transition-all duration-300 hover:scale-105 disabled:opacity-50 shadow-lg relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 -translate-x-full hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                  <span className="relative flex items-center justify-center gap-2">
-                    {isDeleting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        Deleting...
-                      </>
-                    ) : (
-                      'Yes'
-                    )}
-                  </span>
-                </button>
-              </div>
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" 
+                />
+              </svg>
             </div>
           </div>
         </div>
-      </div>
-    )}
+        
+        {/* Title */}
+        <h2 
+          style={{
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            color: '#fff',
+            textAlign: 'center',
+            marginBottom: '1rem',
+            textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          Confirm Deletion
+        </h2>
+        
+        {/* Message */}
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <p style={{ color: 'rgba(255, 255, 255, 0.9)', marginBottom: '0.5rem', fontSize: '1rem' }}>
+            Are you sure you want to delete this product?
+          </p>
+          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.875rem' }}>
+            This action cannot be undone.
+          </p>
+        </div>
+        
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {/* Cancel Button */}
+          <button
+            onClick={cancelDelete}
+            disabled={isDeleting}
+            style={{
+              flex: 1,
+              padding: '0.75rem 1.5rem',
+              borderRadius: '0.75rem',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#fff',
+              fontWeight: '500',
+              fontSize: '1rem',
+              cursor: isDeleting ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              opacity: isDeleting ? 0.5 : 1
+            }}
+onMouseEnter={(e) => {
+  if (!isDeleting) {
+    const target = e.target as HTMLElement;
+    target.style.background = 'rgba(255, 255, 255, 0.2)';
+    target.style.transform = 'scale(1.05)';
+  }
+}}
+onMouseLeave={(e) => {
+  if (!isDeleting) {
+    const target = e.target as HTMLElement;
+    target.style.background = 'rgba(255, 255, 255, 0.1)';
+    target.style.transform = 'scale(1)';
+  }
+}}
 
-    {/* CSS for shimmer animation */}
+          >
+            No
+          </button>
+          
+          {/* Delete Button */}
+          <button
+            onClick={confirmDelete}
+            disabled={isDeleting}
+            style={{
+              flex: 1,
+              padding: '0.75rem 1.5rem',
+              borderRadius: '0.75rem',
+              background: 'linear-gradient(135deg, #ff6363, #ff8a80)',
+              border: 'none',
+              color: '#fff',
+              fontWeight: '500',
+              fontSize: '1rem',
+              cursor: isDeleting ? 'not-allowed' : 'pointer',
+              transition: 'all 0.3s ease',
+              opacity: isDeleting ? 0.5 : 1,
+              boxShadow: '0 4px 15px rgba(255, 99, 99, 0.3)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+onMouseEnter={(e) => {
+  if (!isDeleting) {
+    const target = e.target as HTMLElement;
+    target.style.background = 'linear-gradient(135deg, #ff5252, #ff7961)';
+    target.style.transform = 'scale(1.05)';
+    target.style.boxShadow = '0 6px 20px rgba(255, 99, 99, 0.4)';
+  }
+}}
+onMouseLeave={(e) => {
+  if (!isDeleting) {
+    const target = e.target as HTMLElement;
+    target.style.background = 'linear-gradient(135deg, #ff6363, #ff8a80)';
+    target.style.transform = 'scale(1)';
+    target.style.boxShadow = '0 4px 15px rgba(255, 99, 99, 0.3)';
+  }
+}}
+
+          >
+            {/* Button Shimmer */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                transform: 'translateX(-100%)',
+                transition: 'transform 0.7s ease'
+              }}
+              onMouseEnter={(e) => {
+  const target = e.target as HTMLElement;
+  target.style.transform = 'translateX(100%)';
+}}
+
+            />
+            
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              {isDeleting ? (
+                <>
+                  <div 
+                    style={{
+                      width: '1rem',
+                      height: '1rem',
+                      border: '2px solid rgba(255, 255, 255, 0.3)',
+                      borderTop: '2px solid #fff',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}
+                  />
+                  Deleting...
+                </>
+              ) : (
+                'Yes'
+              )}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/* CSS Animations */}
     {/* <style jsx>{`
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes scaleIn {
+        from { 
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to { 
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
       @keyframes shimmer {
         0% { transform: translateX(-100%); }
         100% { transform: translateX(100%); }
       }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
     `}</style> */}
+  </div>
+)}
   </>
 );
 }
