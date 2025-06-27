@@ -1,5 +1,3 @@
-// hooks/usePriceEditor.ts
-
 interface Product {
   _id: string;
   name: string;

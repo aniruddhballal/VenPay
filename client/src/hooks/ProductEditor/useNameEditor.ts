@@ -1,5 +1,3 @@
-// hooks/useNameEditor.ts
-
 interface Product {
   _id: string;
   name: string;

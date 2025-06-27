@@ -6,8 +6,8 @@ import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip,
 import { Check, Close, Edit, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
 
 import { StyledButton } from "./StyledButton";
-import { useProductEditor, useNameEditor, usePriceEditor, useDescriptionEditor,
-  useImageEditor, useCardInteractions } from '../hooks/useEditor';
+
+import { ProductEditorHooks } from '../hooks';
 
 import { imageSectionSx, backgroundImageOrPlaceholderSx, uploadAvatarSx, uploadTextSx, uploadCaptionSx,
   editOverlayTextSx, editOverlayAvatarSx, editOverlaySx, imageEditingOverlaySx, imageEditingOverlayInnerSx,
@@ -44,6 +44,9 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
   onFieldUpdate
 }) => {
   const navigate = useNavigate();
+
+  const { useProductEditor, useNameEditor, usePriceEditor, useDescriptionEditor,
+  useImageEditor, useCardInteractions } = ProductEditorHooks;
 
   // Main product editor hook
   const editorState = useProductEditor({ product, onFieldUpdate });

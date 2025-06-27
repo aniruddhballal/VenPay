@@ -1,4 +1,3 @@
-// hooks/useProductEditor.ts
 import { useState, useRef, useEffect } from 'react';
 
 interface Product {

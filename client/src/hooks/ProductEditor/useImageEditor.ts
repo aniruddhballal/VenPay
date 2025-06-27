@@ -1,5 +1,3 @@
-// hooks/useImageEditor.ts
-
 import axios from 'axios';
 import { toast } from 'react-toastify';
 

@@ -1,5 +1,3 @@
-// hooks/useCardInteractions.ts
-
 import { useState } from 'react';
 
 export const useCardInteractions = (

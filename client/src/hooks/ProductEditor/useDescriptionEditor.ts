@@ -1,5 +1,3 @@
-// hooks/useDescriptionEditor.ts
-
 interface Product {
   _id: string;
   name: string;
