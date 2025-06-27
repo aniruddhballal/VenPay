@@ -154,6 +154,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise maybe?
 - [x] TASK 154: addproductcard ui from updateproductcard's
+- [ ] TASK 158: minimumprice limit in input/edit field of price
 - [ ] TASK 163: then displayuser and edit profile pages. and while showing product requests, payment requests.
 - [ ] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
 - [x] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
@@ -175,6 +176,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 228: the save/cancel buttons of inline editing -> the glossy matt style can be used on the tab interface of accepted/pending/declined - requests (the one that had the black colour style before)
 - [x] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
+- [x] TASK 232: Faulty cancel button styles - expandCardStyles.ts
 
 </details>
 
@@ -218,7 +220,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 155: clear blank/whitespaces -> add designs -> compactify
 - [ ] TASK 156: chatbox option -> very similar to notifications
 - [ ] TASK 157: complexify the user/product tables
-- [ ] TASK 158: minimumprice limit in input/edit field of price
 - [ ] TASK 159: make reviews as a drop down or something - let it optionally occupy space
 - [ ] TASK 160: instead of having separate edit profile page - allow editing inline - just like product mgmt
 - [ ] TASK 164: BTW NONE of the payment requests - company side - show images of all the products.
