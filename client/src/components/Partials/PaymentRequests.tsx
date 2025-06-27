@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useMemo } from 'react';
 import { styled } from '@mui/material/styles';
@@ -351,16 +350,12 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
     setRatingLoading((prev) => ({ ...prev, [req._id]: true }));
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/api/productratings`,
-        {
-          productId: req.productId._id,
-          productRequestId: req._id, // Added this field
-          rating,
-          review: review.trim() || undefined,
-        },
-        { withCredentials: true }
-      );
+      const response = await api.post("/productratings", {
+        productId: req.productId._id,
+        productRequestId: req._id, // Added this field
+        rating,
+        review: review.trim() || undefined,
+      });
 
       setExistingRatings((prev) => ({ ...prev, [req._id]: response.data }));
       setRatingData((prev) => ({ ...prev, [req._id]: { rating: 0, review: "" } }));
