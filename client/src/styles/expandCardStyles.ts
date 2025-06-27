@@ -591,7 +591,7 @@ export const descriptionStyles = {
 };
 
 // Action Buttons Container
-export const actionButtonsStyles = {
+export const actionButtonStyles = {
   container: {
     display: 'flex',
     gap: '0.5rem',
