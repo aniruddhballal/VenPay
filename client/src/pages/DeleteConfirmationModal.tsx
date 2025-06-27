@@ -4,6 +4,7 @@ interface DeleteConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  onCancel?: () => void;
   isDeleting?: boolean;
   title?: string;
   message?: string;
@@ -14,18 +15,27 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   isOpen, 
   onClose, 
   onConfirm, 
+  onCancel,
   isDeleting = false,
   title = "Confirm Deletion",
   message = "Are you sure you want to delete this product?",
   subtitle = "This action cannot be undone."
 }) => {
-  if (!isOpen) return null;
-
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
+      handleCancel();
+    }
+  };
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    } else {
       onClose();
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <>
@@ -98,7 +108,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
           <div style={{ position: 'relative', zIndex: 10, padding: '2rem' }}>
             {/* Close Button */}
             <button
-              onClick={onClose}
+              onClick={handleCancel}
               style={{
                 position: 'absolute',
                 top: '1rem',
@@ -199,7 +209,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
             <div style={{ display: 'flex', gap: '1rem' }}>
               {/* Cancel Button */}
               <button
-                onClick={onClose}
+                onClick={handleCancel}
                 disabled={isDeleting}
                 style={{
                   flex: 1,

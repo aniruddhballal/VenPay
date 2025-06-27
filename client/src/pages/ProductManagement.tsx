@@ -288,10 +288,11 @@ return (
       )}
     </div>
 
-{/* Clean and simple modal usage */}
+  {/* Clean and simple modal usage */}
     <DeleteConfirmationModal
       isOpen={showDeleteModal}
       onClose={closeDeleteModal}
+      onCancel={cancelDelete}
       onConfirm={confirmDelete}
       isDeleting={isDeleting}
       title="Confirm Deletion"
