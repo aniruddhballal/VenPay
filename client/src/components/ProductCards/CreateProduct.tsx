@@ -157,7 +157,7 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
 
   return (
     <div 
-      className="create-product-card"
+      className="expand-card-compact"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -383,11 +383,16 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             disabled={!isFormValid() || isSubmitting}
             sx={{ 
               fontSize: '0.875rem',
+              display: 'flex',
+              paddingx: '40px',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
               opacity: (isFormValid() && !isSubmitting) ? 1 : 0.6,
             }}
           >
             <Save sx={{ fontSize: 16, marginRight: 1 }} />
-            {isSubmitting ? 'Creating...' : 'Create Product'}
+            {isSubmitting ? 'Creating...' : 'Create'}
           </StyledButton>
           <StyledButton
             variant="original"
