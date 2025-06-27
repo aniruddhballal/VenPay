@@ -1,7 +1,7 @@
 ## 🧠 Project Tasks - Selfcheck points
 
 <details>
-<summary>✅ Completed Tasks</summary>
+<summary>✅ Completed</summary>
 
 - [x] TASK 3: overall UI
 
@@ -133,7 +133,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 </details>
 
 <details>
-<summary>🔧 Needs Modification / Discarded</summary>
+<summary>🛠️ Needs Modification </summary>
 
 - [ ] TASK 8: implement EEFM present worth, future worth, emi, interest schemes - give option for company to pay lesser amount now, or eventually pay larger amount over period of time - stuff like that - varied partial payments (NOTE: NET30 and pay earlier than 30 are the most sensible ones to implement for MSMEs, that too in india. look into these options though)  
 - [ ] TASK 27: new flow for vendor's side. no longer are there two parts (product management and vendor requests). there is just product management (renamed to products) - where every product will have another "expandable" which upon expanding, expands into the list of companies that had requested for it, the current status of that request
@@ -143,39 +143,44 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 </details>
 
 <details>
-<summary>🚧 Partially Done / Ongoing</summary>
+<summary>⚙️ Partially Done</summary>
 
 - [ ] TASK 9: giving discounts and star ratings/credits for companies/vendors for keeping integrity.
 - [ ] TASK 62: NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
 - [ ] TASK 76: vendor link in company dashboard
 - [ ] TASK 83: vendor link in company dashboard - not done yet
-- [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
 - [ ] TASK 97: a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
-- [x] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 - [ ] TASK 101: cut stuff from reminaing.css that have no usage in any tsx file
 - [ ] TASK 104: unify the mui styles thoughout the whole website - pick a colour theme and go by it, the buttons, the effects - YET TO DO
 - [ ] TASK 107: switch to redux, reduxtoolkit instead of local state management
 - [ ] TASK 125: again, these are all on vendor side - so, company side??
 - [ ] TASK 134: REUSE COMPONENTS!!!!!! - STYLED BUTTONS, BOXES ETC - EZ PZ UNIFORMITY
-- [x] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 - [ ] TASK 138. the dashboard onload curves - dont randomise maybe?
-- [x] TASK 154: addproductcard ui from updateproductcard's
 - [ ] TASK 163: show the pfp in displayuser and edit profile pages. and while showing product requests, payment requests.
 - [ ] TASK 171: user display and editprofile must match styles, shape, structure - and editprofile's pfp+pw patch stands out (colours, effects)
-- [x] TASK 174: add product card vs edit product card
 - [ ] TASK 179: animate the underline of accepted requests/declined/pending - STARTED DOING THIS, A LOT OF SCOPE FOR ANIMATED IMPROV
 - [ ] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [ ] TASK 200: link to vendor's profile in company's payment requests section
 - [ ] TASK 201: link to company's profile in vendor's product requests section
 - [ ] TASK 207: reviewStyles.ts improv
-- [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ] after task 208, refer and stylise the AddProductCard component too
 - [ ] TASK 214: further simplify and disintegrate the remaining.css
+
+</details>
+
+<details>
+<summary>🚧 Ongoing</summary>
+- [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
+- [x] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
+- [x] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
+- [x] TASK 154: addproductcard ui from updateproductcard's
+- [x] TASK 174: add product card vs edit product card
+- [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ] after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
 
 </details>
 
 <details>
-<summary>🕒 Yet to Start</summary>
+<summary>⏳ Yet to Start</summary>
 
 - [ ] TASK 1: sort and filter the accepted product requests
 - [ ] TASK 2: sort and filter the type of requests (based on products)
@@ -254,7 +259,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 </details>
 
 <details>
-<summary>📚 Lessons, Tips & Summary</summary>
+<summary>💡 Tips</summary>
 
 - TASK 16: make sure any feature implemented on company side, also gets implemented on vendor side
 - TASK 24: so i think it boils down to - adding more fields in the product schema - and enabling the viewing of vendor/company profiles – separate viewing of each product’s image(s) and rating/ reviews
