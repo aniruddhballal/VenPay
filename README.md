@@ -177,6 +177,8 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 174: add product card vs edit product card
 - [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ] after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
+- [x] TASK 236: Organisational - sort file structure - components vs pages, styles etc
+
 
 </details>
 
@@ -255,7 +257,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
 - [ ] TASK 231: Deploy app
 - [ ] TASK 234: Delete Product Image functionality - right after uploading initially while creating product / while updating/editing the image details
-- [ ] TASK 236: Organisational - sort file structure - components vs pages, styles etc
 
 </details>
 
