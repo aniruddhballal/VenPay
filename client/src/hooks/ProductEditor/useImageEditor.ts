@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../../api/api';
 import { toast } from 'react-toastify';
 
 interface Product {
@@ -59,15 +59,12 @@ export const useImageEditor = (
     formData.append("image", selectedImage);
 
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/products/upload-image/${product._id}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
-      );
-     
+      const res = await api.post(`/products/upload-image/${product._id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       await onFieldUpdate(product._id, 'image', res.data.image);
       toast.success("Product image updated!");
      
