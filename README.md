@@ -173,6 +173,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 226: Redundant save-cancel styling in expandCardStyles.ts
 - [x] TASK 228: the save/cancel buttons of inline editing -> the glossy matt style can be used on the tab interface of accepted/pending/declined - requests (the one that had the black colour style before)
+- [x] TASK 229: Review for any leftover redundancy in expandCardStyles.ts
 
 </details>
 
