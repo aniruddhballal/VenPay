@@ -242,6 +242,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 212: Organisation account -> individual accounts -> for different sectors of the same org.
 - [ ] TASK 213: Delete account option
 - [ ] TASK 216: Check pinterest fintech colour theming etc
+- [ ] TASK 231: Deploy app
 
 </details>
 
