@@ -12,7 +12,7 @@ import {
   priceStyles,
   descriptionStyles,
   actionButtonStyles
-} from '../../styles/expandCardStyles';
+} from '../../styles/updateProductStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
