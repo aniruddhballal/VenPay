@@ -4,9 +4,10 @@ import api from "../api/api";
 import { toast } from "react-toastify";
 
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { Box, Container, Typography, Button, Card, CardContent, CardMedia, Grid, Avatar, Chip, Select, MenuItem, FormControl,
-  Stack, useTheme, useMediaQuery, Fade, Zoom, CircularProgress, Alert, AlertTitle, ButtonBase
+import { Box, Container, Typography, Button, Card, CardContent, CardMedia, Avatar, Chip, Select, MenuItem, FormControl,
+  Stack, useTheme, useMediaQuery, Fade, Zoom, CircularProgress, Alert, AlertTitle, ButtonBase,
 } from "@mui/material";
+
 import { ArrowBack, Email, Store, Reviews, ShoppingCart, Star, StarHalf, StarBorder, Person, Business, AttachMoney,
   Description, FilterList, Visibility, ThumbUp, Schedule, TrendingUp
 } from "@mui/icons-material";
@@ -299,9 +300,18 @@ export default function Product() {
           </Box>
         </Fade>
 
-        <Grid container spacing={6}>
+        {/* Product Image and Details Section */}
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' }, 
+          gap: 6,
+          mb: 8 
+        }}>
           {/* Product Image Section */}
-          <Grid item xs={12} md={6}>
+          <Box sx={{ 
+            flex: { xs: '1', md: '1 1 50%' },
+            width: { xs: '100%', md: '50%' }
+          }}>
             <Zoom in timeout={800}>
               <Card sx={{ 
                 ...productDisplayStyles.interactiveCardStyle,
@@ -336,10 +346,13 @@ export default function Product() {
                 )}
               </Card>
             </Zoom>
-          </Grid>
+          </Box>
 
           {/* Product Details Section */}
-          <Grid item xs={12} md={6}>
+          <Box sx={{ 
+            flex: { xs: '1', md: '1 1 50%' },
+            width: { xs: '100%', md: '50%' }
+          }}>
             <Fade in timeout={1000}>
               <Card sx={{ 
                 ...productDisplayStyles.interactiveCardStyle, 
@@ -430,8 +443,8 @@ export default function Product() {
                 </CardContent>
               </Card>
             </Fade>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {/* Reviews Section */}
         {currentUser?.user && (
@@ -459,8 +472,16 @@ export default function Product() {
                     <>
                       {/* Rating Summary */}
                       {ratings.totalRatings > 0 && (
-                        <Grid container spacing={4} sx={{ mb: 6 }}>
-                          <Grid item xs={12} sm={4}>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          flexDirection: { xs: 'column', sm: 'row' }, 
+                          gap: 4, 
+                          mb: 6 
+                        }}>
+                          <Box sx={{ 
+                            flex: { xs: '1', sm: '1 1 33.333%' },
+                            width: { xs: '100%', sm: '33.333%' }
+                          }}>
                             <Card sx={{ 
                               ...productDisplayStyles.interactiveCardStyle,
                               ...productDisplayStyles.ratingSummaryCard
@@ -475,8 +496,11 @@ export default function Product() {
                                 Average Rating
                               </Typography>
                             </Card>
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
+                          </Box>
+                          <Box sx={{ 
+                            flex: { xs: '1', sm: '1 1 33.333%' },
+                            width: { xs: '100%', sm: '33.333%' }
+                          }}>
                             <Card sx={{ 
                               ...productDisplayStyles.interactiveCardStyle, 
                               ...productDisplayStyles.statsCard
@@ -491,8 +515,11 @@ export default function Product() {
                                 </Typography>
                               </Stack>
                             </Card>
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
+                          </Box>
+                          <Box sx={{ 
+                            flex: { xs: '1', sm: '1 1 33.333%' },
+                            width: { xs: '100%', sm: '33.333%' }
+                          }}>
                             <Card sx={{ 
                               ...productDisplayStyles.interactiveCardStyle, 
                               ...productDisplayStyles.statsCard
@@ -507,8 +534,8 @@ export default function Product() {
                                 </Typography>
                               </Stack>
                             </Card>
-                          </Grid>
-                        </Grid>
+                          </Box>
+                        </Box>
                       )}
 
                       {/* Company Filter */}
@@ -553,74 +580,72 @@ export default function Product() {
                           No reviews found for the selected company.
                         </Alert>
                       ) : (
-                        <Grid container spacing={4}>
+                        <Stack spacing={4}>
                           {filteredRatings.map((rating, index) => (
-                            <Grid item xs={12} key={rating._id}>
-                              <Fade in timeout={500 + index * 100}>
-                                <Card sx={{ 
-                                  ...productDisplayStyles.interactiveCardStyle,
-                                  ...productDisplayStyles.reviewCard
-                                }}>
-                                  <Stack direction={isMobile ? 'column' : 'row'} spacing={4}>
-                                    <Avatar sx={productDisplayStyles.reviewAvatar}>
-                                      <Business sx={{ fontSize: 36 }} />
-                                    </Avatar>
-                                    <Box sx={{ flex: 1 }}>
-                                      <Stack 
-                                        direction={isMobile ? 'column' : 'row'} 
-                                        justifyContent="space-between" 
-                                        alignItems={isMobile ? 'flex-start' : 'center'}
-                                        sx={{ mb: 3 }}
-                                      >
-                                        <Typography variant="h5" sx={productDisplayStyles.reviewCompanyName}>
-                                          {rating.companyId.name}
-                                        </Typography>
-                                        <Chip 
-                                          icon={<Schedule />}
-                                          label={formatDate(rating.productRequestId.createdAt)}
-                                          variant="outlined"
-                                          sx={productDisplayStyles.reviewChip}
-                                        />
-                                      </Stack>
-                                      
-                                      <Box sx={{ mb: 3 }}>
-                                        {renderCustomStars2(rating.rating, 28)}
-                                      </Box>
-                                      
-                                      <Typography 
-                                        variant="body1" 
-                                        sx={productDisplayStyles.reviewText}
-                                      >
-                                        {rating.review || "No review provided."}
+                            <Fade in timeout={500 + index * 100} key={rating._id}>
+                              <Card sx={{ 
+                                ...productDisplayStyles.interactiveCardStyle,
+                                ...productDisplayStyles.reviewCard
+                              }}>
+                                <Stack direction={isMobile ? 'column' : 'row'} spacing={4}>
+                                  <Avatar sx={productDisplayStyles.reviewAvatar}>
+                                    <Business sx={{ fontSize: 36 }} />
+                                  </Avatar>
+                                  <Box sx={{ flex: 1 }}>
+                                    <Stack 
+                                      direction={isMobile ? 'column' : 'row'} 
+                                      justifyContent="space-between" 
+                                      alignItems={isMobile ? 'flex-start' : 'center'}
+                                      sx={{ mb: 3 }}
+                                    >
+                                      <Typography variant="h5" sx={productDisplayStyles.reviewCompanyName}>
+                                        {rating.companyId.name}
                                       </Typography>
-
-                                      <Stack direction="row" spacing={3} flexWrap="wrap">
-                                        <Chip
-                                          icon={<AttachMoney />}
-                                          label={`Unit Price: ₹${rating.productRequestId.unitPrice?.toFixed(2) ?? 'N/A'}`}
-                                          variant="outlined"
-                                          sx={productDisplayStyles.reviewChip}
-                                        />
-                                        <Chip
-                                          icon={<Description />}
-                                          label={`Quantity: ${rating.productRequestId.quantity}`}
-                                          variant="outlined"
-                                          sx={productDisplayStyles.reviewChip}
-                                        />
-                                        <Chip
-                                          icon={<TrendingUp />}
-                                          label={`Total Price: ₹${rating.productRequestId.totalPrice?.toFixed(2) ?? 'N/A'}`}
-                                          variant="outlined"
-                                          sx={productDisplayStyles.reviewChip}
-                                        />
-                                      </Stack>
+                                      <Chip 
+                                        icon={<Schedule />}
+                                        label={formatDate(rating.productRequestId.createdAt)}
+                                        variant="outlined"
+                                        sx={productDisplayStyles.reviewChip}
+                                      />
+                                    </Stack>
+                                    
+                                    <Box sx={{ mb: 3 }}>
+                                      {renderCustomStars2(rating.rating, 28)}
                                     </Box>
-                                  </Stack>
-                                </Card>
-                              </Fade>
-                            </Grid>
+                                    
+                                    <Typography 
+                                      variant="body1" 
+                                      sx={productDisplayStyles.reviewText}
+                                    >
+                                      {rating.review || "No review provided."}
+                                    </Typography>
+
+                                    <Stack direction="row" spacing={3} flexWrap="wrap">
+                                      <Chip
+                                        icon={<AttachMoney />}
+                                        label={`Unit Price: ₹${rating.productRequestId.unitPrice?.toFixed(2) ?? 'N/A'}`}
+                                        variant="outlined"
+                                        sx={productDisplayStyles.reviewChip}
+                                      />
+                                      <Chip
+                                        icon={<Description />}
+                                        label={`Quantity: ${rating.productRequestId.quantity}`}
+                                        variant="outlined"
+                                        sx={productDisplayStyles.reviewChip}
+                                      />
+                                      <Chip
+                                        icon={<TrendingUp />}
+                                        label={`Total Price: ₹${rating.productRequestId.totalPrice?.toFixed(2) ?? 'N/A'}`}
+                                        variant="outlined"
+                                        sx={productDisplayStyles.reviewChip}
+                                      />
+                                    </Stack>
+                                  </Box>
+                                </Stack>
+                              </Card>
+                            </Fade>
                           ))}
-                        </Grid>
+                        </Stack>
                       )}
                     </>
                   )}
