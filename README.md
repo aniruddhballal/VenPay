@@ -171,7 +171,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 220: Reduce number of exports from expandCardStyles.ts
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 226: Redundant styling in expandCardStyles.ts
-- [x] TASK 227: Image edit - onclick - it reloads preview before selecting image
+- [x] TASK 227: Premature editing state activation: Image edit - onclick - it reloads preview before selecting image
 
 </details>
 
