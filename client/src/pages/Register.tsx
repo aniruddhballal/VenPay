@@ -2,7 +2,7 @@ import { Box, Typography, Paper, Fade, Grow } from "@mui/material";
 import { Link } from "react-router-dom";
 
 // ==== FORM LOGIC + CUSTOM HOOK ====
-import { useRegister } from "../hooks/useRegister";
+import { useRegister } from "../hooks";
 
 // ===== COMPONENTS =====
 import { AuthLogo } from "../components/AuthLogo";

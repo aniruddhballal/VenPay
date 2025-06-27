@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import api from "../api";
-import { setUser } from "../store/authSlice";
+import api from "../../api";
+import { setUser } from "../../store/authSlice";
 
 export function useRegister() {
   const [email, setEmail] = useState("");
