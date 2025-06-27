@@ -179,6 +179,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 228: the save/cancel buttons of inline editing -> the glossy matt style can be used on the tab interface of accepted/pending/declined - requests (the one that had the black colour style before)
 - [x] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
 - [x] TASK 234: Delete Product Image - right after uploading initially while creating product / while updating/editing the image details
+- [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
 
 </details>
 
