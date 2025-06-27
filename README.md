@@ -256,6 +256,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
 - [ ] TASK 231: Deploy app
 - [ ] TASK 234: Delete Product Image functionality - right after uploading initially while creating product / while updating/editing the image details
+- [ ] TASK 238: "Back to Dashboard" and "Back to Profile" Buttons exist on opposite sides - confusing. streamline. 
 
 </details>
 
