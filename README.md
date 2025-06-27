@@ -169,6 +169,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 
 <details>
 <summary>🚧 Ongoing</summary>
+
 - [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
 - [x] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 - [x] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
