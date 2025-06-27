@@ -165,6 +165,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?)
 - [x] TASK 219: Inline hover edit UI can be wayyyyy better.
 - [x] TASK 220: Review and analyse expandCardStyles.ts
+ -[x] TASK 221: Hook Barrel: codesplit useProfileEditor.ts
 
 </details>
 
