@@ -1,7 +1,7 @@
 import { Box, TextField, Button, InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
-import { authFormStyles } from "../styles/loginStyles";
+import { authFormStyles } from "../../styles/loginStyles";
 
 type Props = {
   email: string;

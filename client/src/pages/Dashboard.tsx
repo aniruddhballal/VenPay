@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 
-import ConnectingLines from './ConnectingLines'; // adjust path if needed
+import AnimatedLines from '../components/Partials/AnimatedLines'; // adjust path if needed
 
 import { useSelector, useDispatch } from "react-redux";
 import { BusinessCenter, RequestPage, Payment, Inventory, AccountCircle } from "@mui/icons-material";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import ProductManagement from "./ProductManagement";
-import ProductList from "./ProductList";
-import ProductRequests from "./ProductRequests";
-import PaymentRequests from "./PaymentRequests";
+import ProductManagement from "../components/Partials/ProductManagement";
+import ProductList from "../components/Partials/ProductList";
+import ProductRequests from "../components/Partials/ProductRequests";
+import PaymentRequests from "../components/Partials/PaymentRequests";
 import { toast } from "react-toastify";
 import { setUser, logout, setLoading, setInitialized } from "../store/authSlice";
 
@@ -121,7 +121,7 @@ export default function Dashboard() {
   return (
     <DashboardContainer>
     <div style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, width: '100%', height: '100%' }}>
-      <ConnectingLines />
+      <AnimatedLines />
     </div>      
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       

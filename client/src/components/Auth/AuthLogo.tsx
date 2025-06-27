@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
 // ===== STYLES SECTION =====
-import { authLogoStyles } from "../styles/loginStyles";
+import { authLogoStyles } from "../../styles/loginStyles";
 
 export const AuthLogo = () => (
   <Box sx={authLogoStyles.logoContainer}>

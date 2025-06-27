@@ -5,9 +5,9 @@ import { Box, Typography, Paper, Fade, Grow } from "@mui/material";
 import { useLogin } from "../hooks";
 
 // ===== COMPONENTS =====
-import { AuthLogo } from "../components/AuthLogo";
-import { AuthForm } from "../components/AuthForm";
-import { ErrorMessage } from "../components/ErrorMessage";
+import { AuthLogo } from "../components/Auth/AuthLogo";
+import { AuthForm } from "../components/Auth/LoginForm";
+import { ErrorMessage } from "../components/Auth/ErrorMessage";
 
 // ===== STYLES SECTION =====
 import { loginStyles } from '../styles/loginStyles';

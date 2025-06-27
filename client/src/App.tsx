@@ -8,7 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import ProductDisplay from "./pages/ProductDisplay";
 import UserDisplay from "./pages/UserDisplay";
 import EditProfile from "./pages/EditProfile";
-import AuthProvider from "./components/AuthProvider";
+import AuthProvider from "./components/Auth/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { store } from "./store";

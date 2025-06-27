@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 import { useRegister } from "../hooks";
 
 // ===== COMPONENTS =====
-import { AuthLogo } from "../components/AuthLogo";
-import { RegisterForm } from "../components/RegisterForm";
-import { ErrorMessage } from "../components/ErrorMessage";
+import { AuthLogo } from "../components/Auth/AuthLogo";
+import { RegisterForm } from "../components/Auth/RegisterForm";
+import { ErrorMessage } from "../components/Auth/ErrorMessage";
 
 // ===== STYLES SECTION =====
 import { registerStyles } from "../styles/registerStyles";

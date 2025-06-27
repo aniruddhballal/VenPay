@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const CurvedConnectingLines = () => {
+const AnimatedLines = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [shouldDisappear, setShouldDisappear] = useState(false);
   const [shouldEnhanceMain, setShouldEnhanceMain] = useState(false);
@@ -337,4 +337,4 @@ const CurvedConnectingLines = () => {
   );
 };
 
-export default CurvedConnectingLines;
+export default AnimatedLines;

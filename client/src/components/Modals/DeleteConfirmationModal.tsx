@@ -9,7 +9,7 @@ import {
   GlobalStyles 
 } from '@mui/material';
 import { AlertTriangle, X } from 'lucide-react';
-import { deleteConfirmationModalStyles } from '../styles/deleteConfirmationModalStyles';
+import { deleteConfirmationModalStyles } from '../../styles/deleteConfirmationModalStyles';
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;

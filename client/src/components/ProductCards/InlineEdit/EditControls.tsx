@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Typography, Chip, Tooltip } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { StyledButton } from './StyledButton';
-import { actionButtonStyles } from '../styles/expandCardStyles';
+import { StyledButton } from '../../Buttons/StyledButton';
+import { actionButtonStyles } from '../../../styles/expandCardStyles';
 
 interface EditControlsProps {
   onSave: () => void;

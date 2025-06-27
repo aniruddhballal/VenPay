@@ -1,9 +1,9 @@
 // components/AuthProvider.tsx
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser, setInitialized, setLoading } from '../store/authSlice';
-import type { RootState } from '../store';
-import api from '../api';
+import { setUser, setInitialized, setLoading } from '../../store/authSlice';
+import type { RootState } from '../../store';
+import api from '../../api';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();

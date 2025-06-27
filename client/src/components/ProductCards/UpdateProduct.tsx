@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Grow, Tooltip, IconButton, Avatar, CircularProgress } from '@mui/material';
 import { Check, Close, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
 
-import { StyledButton } from "./StyledButton";
-import { InlineEditField } from "./InlineEditField";
-import { ProductEditorHooks } from '../hooks';
+import { StyledButton } from "../Buttons/StyledButton";
+import { InlineEditField } from "./InlineEdit/InlineEditField";
+import { ProductEditorHooks } from '../../hooks';
 
 import {
   imageStyles,
@@ -13,7 +13,7 @@ import {
   priceStyles,
   descriptionStyles,
   actionButtonStyles
-} from '../styles/expandCardStyles';
+} from '../../styles/expandCardStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;

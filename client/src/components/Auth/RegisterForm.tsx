@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, MenuItem, TextField, InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { registerFormStyles } from "../styles/registerStyles";
+import { registerFormStyles } from "../../styles/registerStyles";
 
 export function RegisterForm({
   email, setEmail,
