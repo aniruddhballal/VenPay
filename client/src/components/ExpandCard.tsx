@@ -1,4 +1,3 @@
-// components/ExpandCard.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip,
@@ -9,16 +8,12 @@ import { StyledButton } from "./StyledButton";
 
 import { ProductEditorHooks } from '../hooks';
 
-import { imageSectionSx, backgroundImageOrPlaceholderSx, uploadAvatarSx, uploadTextSx, uploadCaptionSx,
-  editOverlayTextSx, editOverlayAvatarSx, editOverlaySx, imageEditingOverlaySx, imageEditingOverlayInnerSx,
-   saveButtonSx, cancelButtonSx, nameMetaChipSx, nameMetaBarSx, nameTextFieldSx, nameSectionSx, basicInfoContainerStyle,
-   nameEditorActionsRowSx, nameSaveButtonSx, nameCancelButtonSx, editIndicatorTextSx, editIndicatorIconSx,
-   editIndicatorBoxSx, nameDisplayTextSx, nameDisplayPaperSx, priceEditorWrapperSx, priceTextFieldSx, priceMetaBarSx,
-   priceMetaTextSx, priceMetaChipSx, priceActionRowSx, priceSaveButtonSx, priceCancelButtonSx, priceDisplayPaperSx,
-   priceTextSx, priceEditIndicatorSx, priceEditIconSx, priceEditTextSx, detailsContainerSx, descriptionInputSx,
-   descriptionControlBarSx, controlChipSx, saveDescriptionButtonSx, cancelDescriptionButtonSx, 
-   descriptionPreviewPaperSx, descriptionTypographySx, descriptionEditIndicatorSx, descriptionEditIconSx,
-   descriptionEditLabelSx, actionButtonsContainerSx
+import {
+  imageStyles,
+  nameStyles,
+  priceStyles,
+  descriptionStyles,
+  actionButtonsContainer
 } from '../styles/expandCardStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
@@ -123,28 +118,28 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
       {/* Image Section */}
       <Box 
         className="image-section" 
-        sx={imageSectionSx}
+        sx={imageStyles.section}
         onClick={imageEditor.handleImageClick}
       >
         {/* Background Image or Upload Placeholder */}
-          <Box sx={backgroundImageOrPlaceholderSx(product.image)}>
+          <Box sx={imageStyles.backgroundOrPlaceholder(product.image)}>
             {/* Upload placeholder content */}
             {!product.image && (
               <>
-                <Avatar className="upload-icon" sx={uploadAvatarSx}>
+                <Avatar className="upload-icon" sx={imageStyles.uploadAvatar}>
                   <AddPhotoAlternate sx={{ fontSize: 32 }} />
                 </Avatar>
                 <Typography
                   className="upload-text"
                   variant="h6"
-                  sx={uploadTextSx}
+                  sx={imageStyles.uploadText}
                 >
                   Add Product Image
                 </Typography>
 
               <Typography
                 variant="caption"
-                sx={uploadCaptionSx}
+                sx={imageStyles.uploadCaption}
               >
                 Click to upload • JPG, PNG, or GIF
               </Typography>
@@ -152,18 +147,18 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
           )}
         </Box>
 
-        <Box className="edit-overlay" sx={editOverlaySx}>
-          <Avatar sx={editOverlayAvatarSx}>
+        <Box className="edit-overlay" sx={imageStyles.editOverlay}>
+          <Avatar sx={imageStyles.editOverlayAvatar}>
             <CameraAlt sx={{ fontSize: 24 }} />
           </Avatar>
-          <Typography variant="caption" sx={editOverlayTextSx}>
+          <Typography variant="caption" sx={imageStyles.editOverlayText}>
             Click to change image
           </Typography>
         </Box>
 
         <Grow in={editorState.isEditingImage} timeout={300}>
-          <Box sx={imageEditingOverlaySx(editorState.previewUrl)}>
-            <Box sx={imageEditingOverlayInnerSx}>
+          <Box sx={imageStyles.editingOverlay(editorState.previewUrl)}>
+            <Box sx={imageStyles.editingOverlayInner}>
               <Tooltip title="Save image" arrow>
                 <IconButton
                   onClick={(e) => {
@@ -172,7 +167,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                   }}
                   disabled={editorState.uploadingImage}
                   size="large"
-                  sx={saveButtonSx}
+                  sx={imageStyles.saveButton}
                 >
                   {editorState.uploadingImage ? (
                     <CircularProgress size={24} />
@@ -190,7 +185,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                   }}
                   disabled={editorState.uploadingImage}
                   size="large"
-                  sx={cancelButtonSx}
+                  sx={imageStyles.cancelButton}
                 >
                   <Close sx={{ fontSize: 24 }} />
                 </IconButton>
@@ -211,11 +206,11 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
       <div className="content">
         <div
           className="basic-info"
-          style={basicInfoContainerStyle}
+          style={nameStyles.container}
         >
           <Box
             className="name-section"
-            sx={nameSectionSx}
+            sx={nameStyles.section}
           >
             {editorState.isEditingName ? (
               <Grow in={editorState.isEditingName} timeout={300}>
@@ -229,10 +224,10 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                     variant="outlined"
                     placeholder="Enter product name..."
                     inputProps={{ maxLength: MAX_NAME_LENGTH }}
-                    sx={nameTextFieldSx}
+                    sx={nameStyles.textField}
                   />
 
-                  <Box sx={nameMetaBarSx}>
+                  <Box sx={nameStyles.metaBar}>
                     <Typography variant="caption" color="text.secondary">
                       {editorState.editedName.length}/{MAX_NAME_LENGTH} characters
                     </Typography>
@@ -240,17 +235,17 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                       label="Enter to save • Esc to cancel"
                       size="small"
                       variant="filled"
-                      sx={nameMetaChipSx}
+                      sx={nameStyles.metaChip}
                     />
                   </Box>
 
-                  <Box sx={nameEditorActionsRowSx}>
+                  <Box sx={nameStyles.actionsRow}>
                     <Tooltip title="Save changes (Enter)" arrow>
                       <StyledButton
                         variant="original"
                         onClick={nameEditor.handleNameSave}
                         startIcon={<Check />}
-                        sx={nameSaveButtonSx}
+                        sx={nameStyles.saveButton}
                       >
                         Save
                       </StyledButton>
@@ -261,7 +256,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                         variant="original"
                         onClick={nameEditor.handleNameCancel}
                         startIcon={<Close />}
-                        sx={nameCancelButtonSx}
+                        sx={nameStyles.cancelButton}
                       >
                         Cancel
                       </StyledButton>
@@ -271,13 +266,13 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
               </Grow>
             ) : (
               <Fade in={!editorState.isEditingName} timeout={200}>
-                <Paper onClick={nameEditor.handleNameClick} elevation={0} sx={nameDisplayPaperSx}>
-                  <Typography variant="h6" className="name-text" sx={nameDisplayTextSx}>
+                <Paper onClick={nameEditor.handleNameClick} elevation={0} sx={nameStyles.displayPaper}>
+                  <Typography variant="h6" className="name-text" sx={nameStyles.displayText}>
                     {product.name}
                   </Typography>
-                  <Box className="edit-indicator" sx={editIndicatorBoxSx}>
-                    <Edit sx={editIndicatorIconSx} />
-                    <Typography variant="caption" sx={editIndicatorTextSx}>
+                  <Box className="edit-indicator" sx={nameStyles.editIndicator}>
+                    <Edit sx={nameStyles.editIcon} />
+                    <Typography variant="caption" sx={nameStyles.editText}>
                       Click to edit name
                     </Typography>
                   </Box>
@@ -288,7 +283,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
           
           {editorState.isEditingPrice ? (
             <Grow in={editorState.isEditingPrice} timeout={300}>
-              <Box sx={priceEditorWrapperSx}>
+              <Box sx={priceStyles.wrapper}>
                 <TextField
                   fullWidth
                   type="number"
@@ -299,28 +294,28 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                   autoFocus
                   variant="outlined"
                   placeholder="Enter product price..."
-                  sx={priceTextFieldSx}
+                  sx={priceStyles.textField}
                 />
 
-                <Box sx={priceMetaBarSx}>
-                  <Typography variant="caption" color="text.secondary" sx={priceMetaTextSx}>
+                <Box sx={priceStyles.metaBar}>
+                  <Typography variant="caption" color="text.secondary" sx={priceStyles.metaText}>
                     Price in ₹ (minimum: 0)
                   </Typography>
                   <Chip
                     label="Enter to save • Esc to cancel"
                     size="small"
                     variant="filled"
-                    sx={priceMetaChipSx}
+                    sx={priceStyles.metaChip}
                   />
                 </Box>
 
-                <Box sx={priceActionRowSx}>
+                <Box sx={priceStyles.actionRow}>
                   <Tooltip title="Save changes (Enter)" arrow>
                     <StyledButton
                       variant="original"
                       onClick={priceEditor.handlePriceSave}
                       startIcon={<Check />}
-                      sx={priceSaveButtonSx}
+                      sx={priceStyles.saveButton}
                     >
                       Save
                     </StyledButton>
@@ -331,7 +326,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                       variant="original"
                       onClick={priceEditor.handlePriceCancel}
                       startIcon={<Close />}
-                      sx={priceCancelButtonSx}
+                      sx={priceStyles.cancelButton}
                     >
                       Cancel
                     </StyledButton>
@@ -344,15 +339,15 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
               <Paper
                 onClick={priceEditor.handlePriceClick}
                 elevation={0}
-                sx={priceDisplayPaperSx}
+                sx={priceStyles.displayPaper}
               >
-                <Typography variant="h6" className="price-text" sx={priceTextSx}>
+                <Typography variant="h6" className="price-text" sx={priceStyles.displayText}>
                   ₹{product.price.toFixed(2)}
                 </Typography>
 
-                <Box className="edit-indicator" sx={priceEditIndicatorSx}>
-                  <Edit sx={priceEditIconSx} />
-                  <Typography variant="caption" sx={priceEditTextSx}>
+                <Box className="edit-indicator" sx={priceStyles.editIndicator}>
+                  <Edit sx={priceStyles.editIcon} />
+                  <Typography variant="caption" sx={priceStyles.editText}>
                     <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
                       Click to edit price
                     </Box>
@@ -367,7 +362,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
         </div>
         <Box
           className="details"
-          sx={detailsContainerSx(editorState.isEditingDescription, cardInteractions.isHovered)}
+          sx={descriptionStyles.container(editorState.isEditingDescription, cardInteractions.isHovered)}
         >
           {editorState.isEditingDescription ? (
             <Grow in={editorState.isEditingDescription} timeout={300}>
@@ -384,12 +379,12 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                   variant="outlined"
                   placeholder="Enter product description..."
                   inputProps={{ maxLength: MAX_DESCRIPTION_LENGTH }}
-                  sx={descriptionInputSx}
+                  sx={descriptionStyles.input}
                 />
 
                 {cardInteractions.isHovered && (
                   <>
-                    <Box sx={descriptionControlBarSx(cardInteractions.isHovered)}>
+                    <Box sx={descriptionStyles.controlBar(cardInteractions.isHovered)}>
                       <Typography variant="caption" color="text.secondary">
                         {editorState.editedDescription.length}/{MAX_DESCRIPTION_LENGTH} characters
                       </Typography>
@@ -397,7 +392,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                         label="Enter to save • Esc to cancel"
                         size="small"
                         variant="filled"
-                        sx={controlChipSx}
+                        sx={descriptionStyles.controlChip}
                       />
                     </Box>
 
@@ -407,7 +402,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                           variant="original"
                           onClick={descriptionEditor.handleDescriptionSave}
                           startIcon={<Check />}
-                          sx={saveDescriptionButtonSx}
+                          sx={descriptionStyles.saveButton}
                         >
                           Save
                         </StyledButton>
@@ -418,7 +413,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                           variant="original"
                           onClick={descriptionEditor.handleDescriptionCancel}
                           startIcon={<Close />}
-                          sx={cancelDescriptionButtonSx}
+                          sx={descriptionStyles.cancelButton}
                         >
                           Cancel
                         </StyledButton>
@@ -433,19 +428,19 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
               <Paper
                 onClick={descriptionEditor.handleDescriptionClick}
                 elevation={0}
-                sx={descriptionPreviewPaperSx(cardInteractions.isHovered)}
+                sx={descriptionStyles.previewPaper(cardInteractions.isHovered)}
               >
                 <Typography
                   variant="body1"
                   className="desc-text"
-                  sx={descriptionTypographySx(cardInteractions.isHovered)}
+                  sx={descriptionStyles.typography(cardInteractions.isHovered)}
                 >
                   {product.description}
                 </Typography>
 
-                <Box className="edit-indicator" sx={descriptionEditIndicatorSx}>
-                  <Edit sx={descriptionEditIconSx} />
-                  <Typography variant="caption" sx={descriptionEditLabelSx}>
+                <Box className="edit-indicator" sx={descriptionStyles.editIndicator}>
+                  <Edit sx={descriptionStyles.editIcon} />
+                  <Typography variant="caption" sx={descriptionStyles.editLabel}>
                     Click to edit description
                   </Typography>
                 </Box>
@@ -453,7 +448,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
             </Fade>
           )}
         </Box>
-        <div style={actionButtonsContainerSx}>
+        <div style={actionButtonsContainer}>
           <StyledButton
             variant="primary"
             onClick={cardInteractions.handleVisitProduct}
