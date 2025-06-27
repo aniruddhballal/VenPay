@@ -117,6 +117,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 227: Premature editing state activation: Image edit - onclick - it reloads preview before selecting image
 - [x] TASK 229: Review for any leftover redundancy in expandCardStyles.ts
 - [x] TASK 232: Faulty cancel button styles - expandCardStyles.ts
+- [x] TASK 233: Center the character count + hint
 
 </details>
 
@@ -177,7 +178,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 228: the save/cancel buttons of inline editing -> the glossy matt style can be used on the tab interface of accepted/pending/declined - requests (the one that had the black colour style before)
 - [x] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
-- [x] TASK 233: Center the character count + hint
 
 </details>
 
