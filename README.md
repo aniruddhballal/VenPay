@@ -117,6 +117,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 190: unify the tab styling for payment and product requests pages - same import same styles.ts
 - [x] TASK 193: small task: the order of appearance - accepted, pending, declined - is not the same for vendor - user - check if there should be different preferred orders for each or unify both?
 - [x] TASK 194: create a new type of readme.md file - sort the priorities of the tasks, list the tasks currently being worked on, the tasks completed, and the ones that are pending need to have priorities.
+- [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [x] TASK 198: display rating in vendor dashboard - product requests
 - [x] TASK 199: display product image in company dashboard - payment requests
 - [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
@@ -181,7 +182,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <summary>🚧 Ongoing</summary>
 
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
-- [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
 
 </details>
