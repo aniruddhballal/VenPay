@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/api";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
@@ -109,11 +109,10 @@ export default function ProductList() {
     const fetchData = async () => {
       try {
         const [productsRes, requestsRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/products", { withCredentials: true }),
-          axios.get<string[]>("http://localhost:5000/api/requests/company", {
-            withCredentials: true,
-          }),
+          api.get("/products"),
+          api.get<string[]>("/requests/company"),
         ]);
+
         setProducts(productsRes.data);
         setRequestedProducts(new Set(requestsRes.data));
       } catch (err) {
@@ -145,22 +144,20 @@ export default function ProductList() {
     const quantity = quantities[id] || 1;
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/requests",
-        { productId: id, message, quantity },
-        { withCredentials: true }
-      );
-      setRequestedProducts(prev => new Set(prev).add(id));
-      setMessages(prev => {
+      await api.post("/requests", { productId: id, message, quantity });
+      setRequestedProducts((prev) => new Set(prev).add(id));
+      setMessages((prev) => {
         const { [id]: _, ...rest } = prev;
         return rest;
       });
-      setQuantities(prev => {
+
+      setQuantities((prev) => {
         const { [id]: _, ...rest } = prev;
         return rest;
       });
+
       toast.success("Product request sent successfully!");
-    } catch (err: any) {
+      } catch (err: any) {
       console.error("Failed to send request:", err);
       toast.error(err.response?.data?.error || "Failed to send request.");
     }
