@@ -1,11 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, TextField, Typography, Paper, Fade, Grow, Chip, Tooltip,
-  IconButton, Avatar, CircularProgress } from '@mui/material';
-import { Check, Close, Edit, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
+import { Box, Typography, Grow, Tooltip, IconButton, Avatar, CircularProgress } from '@mui/material';
+import { Check, Close, CameraAlt, AddPhotoAlternate } from '@mui/icons-material';
 
 import { StyledButton } from "./StyledButton";
-
+import { InlineEditField } from "./InlineEditField";
 import { ProductEditorHooks } from '../hooks';
 
 import {
@@ -122,20 +121,20 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
         onClick={imageEditor.handleImageClick}
       >
         {/* Background Image or Upload Placeholder */}
-          <Box sx={imageStyles.backgroundOrPlaceholder(product.image)}>
-            {/* Upload placeholder content */}
-            {!product.image && (
-              <>
-                <Avatar className="upload-icon" sx={imageStyles.uploadAvatar}>
-                  <AddPhotoAlternate sx={{ fontSize: 32 }} />
-                </Avatar>
-                <Typography
-                  className="upload-text"
-                  variant="h6"
-                  sx={imageStyles.uploadText}
-                >
-                  Add Product Image
-                </Typography>
+        <Box sx={imageStyles.backgroundOrPlaceholder(product.image)}>
+          {/* Upload placeholder content */}
+          {!product.image && (
+            <>
+              <Avatar className="upload-icon" sx={imageStyles.uploadAvatar}>
+                <AddPhotoAlternate sx={{ fontSize: 32 }} />
+              </Avatar>
+              <Typography
+                className="upload-text"
+                variant="h6"
+                sx={imageStyles.uploadText}
+              >
+                Add Product Image
+              </Typography>
 
               <Typography
                 variant="caption"
@@ -204,250 +203,96 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
       </Box>
       
       <div className="content">
-        <div
-          className="basic-info"
-          style={nameStyles.container}
-        >
-          <Box
-            className="name-section"
-            sx={nameStyles.section}
-          >
-            {editorState.isEditingName ? (
-              <Grow in={editorState.isEditingName} timeout={300}>
-                <Box>
-                  <TextField
-                    fullWidth
-                    value={editorState.editedName}
-                    onChange={(e) => editorState.setEditedName(e.target.value)}
-                    onKeyDown={nameEditor.handleNameKeyPress}
-                    autoFocus
-                    variant="outlined"
-                    placeholder="Enter product name..."
-                    inputProps={{ maxLength: MAX_NAME_LENGTH }}
-                    sx={nameStyles.textField}
-                  />
-
-                  <Box sx={nameStyles.metaBar}>
-                    <Typography variant="caption" color="text.secondary">
-                      {editorState.editedName.length}/{MAX_NAME_LENGTH} characters
-                    </Typography>
-                    <Chip
-                      label="Enter to save • Esc to cancel"
-                      size="small"
-                      variant="filled"
-                      sx={nameStyles.metaChip}
-                    />
-                  </Box>
-
-                  <Box sx={nameStyles.actionsRow}>
-                    <Tooltip title="Save changes (Enter)" arrow>
-                      <StyledButton
-                        variant="original"
-                        onClick={nameEditor.handleNameSave}
-                        startIcon={<Check />}
-                        sx={actionButtonStyles.saveButton}
-                      >
-                        Save
-                      </StyledButton>
-                    </Tooltip>
-
-                    <Tooltip title="Cancel editing (Esc)" arrow>
-                      <StyledButton
-                        variant="original"
-                        onClick={nameEditor.handleNameCancel}
-                        startIcon={<Close />}
-                        sx={actionButtonStyles.cancelButton}
-                      >
-                        Cancel
-                      </StyledButton>
-                    </Tooltip>
-                  </Box>
-                </Box>
-              </Grow>
-            ) : (
-              <Fade in={!editorState.isEditingName} timeout={200}>
-                <Paper onClick={nameEditor.handleNameClick} elevation={0} sx={nameStyles.displayPaper}>
-                  <Typography variant="h6" className="name-text" sx={nameStyles.displayText}>
-                    {product.name}
-                  </Typography>
-                  <Box className="edit-indicator" sx={nameStyles.editIndicator}>
-                    <Edit sx={nameStyles.editIcon} />
-                    <Typography variant="caption" sx={nameStyles.editText}>
-                      Click to edit name
-                    </Typography>
-                  </Box>
-                </Paper>
-              </Fade>
-            )}
-          </Box>
+        <div className="basic-info" style={nameStyles.container}>
+          {/* Name Field */}
+          <InlineEditField
+            value={product.name}
+            editedValue={editorState.editedName}
+            isEditing={editorState.isEditingName}
+            isHovered={cardInteractions.isHovered}
+            onEdit={nameEditor.handleNameClick}
+            onSave={nameEditor.handleNameSave}
+            onCancel={nameEditor.handleNameCancel}
+            onValueChange={editorState.setEditedName}
+            onKeyDown={nameEditor.handleNameKeyPress}
+            inputType="text"
+            placeholder="Enter product name..."
+            maxLength={MAX_NAME_LENGTH}
+            displayComponent={
+              <Typography variant="h6" className="name-text" sx={nameStyles.displayText}>
+                {product.name}
+              </Typography>
+            }
+            editLabel="Click to edit name"
+            containerSx={nameStyles.section}
+            inputSx={nameStyles.textField}
+            displaySx={nameStyles.displayPaper}
+          />
           
-          {editorState.isEditingPrice ? (
-            <Grow in={editorState.isEditingPrice} timeout={300}>
-              <Box sx={priceStyles.wrapper}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  inputProps={{ step: '1', min: '0' }}
-                  value={editorState.editedPrice}
-                  onChange={(e) => editorState.setEditedPrice(e.target.value)}
-                  onKeyDown={priceEditor.handlePriceKeyPress}
-                  autoFocus
-                  variant="outlined"
-                  placeholder="Enter product price..."
-                  sx={priceStyles.textField}
-                />
-
-                <Box sx={priceStyles.metaBar}>
-                  <Typography variant="caption" color="text.secondary" sx={priceStyles.metaText}>
-                    Price in ₹ (minimum: 0)
-                  </Typography>
-                  <Chip
-                    label="Enter to save • Esc to cancel"
-                    size="small"
-                    variant="filled"
-                    sx={priceStyles.metaChip}
-                  />
-                </Box>
-
-                <Box sx={priceStyles.actionRow}>
-                  <Tooltip title="Save changes (Enter)" arrow>
-                    <StyledButton
-                      variant="original"
-                      onClick={priceEditor.handlePriceSave}
-                      startIcon={<Check />}
-                      sx={actionButtonStyles.saveButton}
-                    >
-                      Save
-                    </StyledButton>
-                  </Tooltip>
-
-                  <Tooltip title="Cancel editing (Esc)" arrow>
-                    <StyledButton
-                      variant="original"
-                      onClick={priceEditor.handlePriceCancel}
-                      startIcon={<Close />}
-                      sx={actionButtonStyles.cancelButton}
-                    >
-                      Cancel
-                    </StyledButton>
-                  </Tooltip>
-                </Box>
-              </Box>
-            </Grow>
-          ) : (
-            <Fade in={!editorState.isEditingPrice} timeout={200}>
-              <Paper
-                onClick={priceEditor.handlePriceClick}
-                elevation={0}
-                sx={priceStyles.displayPaper}
-              >
-                <Typography variant="h6" className="price-text" sx={priceStyles.displayText}>
-                  ₹{product.price.toFixed(2)}
-                </Typography>
-
-                <Box className="edit-indicator" sx={priceStyles.editIndicator}>
-                  <Edit sx={priceStyles.editIcon} />
-                  <Typography variant="caption" sx={priceStyles.editText}>
-                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                      Click to edit price
-                    </Box>
-                    <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
-                      Tap to edit
-                    </Box>
-                  </Typography>
-                </Box>
-              </Paper>
-            </Fade>
-          )}
+          {/* Price Field */}
+          <InlineEditField
+            value={product.price}
+            editedValue={editorState.editedPrice}
+            isEditing={editorState.isEditingPrice}
+            isHovered={cardInteractions.isHovered}
+            onEdit={priceEditor.handlePriceClick}
+            onSave={priceEditor.handlePriceSave}
+            onCancel={priceEditor.handlePriceCancel}
+            onValueChange={editorState.setEditedPrice}
+            onKeyDown={priceEditor.handlePriceKeyPress}
+            inputType="number"
+            placeholder="Enter product price..."
+            step="1"
+            min="0"
+            displayComponent={
+              <Typography variant="h6" className="price-text" sx={priceStyles.displayText}>
+                ₹{product.price.toFixed(2)}
+              </Typography>
+            }
+            editLabel="Click to edit price"
+            hintText="Enter to save • Esc to cancel"
+            containerSx={priceStyles.wrapper}
+            inputSx={priceStyles.textField}
+            displaySx={priceStyles.displayPaper}
+          />
         </div>
+
+        {/* Description Field */}
         <Box
           className="details"
           sx={descriptionStyles.container(editorState.isEditingDescription, cardInteractions.isHovered)}
         >
-          {editorState.isEditingDescription ? (
-            <Grow in={editorState.isEditingDescription} timeout={300}>
-              <Box>
-                <TextField
-                  inputRef={editorState.descriptionInputRef}
-                  fullWidth
-                  multiline
-                  rows={4}
-                  value={editorState.editedDescription}
-                  onChange={(e) => editorState.setEditedDescription(e.target.value)}
-                  onKeyDown={descriptionEditor.handleDescriptionKeyPress}
-                  autoFocus
-                  variant="outlined"
-                  placeholder="Enter product description..."
-                  inputProps={{ maxLength: MAX_DESCRIPTION_LENGTH }}
-                  sx={descriptionStyles.input}
-                />
-
-                {cardInteractions.isHovered && (
-                  <>
-                    <Box sx={descriptionStyles.controlBar(cardInteractions.isHovered)}>
-                      <Typography variant="caption" color="text.secondary">
-                        {editorState.editedDescription.length}/{MAX_DESCRIPTION_LENGTH} characters
-                      </Typography>
-                      <Chip
-                        label="Enter to save • Esc to cancel"
-                        size="small"
-                        variant="filled"
-                        sx={descriptionStyles.controlChip}
-                      />
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 2, mt: 0 }}>
-                      <Tooltip title="Save changes (Enter)" arrow>
-                        <StyledButton
-                          variant="original"
-                          onClick={descriptionEditor.handleDescriptionSave}
-                          startIcon={<Check />}
-                          sx={actionButtonStyles.saveButton}
-                        >
-                          Save
-                        </StyledButton>
-                      </Tooltip>
-
-                      <Tooltip title="Cancel editing (Esc)" arrow>
-                        <StyledButton
-                          variant="original"
-                          onClick={descriptionEditor.handleDescriptionCancel}
-                          startIcon={<Close />}
-                          sx={actionButtonStyles.cancelButton}
-                        >
-                          Cancel
-                        </StyledButton>
-                      </Tooltip>
-                    </Box>
-                  </>
-                )}
-              </Box>
-            </Grow>
-          ) : (
-            <Fade in={!editorState.isEditingDescription} timeout={200}>
-              <Paper
-                onClick={descriptionEditor.handleDescriptionClick}
-                elevation={0}
-                sx={descriptionStyles.previewPaper(cardInteractions.isHovered)}
+          <InlineEditField
+            value={product.description}
+            editedValue={editorState.editedDescription}
+            isEditing={editorState.isEditingDescription}
+            isHovered={cardInteractions.isHovered}
+            onEdit={descriptionEditor.handleDescriptionClick}
+            onSave={descriptionEditor.handleDescriptionSave}
+            onCancel={descriptionEditor.handleDescriptionCancel}
+            onValueChange={editorState.setEditedDescription}
+            onKeyDown={descriptionEditor.handleDescriptionKeyPress}
+            inputType="textarea"
+            placeholder="Enter product description..."
+            maxLength={MAX_DESCRIPTION_LENGTH}
+            rows={4}
+            displayComponent={
+              <Typography
+                variant="body1"
+                className="desc-text"
+                sx={descriptionStyles.typography(cardInteractions.isHovered)}
               >
-                <Typography
-                  variant="body1"
-                  className="desc-text"
-                  sx={descriptionStyles.typography(cardInteractions.isHovered)}
-                >
-                  {product.description}
-                </Typography>
-
-                <Box className="edit-indicator" sx={descriptionStyles.editIndicator}>
-                  <Edit sx={descriptionStyles.editIcon} />
-                  <Typography variant="caption" sx={descriptionStyles.editLabel}>
-                    Click to edit description
-                  </Typography>
-                </Box>
-              </Paper>
-            </Fade>
-          )}
+                {product.description}
+              </Typography>
+            }
+            editLabel="Click to edit description"
+            inputRef={editorState.descriptionInputRef}
+            inputSx={descriptionStyles.input}
+            displaySx={descriptionStyles.previewPaper(cardInteractions.isHovered)}
+          />
         </Box>
+
+        {/* Action Buttons */}
         <Box sx={actionButtonStyles.container}>
           <StyledButton
             variant="primary"
