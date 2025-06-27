@@ -24,7 +24,8 @@ export const useImageEditor = (
   onFieldUpdate: (id: string, field: string, value: string | number) => void
 ) => {
   const handleImageClick = () => {
-    setIsEditingImage(true);
+    // Remove this line - don't set editing state until file is selected
+    // setIsEditingImage(true);
     if (imageInputRef.current) {
       imageInputRef.current.click();
     }
@@ -40,6 +41,9 @@ export const useImageEditor = (
       setSelectedImage(e.target.files[0]);
       const url = URL.createObjectURL(e.target.files[0]);
       setPreviewUrl(url);
+      
+      // Set editing state only after a file is actually selected
+      setIsEditingImage(true);
     }
   };
 
@@ -63,10 +67,10 @@ export const useImageEditor = (
           withCredentials: true,
         }
       );
-      
+     
       await onFieldUpdate(product._id, 'image', res.data.image);
       toast.success("Product image updated!");
-      
+     
       setSelectedImage(null);
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
