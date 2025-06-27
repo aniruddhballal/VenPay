@@ -1,9 +1,9 @@
 import { useState } from "react";
-import api from "../api";
+import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { setUser } from "../store/authSlice";
+import { setUser } from "../../store/authSlice";
 
 export const useLogin = () => {
   const [email, setEmail] = useState("");

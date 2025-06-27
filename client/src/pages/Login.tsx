@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Box, Typography, Paper, Fade, Grow } from "@mui/material";
 
 // ==== FORM LOGIC + CUSTOM HOOK ====
-import { useLogin } from "../hooks/useLogin";
+import { useLogin } from "../hooks";
 
 // ===== COMPONENTS =====
 import { AuthLogo } from "../components/AuthLogo";
