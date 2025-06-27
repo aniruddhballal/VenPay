@@ -181,7 +181,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <summary>🚧 Ongoing</summary>
 
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
-- [ ] TASK 197: Make use of centralised axios - api.ts throughout the whole app
+- [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
 
 </details>
