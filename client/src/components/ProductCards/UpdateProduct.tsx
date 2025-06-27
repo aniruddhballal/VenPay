@@ -135,7 +135,6 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
               >
                 Add Product Image
               </Typography>
-
               <Typography
                 variant="caption"
                 sx={imageStyles.uploadCaption}
@@ -151,7 +150,7 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
             <CameraAlt sx={{ fontSize: 24 }} />
           </Avatar>
           <Typography variant="caption" sx={imageStyles.editOverlayText}>
-            Click to change image
+            {!product.image ? "Click to add image" : "Click to change image"}
           </Typography>
         </Box>
 
