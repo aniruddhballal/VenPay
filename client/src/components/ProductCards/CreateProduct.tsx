@@ -378,7 +378,7 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
         {/* Action Buttons */}
         <Box sx={actionButtonStyles.container}>
           <StyledButton
-            variant="primary"
+            variant="original"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => onSubmit(e)}
             disabled={!isFormValid() || isSubmitting}
             sx={{ 
@@ -395,7 +395,7 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             {isSubmitting ? 'Creating...' : 'Create'}
           </StyledButton>
           <StyledButton
-            variant="original"
+            variant="danger"
             onClick={onCancel}
             disabled={isSubmitting}
             sx={{ fontSize: '0.875rem' }}
