@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api/api";
 import { toast } from "react-toastify";
 import { resetInitialized, setUser } from "../../store/authSlice";
 import { fetchUserById, clearUser } from "../../store/userSlice";
@@ -75,16 +75,11 @@ export const useEditProfileSubmit = () => {
         formData.append('newPassword', newPassword);
       }
 
-      const response = await axios.put(
-        `http://localhost:5000/api/users/${id as string}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+      const response = await api.put(`/users/${id as string}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       toast.success("Profile updated successfully!");
       
