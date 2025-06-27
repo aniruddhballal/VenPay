@@ -172,7 +172,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [ ] TASK 204: check if the components like reviews and other details dont show false/wrong data while theyre actually loading - add loading screens or skeletons.
 - [ ] TASK 206: check all the browser error logs and the the gap in the heading of the reiews - it will all be changed when i compactify stuff. this is first to do man! annd, the deprecated warnings and the migration upgrade errors.
 - [ ] TASK 207: reviewStyles.ts improv
-- [x] TASK 209: after task 208, refer and stylise the AddProductCard component too
+- [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ]after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 214: further simplify and disintegrate the remaining.css
 - [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?)
 - [x] TASK 219: Inline hover edit UI can be better - match colours and borders and hover effects of sliding from a side (airbnb)
