@@ -145,7 +145,14 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
           )}
         </Box>
 
-        <Box className="edit-overlay" sx={imageStyles.editOverlay}>
+        <Box className="edit-overlay"
+          sx={{
+            ...imageStyles.editOverlay,
+            ...((!product.image) && {
+              backgroundColor: 'rgb(0, 0, 0) !important'
+            })
+          }}
+        >
           <Avatar sx={imageStyles.editOverlayAvatar}>
             <CameraAlt sx={{ fontSize: 24 }} />
           </Avatar>
