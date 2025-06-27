@@ -243,50 +243,6 @@ export const nameStyles = {
     gap: 2,
   } as SxProps<Theme>,
 
-  saveButton: {
-    flex: 1,
-    mb: 2,
-    fontSize: '0.875rem',
-    height: '35px',
-    fontWeight: '400',
-    borderRadius: '12px',
-    background: '#ffffff',
-    color: '#2563eb',
-    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-    '&:hover': {
-      background: '#f0f4ff',
-      boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
-      transform: 'translateY(-2px)',
-    },
-    '&:active': {
-      background: '#e0eaff',
-      boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-      transform: 'translateY(0)',
-    },
-  } as SxProps<Theme>,
-
-  cancelButton: {
-    flex: 1,
-    mb: 2,
-    fontSize: '0.875rem',
-    height: '35px',
-    fontWeight: '400',
-    borderRadius: '12px',
-    background: '#ffffff',
-    color: '#b91c1c',
-    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-    '&:hover': {
-      background: '#fef2f2',
-      boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
-      transform: 'translateY(-2px)',
-    },
-    '&:active': {
-      background: '#fee2e2',
-      boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-      transform: 'translateY(0)',
-    },
-  } as SxProps<Theme>,
-
   displayPaper: {
     p: 0,
     cursor: 'pointer',
@@ -433,52 +389,6 @@ export const priceStyles = {
     },
   } as SxProps<Theme>,
 
-  saveButton: {
-    flex: 1,
-    mb: 2,
-    fontSize: { xs: '0.8rem', sm: '0.875rem' },
-    height: { xs: '32px', sm: '35px' },
-    fontWeight: '400',
-    borderRadius: '12px',
-    background: '#ffffff',
-    color: '#2563eb',
-    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-    minWidth: { xs: '80px', sm: 'auto' },
-    '&:hover': {
-      background: '#f0f4ff',
-      boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
-      transform: { xs: 'none', sm: 'translateY(-2px)' },
-    },
-    '&:active': {
-      background: '#e0eaff',
-      boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-      transform: 'translateY(0)',
-    },
-  } as SxProps<Theme>,
-
-  cancelButton: {
-    flex: 1,
-    mb: 2,
-    fontSize: { xs: '0.8rem', sm: '0.875rem' },
-    height: { xs: '32px', sm: '35px' },
-    fontWeight: '400',
-    borderRadius: '12px',
-    background: '#ffffff',
-    color: '#b91c1c',
-    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-    minWidth: { xs: '80px', sm: 'auto' },
-    '&:hover': {
-      background: '#fef2f2',
-      boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
-      transform: { xs: 'none', sm: 'translateY(-2px)' },
-    },
-    '&:active': {
-      background: '#fee2e2',
-      boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-      transform: 'translateY(0)',
-    },
-  } as SxProps<Theme>,
-
   displayPaper: {
     p: { xs: 1, sm: 0 },
     cursor: 'pointer',
@@ -610,49 +520,6 @@ export const descriptionStyles = {
     alignSelf: { xs: 'center', sm: 'auto' },
   } as SxProps<Theme>,
 
-  saveButton: {
-    flex: 1,
-    fontSize: '0.875rem',
-    height: '35px',
-    fontWeight: '400',
-    borderRadius: '12px',
-    background: '#ffffff',
-    color: '#2563eb',
-    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-    '&:hover': {
-      background: '#f0f4ff',
-      boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
-      transform: 'translateY(-2px)',
-    },
-    '&:active': {
-      background: '#e0eaff',
-      boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
-      transform: 'translateY(0)',
-    },
-  } as SxProps<Theme>,
-
-  cancelButton: {
-    flex: 1,
-    mb: 2,
-    fontSize: '0.875rem',
-    height: '35px',
-    fontWeight: '400',
-    borderRadius: '12px',
-    background: '#ffffff',
-    color: '#b91c1c',
-    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-    '&:hover': {
-      background: '#fef2f2',
-      boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
-      transform: 'translateY(-2px)',
-    },
-    '&:active': {
-      background: '#fee2e2',
-      boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-      transform: 'translateY(0)',
-    },
-  } as SxProps<Theme>,
-
   previewPaper: (isHovered: boolean): SxProps<Theme> => ({
     p: 0,
     cursor: 'pointer',
@@ -724,8 +591,51 @@ export const descriptionStyles = {
 };
 
 // Action Buttons Container
-export const actionButtonsContainer: React.CSSProperties = {
-  display: 'flex',
-  gap: '0.5rem',
-  marginTop: '1rem',
+export const actionButtonsStyles = {
+  container: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginTop: '1rem',
+  } as SxProps<Theme>,
+  
+  saveButton: {
+    flex: 1,
+    mb: 2,
+    fontSize: { xs: '0.8rem', sm: '0.875rem' },
+    height: { xs: '32px', sm: '35px' },
+    fontWeight: '400',
+    borderRadius: '12px',
+    background: '#ffffff',
+    color: '#2563eb',
+    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+    minWidth: { xs: '80px', sm: 'auto' },
+    '&:hover': {
+      background: '#f0f4ff',
+      boxShadow: '0 8px 25px rgba(59, 130, 246, 0.5)',
+      transform: { xs: 'none', sm: 'translateY(-2px)' },
+    },
+    '&:active': {
+      background: '#e0eaff',
+      boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+      transform: 'translateY(0)',
+    },
+  } as SxProps<Theme>,
+
+    cancelButton: {
+    width: 56,
+    height: 56,
+    background: alpha('#ffffff', 0.95),
+    color: '#dc2626',
+    border: '2px solid rgba(220, 38, 38, 0.3)',
+    backdropFilter: 'blur(8px)',
+    '&:hover': {
+      background: alpha('#ffffff', 1),
+      transform: 'scale(1.1)',
+      boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
+    },
+    '&:disabled': {
+      background: alpha('#f5f5f5', 0.9),
+      color: '#9ca3af',
+    },
+  } as SxProps<Theme>,
 };

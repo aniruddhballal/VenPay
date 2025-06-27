@@ -13,7 +13,7 @@ import {
   nameStyles,
   priceStyles,
   descriptionStyles,
-  actionButtonsContainer
+  actionButtonsStyles
 } from '../styles/expandCardStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
@@ -245,7 +245,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                         variant="original"
                         onClick={nameEditor.handleNameSave}
                         startIcon={<Check />}
-                        sx={nameStyles.saveButton}
+                        sx={actionButtonsStyles.saveButton}
                       >
                         Save
                       </StyledButton>
@@ -256,7 +256,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                         variant="original"
                         onClick={nameEditor.handleNameCancel}
                         startIcon={<Close />}
-                        sx={nameStyles.cancelButton}
+                        sx={actionButtonsStyles.cancelButton}
                       >
                         Cancel
                       </StyledButton>
@@ -315,7 +315,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                       variant="original"
                       onClick={priceEditor.handlePriceSave}
                       startIcon={<Check />}
-                      sx={priceStyles.saveButton}
+                      sx={actionButtonsStyles.saveButton}
                     >
                       Save
                     </StyledButton>
@@ -326,7 +326,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                       variant="original"
                       onClick={priceEditor.handlePriceCancel}
                       startIcon={<Close />}
-                      sx={priceStyles.cancelButton}
+                      sx={actionButtonsStyles.cancelButton}
                     >
                       Cancel
                     </StyledButton>
@@ -402,7 +402,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                           variant="original"
                           onClick={descriptionEditor.handleDescriptionSave}
                           startIcon={<Check />}
-                          sx={descriptionStyles.saveButton}
+                          sx={actionButtonsStyles.saveButton}
                         >
                           Save
                         </StyledButton>
@@ -413,7 +413,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
                           variant="original"
                           onClick={descriptionEditor.handleDescriptionCancel}
                           startIcon={<Close />}
-                          sx={descriptionStyles.cancelButton}
+                          sx={actionButtonsStyles.cancelButton}
                         >
                           Cancel
                         </StyledButton>
@@ -448,7 +448,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
             </Fade>
           )}
         </Box>
-        <div style={actionButtonsContainer}>
+        <Box sx={actionButtonsStyles.container}>
           <StyledButton
             variant="primary"
             onClick={cardInteractions.handleVisitProduct}
@@ -463,7 +463,7 @@ export const ExpandCard: React.FC<ExpandCardProps> = ({
           >
             🗑️ Delete
           </StyledButton>
-        </div>
+        </Box>
       </div>
     </div>
   );
