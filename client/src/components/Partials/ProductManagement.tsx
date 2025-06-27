@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef} from "react";
 import { toast } from "react-toastify";
 
-import { ExpandCard } from "../ProductCards/UpdateProduct";
-import { AddProductCard } from "../ProductCards/CreateProduct";
+import { UpdateProduct } from "../ProductCards/UpdateProduct";
+import { CreateProduct } from "../ProductCards/CreateProduct";
 import api from "../../api/api";
 
 import DeleteConfirmationModal from '../Modals/DeleteConfirmationModal';
@@ -257,7 +257,7 @@ return (
       
       <div className="cards-grid-small">
         {products.map((product) => (
-          <ExpandCard
+          <UpdateProduct
             key={product._id}
             product={product}
             onDelete={handleDelete}
@@ -266,7 +266,7 @@ return (
         ))}
         
         {/* Add Product Card as the last item in the grid */}
-        <AddProductCard
+        <CreateProduct
           form={form}
           onFormChange={handleChange}
           onSubmit={handleSubmit}
