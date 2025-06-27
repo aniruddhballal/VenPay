@@ -118,6 +118,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 229: Review for any leftover redundancy in expandCardStyles.ts
 - [x] TASK 232: Faulty cancel button styles - expandCardStyles.ts
 - [x] TASK 233: Center the character count + hint
+- [x] TASK 237: Delete product confirmation modal - can be improved/stylised
 
 </details>
 
@@ -181,7 +182,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 234: Delete Product Image - right after uploading initially while creating product / while updating/editing the image details
 - [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
 - [x] TASK 236: Organisational - sort file structure - components vs pages, styles etc
-- [x] TASK 237: Delete product confirmation modal - can be improved/stylised
 
 </details>
 
