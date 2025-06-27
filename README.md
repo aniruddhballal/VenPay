@@ -66,8 +66,10 @@
 - [x] TASK 92: auto-saving of product details when mouse leaves/stops hovering over the product card
 - [x] TASK 93: MUI-fied CSS obviously
 - [x] TASK 94: a lot of other small bugs, debugs wtv
+- [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
 - [x] TASK 96: NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
 - [x] TASK 98: issues with the calendar (on non-net30 payments)
+- [x] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 - [x] TASK 100: update image - better the ui
 - [x] TASK 102: find out why the code is still looking for deleted products' ids - check backend product deletion logic?
 - [x] TASK 103: add back to dashboard button on the productdetails page - add link to visit vendor profile from product details page
@@ -96,12 +98,15 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 143: infinite loop routing issue (dahsboard->profile->editprofile)
 - [x] TASK 149: better the review giving UI
 - [x] TASK 150: appearance of product/payment requests - annoying-slide-aall-the-way-to-the-bottom
+- [x] TASK 154: addproductcard ui from updateproductcard's
+- [x] TASK 158: minimumprice limit in input/edit field of price
 - [x] TASK 161: implementing profile photo patch now: wait, let me think about where all this change will ripple into...
 - [x] TASK 162: dashboard (profile button can be replaced with profile photo, same functionality onclick).
 - [x] TASK 169: add styles to editprofile page
 - [x] TASK 170: want dashboard to load with new username and deets after "save changes" from editprofile.
 - [x] TASK 172: infinite loop - stacking pages - navigate -1
 - [x] TASK 173: cant access the editprofile of another user directly, but if you copy paste url, it isnt protected. it lets any logged in user edit it.
+- [x] TASK 174: add product card vs edit product card
 - [x] TASK 175: break productmanagement into MORE COMPONENTS MAN its 1700 lines or something
 - [x] TASK 176: CONNECTINGLINES.TSX - MAKE IT ERROR FREE.
 - [x] TASK 177: combine paymentRequestsStyles-fromremainingcss.css along with PaymentRequests.tsx - and then resplit the styles. - understand what the buttonprops issue actually is. - COMBINATION DONE, RE-SPLITTING IS LEFT NOW.
@@ -116,6 +121,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 199: display product image in company dashboard - payment requests
 - [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
 - [x] TASK 208: break the ExpandCard component further
+- [x] TASK 209: [ SAME AS TASKS - 95, 99, 154, 174, 235, 240 ] after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 217: ISSUE WITH PRODUCT CREATION AINNOWAY - NO PRODUCT IMAGE?! works on "update product image" tho - check backend routes - done, apparently random backend one-off issue
 - [x] TASK 218: Hook Barrel: break useProductEditor.ts hook into its subcomponents
 - [x] TASK 220: Reduce number of exports from expandCardStyles.ts
@@ -128,9 +134,11 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 229: Review for any leftover redundancy in expandCardStyles.ts
 - [x] TASK 232: Faulty cancel button styles - expandCardStyles.ts
 - [x] TASK 233: Center the character count + hint
+- [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
 - [x] TASK 236: Organisational - sort file structure - components vs pages, styles etc
 - [x] TASK 237: Delete product confirmation modal - can be improved/stylised
 - [X] TASK 239: Grid, Grid2, UnstableGrid - MUI-TS issues - resolve by using Box/Stack
+- [x] TASK 240: rename expandcard to updateproduct, addproductcard to createproduct - unify the styles
 
 </details>
 
@@ -171,16 +179,9 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <details>
 <summary>🚧 Ongoing</summary>
 
-- [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
-- [x] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
-- [x] TASK 154: addproductcard ui from updateproductcard's
-- [x] TASK 158: minimumprice limit in input/edit field of price
-- [x] TASK 174: add product card vs edit product card
+
 - [ ] TASK 197: Make use of centralised axios - api.ts throughout the whole app
-- [x] TASK 209: [ SAME AS TASKS - 95, 99, 154, 174, 235, 240 ] after task 208, refer and stylise the AddProductCard component too
-- [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
-- [x] TASK 240: rename expandcard to updateproduct, addproductcard to createproduct - unify the styles
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
 
 </details>
