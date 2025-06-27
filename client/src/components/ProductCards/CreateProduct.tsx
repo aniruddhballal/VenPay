@@ -11,7 +11,7 @@ import {
   priceStyles,
   descriptionStyles,
   actionButtonStyles
-} from '../../styles/expandCardStyles';
+} from '../../styles/updateProductStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
@@ -25,8 +25,8 @@ interface CreateProductForm {
 
 interface CreateProductProps {
   form: CreateProductForm;
-  onFormChange: (field: string, value: string) => void;
-  onSubmit: () => void;
+  onFormChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedImage: File | null;
   previewUrl: string;
@@ -80,7 +80,11 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
 
   const handleImageCancel = () => {
     setIsEditingImage(false);
-    onFormChange('image', '');
+    // Create a synthetic event for form change
+    const syntheticEvent = {
+      target: { name: 'image', value: '' }
+    } as React.ChangeEvent<HTMLInputElement>;
+    onFormChange(syntheticEvent);
   };
 
   // React to image selection
@@ -94,7 +98,11 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
   const handleNameClick = () => setIsEditingName(true);
   const handleNameSave = () => setIsEditingName(false);
   const handleNameCancel = () => {
-    onFormChange('name', '');
+    // Create a synthetic event for form change
+    const syntheticEvent = {
+      target: { name: 'name', value: '' }
+    } as React.ChangeEvent<HTMLInputElement>;
+    onFormChange(syntheticEvent);
     setIsEditingName(false);
   };
   const handleNameKeyPress = (e: React.KeyboardEvent) => {
@@ -105,7 +113,11 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
   const handlePriceClick = () => setIsEditingPrice(true);
   const handlePriceSave = () => setIsEditingPrice(false);
   const handlePriceCancel = () => {
-    onFormChange('price', '');
+    // Create a synthetic event for form change
+    const syntheticEvent = {
+      target: { name: 'price', value: '' }
+    } as React.ChangeEvent<HTMLInputElement>;
+    onFormChange(syntheticEvent);
     setIsEditingPrice(false);
   };
   const handlePriceKeyPress = (e: React.KeyboardEvent) => {
@@ -116,7 +128,11 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
   const handleDescriptionClick = () => setIsEditingDescription(true);
   const handleDescriptionSave = () => setIsEditingDescription(false);
   const handleDescriptionCancel = () => {
-    onFormChange('description', '');
+    // Create a synthetic event for form change
+    const syntheticEvent = {
+      target: { name: 'description', value: '' }
+    } as React.ChangeEvent<HTMLTextAreaElement>;
+    onFormChange(syntheticEvent);
     setIsEditingDescription(false);
   };
   const handleDescriptionKeyPress = (e: React.KeyboardEvent) => {
@@ -254,7 +270,12 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             onEdit={handleNameClick}
             onSave={handleNameSave}
             onCancel={handleNameCancel}
-            onValueChange={(value) => onFormChange('name', value)}
+            onValueChange={(value) => {
+              const syntheticEvent = {
+                target: { name: 'name', value }
+              } as React.ChangeEvent<HTMLInputElement>;
+              onFormChange(syntheticEvent);
+            }}
             onKeyDown={handleNameKeyPress}
             inputType="text"
             placeholder="Enter product name..."
@@ -283,7 +304,12 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             onEdit={handlePriceClick}
             onSave={handlePriceSave}
             onCancel={handlePriceCancel}
-            onValueChange={(value) => onFormChange('price', value)}
+            onValueChange={(value) => {
+              const syntheticEvent = {
+                target: { name: 'price', value }
+              } as React.ChangeEvent<HTMLInputElement>;
+              onFormChange(syntheticEvent);
+            }}
             onKeyDown={handlePriceKeyPress}
             inputType="number"
             placeholder="Enter product price..."
@@ -319,7 +345,12 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
             onEdit={handleDescriptionClick}
             onSave={handleDescriptionSave}
             onCancel={handleDescriptionCancel}
-            onValueChange={(value) => onFormChange('description', value)}
+            onValueChange={(value) => {
+              const syntheticEvent = {
+                target: { name: 'description', value }
+              } as React.ChangeEvent<HTMLTextAreaElement>;
+              onFormChange(syntheticEvent);
+            }}
             onKeyDown={handleDescriptionKeyPress}
             inputType="textarea"
             placeholder="Enter product description..."
@@ -347,15 +378,15 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
 
         {/* Action Buttons */}
         <Box sx={actionButtonStyles.container}>
-          <StyledButton
-            variant="primary"
-            onClick={onSubmit}
-            disabled={!isFormValid() || isSubmitting}
-            sx={{ 
-              fontSize: '0.875rem',
-              opacity: (isFormValid() && !isSubmitting) ? 1 : 0.6
-            }}
-          >
+  <StyledButton
+    variant="primary"
+    onClick={(e: React.MouseEvent<HTMLButtonElement>) => onSubmit(e)}
+    disabled={!isFormValid() || isSubmitting}
+    sx={{ 
+      fontSize: '0.875rem',
+      opacity: (isFormValid() && !isSubmitting) ? 1 : 0.6,
+    }}
+  >
             <Save sx={{ fontSize: 16, marginRight: 1 }} />
             {isSubmitting ? 'Creating...' : 'Create Product'}
           </StyledButton>
