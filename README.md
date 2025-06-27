@@ -178,6 +178,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [x] TASK 209: [ SAME AS TASKS - 95 AND 154 ] after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 235: Add product card - kinda does look like the expandcard but its too long by default and products created when hovered also get too long
+- [X] TASK 239: Grid, Grid2, UnstableGrid - MUI-TS issues - resolve by using Box/Stack
 
 </details>
 
