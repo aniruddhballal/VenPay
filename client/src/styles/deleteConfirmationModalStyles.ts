@@ -22,11 +22,12 @@ export const deleteConfirmationModalStyles = {
 
   modalContainer: {
     position: 'relative',
-    background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9))',
+    background: '#FFEAEB',
+    // background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9))',
     backdropFilter: 'blur(20px)',
     borderRadius: '24px',
     boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.8)',
-    border: '1px solid rgba(255, 255, 255, 0.6)',
+    // border: '1px solid rgba(255, 255, 255, 0.6)',
     maxWidth: '400px',
     width: '100%',
     overflow: 'hidden',
@@ -100,7 +101,7 @@ export const deleteConfirmationModalStyles = {
     padding: '8px',
     borderRadius: '50%',
     cursor: 'pointer',
-    color: '#64748b',
+    color: '#551719',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -111,7 +112,7 @@ export const deleteConfirmationModalStyles = {
     zIndex: 10,
     '&:hover': {
       backgroundColor: '#f1f5f9',
-      color: '#334155',
+      color: '#8D272B',
     },
   } as SxProps<Theme>,
 
@@ -128,11 +129,11 @@ export const deleteConfirmationModalStyles = {
     '&::before': {
       content: '""',
       position: 'absolute',
-      top: '-8px',
-      left: '-8px',
-      right: '-8px',
-      bottom: '-8px',
-      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.4), rgba(239, 68, 68, 0.1), transparent)',
+      top: '-20px',
+      left: '-20px',
+      right: '-20px',
+      bottom: '-20px',
+      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.5), rgba(239, 68, 68, 0.01), transparent)',
       borderRadius: '50%',
       animation: 'glow 2s ease-in-out infinite alternate',
       zIndex: -1,
@@ -210,7 +211,7 @@ export const deleteConfirmationModalStyles = {
     fontSize: '14px',
     margin: 0,
     fontWeight: '600',
-    background: 'linear-gradient(135deg, rgba(254, 242, 242, 0.8), rgba(255, 228, 230, 0.6))',
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6))',
     padding: '8px 16px',
     borderRadius: '8px',
     border: '1px solid rgba(239, 68, 68, 0.2)',
@@ -244,6 +245,9 @@ export const deleteConfirmationModalStyles = {
   cancelBtn: {
     flex: 1,
     padding: '12px 24px',
+    marginLeft: '40px',
+    marginRight: '10px',
+    height: '48px',
     borderRadius: '12px',
     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.8))',
     backdropFilter: 'blur(10px)',
@@ -274,6 +278,9 @@ export const deleteConfirmationModalStyles = {
 
   confirmBtn: {
     flex: 1,
+    marginLeft: '10px',
+    marginRight: '40px',
+    height: '48px',
     padding: '12px 24px',
     borderRadius: '12px',
     background: 'linear-gradient(135deg, #ef4444, #f87171)',
