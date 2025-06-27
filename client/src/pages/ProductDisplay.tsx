@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/api";
 import { toast } from "react-toastify";
 
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -88,27 +88,16 @@ export default function Product() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await axios.get(`http://localhost:5000/api/auth/me`, {
-          withCredentials: true,
-        });
+        const userRes = await api.get("/auth/me");
         setCurrentUser(userRes.data);
 
-        const productRes = await axios.get(
-          `http://localhost:5000/api/products/${id}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const productRes = await api.get(`/products/${id}`);
+
         setProduct(productRes.data);
 
         setRatingsLoading(true);
         try {
-          const ratingsRes = await axios.get(
-            `http://localhost:5000/api/productratings/product/${id}`,
-            {
-              withCredentials: true,
-            }
-          );
+          const ratingsRes = await api.get(`/productratings/product/${id}`);
           setRatings(ratingsRes.data);
         } catch (ratingsErr: any) {
           console.error("Ratings fetch error:", ratingsErr);
