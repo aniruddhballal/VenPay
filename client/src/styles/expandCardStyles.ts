@@ -621,21 +621,25 @@ export const actionButtonStyles = {
     },
   } as SxProps<Theme>,
 
-    cancelButton: {
-    width: 56,
-    height: 56,
-    background: alpha('#ffffff', 0.95),
-    color: '#dc2626',
-    border: '2px solid rgba(220, 38, 38, 0.3)',
-    backdropFilter: 'blur(8px)',
+  cancelButton: {
+    flex: 1,
+    mb: 2,
+    fontSize: '0.875rem',
+    height: '35px',
+    fontWeight: '400',
+    borderRadius: '12px',
+    background: '#ffffff',
+    color: '#b91c1c',
+    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
     '&:hover': {
-      background: alpha('#ffffff', 1),
-      transform: 'scale(1.1)',
-      boxShadow: '0 8px 25px rgba(220, 38, 38, 0.4)',
+      background: '#fef2f2',
+      boxShadow: '0 8px 25px rgba(239, 68, 68, 0.5)',
+      transform: 'translateY(-2px)',
     },
-    '&:disabled': {
-      background: alpha('#f5f5f5', 0.9),
-      color: '#9ca3af',
+    '&:active': {
+      background: '#fee2e2',
+      boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+      transform: 'translateY(0)',
     },
   } as SxProps<Theme>,
 };
