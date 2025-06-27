@@ -146,7 +146,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 62: NOW whats left is productdisplay page and then ratings for products, and then eventually companies and vendors.
 - [ ] TASK 76: vendor link in company dashboard
 - [ ] TASK 83: vendor link in company dashboard - not done yet
-- [ ] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
+- [x] TASK 95: YET TO Implement: features from ExpandProductCard onto AddProductCard
 - [ ] TASK 96: NOTE TO SELF: read this readme file - find out what are the old/new to-do's - make a new list under this and start working one by one.
 - [ ] TASK 97: a lot of dev happened on vendor side, nothing much on company side - FUNNILY, the gap in the prod-desc box still does exist? lol
 - [ ] TASK 99: add new product card - edit features - expansion level bug + lack of features that updateproductcard has
