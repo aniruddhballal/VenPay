@@ -24,9 +24,10 @@ import {
   PasswordToggleCard, PasswordFieldsContainer, ActionButtonsContainer, FlexButton
 } from '../styles/editProfileStyles';
 
-import { useEditProfile } from '../hooks/useEditProfile';
+import { useEditProfile } from '../hooks';
 
 export default function EditProfile() {
+
   const {
     // State values
     name,
