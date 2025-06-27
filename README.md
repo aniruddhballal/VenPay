@@ -139,6 +139,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 237: Delete product confirmation modal - can be improved/stylised
 - [X] TASK 239: Grid, Grid2, UnstableGrid - MUI-TS issues - resolve by using Box/Stack
 - [x] TASK 240: rename expandcard to updateproduct, addproductcard to createproduct - unify the styles
+- [x] TASK 242: if there is no image, it should not render the "click to change image" - or idk make it better.
 
 </details>
 
@@ -182,7 +183,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 - [ ] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
-- [ ] TASK 242: if there is no image, it should not render the "click to change image" - or idk make it better.
 
 </details>
 
