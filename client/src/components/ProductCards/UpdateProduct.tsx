@@ -13,7 +13,7 @@ import {
   priceStyles,
   descriptionStyles,
   actionButtonStyles
-} from '../../styles/expandCardStyles';
+} from '../../styles/updateProductStyles';
 
 const MAX_DESCRIPTION_LENGTH = 96;
 const MAX_NAME_LENGTH = 18;
@@ -26,13 +26,13 @@ interface Product {
   image?: string;
 }
 
-interface ExpandCardProps {
+interface UpdateProductProps {
   product: Product;
   onDelete: (id: string) => void;
   onFieldUpdate: (id: string, field: string, value: string | number) => void;
 }
 
-export const ExpandCard: React.FC<ExpandCardProps> = ({
+export const UpdateProduct: React.FC<UpdateProductProps> = ({
   product,
   onDelete,
   onFieldUpdate
