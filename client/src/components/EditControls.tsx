@@ -54,6 +54,7 @@ export const EditControls: React.FC<EditControlsProps> = ({
             size="small"
             variant="filled"
             sx={{
+              flex: 'center',
               backgroundColor: 'rgba(0, 0, 0, 0.04)',
               color: 'text.secondary',
               fontSize: '0.65rem',
