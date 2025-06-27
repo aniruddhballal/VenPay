@@ -4,6 +4,7 @@
 <summary>✅ Completed Tasks</summary>
 
 - [x] TASK 6: warning for deadline nearings
+- [x] TASK 10: switch to mongodb atlas? check if i should be having all the database stuff in compass ka localhost 120710 something or if it is better to have it connected to that VendorManagement thing that i created (maybe create a new one)
 - [x] TASK 12: alright now, can you add a  button next to each of the accepted products, which says "make payment" along with an input text box. this text box should accept any amount thats equal to or lesser than the total price of the quantity of the same product bought. and on clicking on "make payment" it should ask the company to re-enter the password. if it is same, then it should make the transaction and keep track of how much is paid and how much needs to be paid next, and change the status from unpaid to partially paid and if at all the entire amount is paid then change it to paid.
 - [x] TASK 17: check different ways for displaying the products, requests - catalogue? idk some scrolling animation - edit: carousel not catalogue lmao
 - [x] TASK 23: add reviews for products and vendors and companies - should be able to visit a particular vendor's/company's "profile"
@@ -138,7 +139,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 
 - [ ] TASK 3: overall UI
 - [ ] TASK 9: giving discounts and star ratings/credits for companies/vendors for keeping integrity.
-- [x] TASK 10: switch to mongodb atlas? check if i should be having all the database stuff in compass ka localhost 120710 something or if it is better to have it connected to that VendorManagement thing that i created (maybe create a new one)
 - [ ] TASK 13: IMPROVE THE UI UX ADD A LOT OF USER HELPFUL INTERACTIVE STUFF
 - [ ] TASK 18: check if background can be made better - colour grading and scheming
 - [ ] TASK 22: add multiple images for the products - add more details for each product
