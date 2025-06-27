@@ -182,6 +182,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 - [ ] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
+- [ ] TASK 242: if there is no image, it should not render the "click to change image" - or idk make it better.
 
 </details>
 
@@ -260,7 +261,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 231: Deploy app
 - [ ] TASK 234: Delete Product Image functionality - right after uploading initially while creating product / while updating/editing the image details
 - [ ] TASK 238: "Back to Dashboard" and "Back to Profile" Buttons exist on opposite sides - confusing. streamline. 
-- [ ] TASK 242: if there is no image, it should not render the "click to change image" - or idk make it better.
 - [ ] TASK 243: the description and all are cornered to the top left
 - [ ] TASK 244: create cancel button arent equally sized
 - [ ] TASK 245: approductcard - the hints ki "add this" add that - font and size is OFF
