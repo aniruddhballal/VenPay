@@ -107,6 +107,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
 - [x] TASK 217: ISSUE WITH PRODUCT CREATION AINNOWAY - NO PRODUCT IMAGE?! works on "update product image" tho - check backend routes - done, apparently random backend one-off issue
 - [x] TASK 218: Hook Barrel: break useProductEditor.ts hook into its subcomponents
+- [x] TASK 220: Reduce number of exports from expandCardStyles.ts
 - [x] TASK 221: Hook Barrel: codesplit useProfileEditor.ts
 - [x] TASK 222: Review and sort TASK 218'S Hook Barrel (Product Editor hooks) 
 - [x] TASK 224: Export the login hook hooks/index.ts
@@ -169,7 +170,6 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 214: further simplify and disintegrate the remaining.css
 - [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?)
 - [x] TASK 219: Inline hover edit UI can be wayyyyy better.
-- [x] TASK 220: Reduce number of exports from expandCardStyles.ts
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 226: Redundant styling in expandCardStyles.ts
 
