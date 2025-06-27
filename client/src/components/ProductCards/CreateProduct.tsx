@@ -202,7 +202,14 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
           )}
         </Box>
 
-        <Box className="edit-overlay" sx={imageStyles.editOverlay}>
+        <Box className="edit-overlay" 
+        sx={{
+          ...imageStyles.editOverlay,
+          ...({
+            backgroundColor: 'rgb(0, 0, 0) !important'
+          })
+        }}
+        >
           <Avatar sx={imageStyles.editOverlayAvatar}>
             <CameraAlt sx={{ fontSize: 24 }} />
           </Avatar>
