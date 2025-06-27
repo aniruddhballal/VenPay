@@ -173,7 +173,7 @@ HMMM OKAY, IT LOOKS FINE NOW 138. the dashboard onload curves - dont randomise m
 - [x] TASK 209: after task 208, refer and stylise the AddProductCard component too
 - [x] TASK 214: further simplify and disintegrate the remaining.css
 - [x] TASK 215: filter-search. notifications. compactification/expansification (add more details, remove more, hover-expand, new pages?)
-- [x] TASK 219: Inline hover edit UI can be wayyyyy better.
+- [x] TASK 219: Inline hover edit UI can be better - match colours and borders and hover effects of sliding from a side (airbnb)
 - [x] TASK 223: Consider converting ProductEditorHooks into a named export from hooks/index.ts
 - [x] TASK 228: the save/cancel buttons of inline editing -> the glossy matt style can be used on the tab interface of accepted/pending/declined - requests (the one that had the black colour style before)
 - [x] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
