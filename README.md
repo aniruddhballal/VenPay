@@ -189,7 +189,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product card have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
 - [ ] TASK 252: delete button for a product that accessible, on the main dashboard?
 - [ ] TASK 254: was it a good decision to use MUI? was normal css better? should have shifted to tailwind or something else?
-- [ ] TASK 255: animation of the animated lines are too mid - and they arent delayed-rendered properly also now that i did the conditional rendering - shift to better lines - synchronise with the border that comes around the sub-content's title?
+- [x] TASK 255: animation of the animated lines are too mid - and they arent delayed-rendered properly also now that i did the conditional rendering - shift to better lines - synchronise with the border that comes around the sub-content's title?
 
 </details>
 
