@@ -185,7 +185,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
-- [ ] TASK 250: work on updateproductcard - revamp the whole thing - make it classy like the productdetails/display page and then THEN THEN AFTER THAT apply the revamp to addproductcard (which i might have to start from scratch) - throwback to TASK 37.
+- [x] TASK 250: work on updateproductcard - revamp the whole thing - make it classy like the productdetails/display page and then THEN THEN AFTER THAT apply the revamp to addproductcard (which i might have to start from scratch) - throwback to TASK 37.
 - [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product card have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
 - [ ] TASK 252: delete button for a product that accessible, on the main dashboard?
 - [ ] TASK 254: was it a good decision to use MUI? was normal css better? should have shifted to tailwind or something else?
