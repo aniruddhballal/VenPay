@@ -142,6 +142,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [X] TASK 239: Grid, Grid2, UnstableGrid - MUI-TS issues - resolve by using Box/Stack
 - [x] TASK 240: rename expandcard to updateproduct, addproductcard to createproduct - unify the styles
 - [x] TASK 242: if there is no image, it should not render the "click to change image" - or idk make it better.
+- [x] TASK 253: New flow: dashboard will have requests, and product mgmt/list rendered onclick. dont display both at the same time, one below the other.
 
 </details>
 
@@ -187,9 +188,8 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 250: work on updateproductcard - revamp the whole thing - make it classy like the productdetails/display page and then THEN THEN AFTER THAT apply the revamp to addproductcard (which i might have to start from scratch) - throwback to TASK 37.
 - [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product card have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
 - [ ] TASK 252: delete button for a product that accessible, on the main dashboard?
-- [x] TASK 253: New flow: dashboard will have requests, and product mgmt/list rendered onclick. dont display both at the same time, one below the other.
 - [ ] TASK 254: was it a good decision to use MUI? was normal css better? should have shifted to tailwind or something else?
-
+- [ ] TASK 255: animation of the animated lines are too mid - and they arent delayed-rendered properly also now that i did the conditional rendering - shift to better lines - synchronise with the border that comes around the sub-content's title?
 
 </details>
 
