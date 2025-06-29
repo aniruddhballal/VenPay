@@ -240,6 +240,14 @@ export default function UserDisplay() {
             <Divider sx={{ marginY: '2rem' }} />
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <SecondaryButton
+                startIcon={<DashboardIcon />}
+                onClick={() => navigate(-1)}
+                sx={{ flex: 1 }}
+              >
+                Back to Dashboard
+              </SecondaryButton>
+
               {isOwnProfile && (
                 <StyledLoadingButton
                   startIcon={<EditIcon />}
@@ -249,14 +257,7 @@ export default function UserDisplay() {
                   Edit Profile
                 </StyledLoadingButton>
               )}
-              
-              <SecondaryButton
-                startIcon={<DashboardIcon />}
-                onClick={() => navigate(-1)}
-                sx={{ flex: 1 }}
-              >
-                Back to Dashboard
-              </SecondaryButton>
+
             </Stack>
           </CardContent>
         </StyledCard>
