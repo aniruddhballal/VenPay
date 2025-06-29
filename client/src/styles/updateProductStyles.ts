@@ -1,5 +1,13 @@
 import type { SxProps, Theme } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import { keyframes } from '@mui/system';
+
+export const spin = keyframes`
+  0%   { transform: rotate(0deg); }
+  70%  { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+`;
+
 
 // Image Section Styles
 export const imageStyles = {
@@ -25,57 +33,55 @@ export const imageStyles = {
     },
   } as SxProps<Theme>,
 
-  backgroundOrPlaceholder: (productImage?: string): SxProps<Theme> => ({
-    position: 'absolute',
-    inset: 0,
-    background: productImage
-      ? `url(${productImage}) center/cover no-repeat`
-      : 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)',
-    border: !productImage ? '2px dashed #d1d5db' : 'none',
-    display: !productImage ? 'flex' : 'block',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease',
-    '&:hover': !productImage
-      ? {
-          border: '2px dashed #667eea',
-          background: 'linear-gradient(135deg, #f0f4ff 0%, #e0eaff 100%)',
-        }
-      : {},
-  }),
+backgroundOrPlaceholder: (productImage?: string): SxProps<Theme> => ({
+  position: 'absolute',
+  inset: 0,
+  background: productImage
+    ? `url(${productImage}) center/cover no-repeat`
+    : 'linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%)', // dark background
+  border: 'none',
+  display: !productImage ? 'flex' : 'block',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'all 0.3s ease',
+  '&:hover': !productImage
+    ? {
+        background: 'linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%)',
+      }
+    : {},
+}),
 
-  uploadAvatar: {
+uploadAvatar: {
     width: 64,
     height: 64,
-    background: alpha('#667eea', 0.1),
-    color: '#9ca3af',
+    backgroundColor: '#ccff00',
+    color: '#000',
     mb: 2,
     transition: 'all 0.3s ease',
+    cursor: 'pointer',
     '&:hover': {
       transform: 'scale(1.1)',
-      color: '#667eea',
     },
   } as SxProps<Theme>,
 
-  uploadText: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#6b7280',
-    textAlign: 'center',
-    transition: 'color 0.3s ease',
-    mb: 0.5,
-    '&:hover': {
-      color: '#667eea',
-    },
+  rotatingIcon: {
+    fontSize: 32,
+    animation: `${spin} 0.4s linear`,
   } as SxProps<Theme>,
 
-  uploadCaption: {
-    fontSize: '0.75rem',
-    color: '#9ca3af',
-    textAlign: 'center',
-    fontWeight: '400',
+  fadeInIcon: {
+    fontSize: 24,
+    opacity: 1,
+    transition: 'opacity 0.2s ease',
   } as SxProps<Theme>,
+
+uploadCaption: {
+  fontSize: '0.75rem',
+  color: '#ccff00',  textAlign: 'center',
+  fontWeight: '400',
+} as SxProps<Theme>,
+
 
   editOverlay: {
     position: 'absolute',
@@ -194,31 +200,37 @@ export const nameStyles = {
   } as SxProps<Theme>,
 
   textField: {
-    mb: 1,
-    '& .MuiOutlinedInput-root': {
-      borderRadius: 3,
-      background: 'linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%)',
-      fontSize: '1.3rem',
-      fontWeight: '600',
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      '&:hover': {
-        background: 'rgba(102, 126, 234, 0.04)',
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: '#667eea',
-          borderWidth: 2,
-        },
-      },
-      '&.Mui-focused': {
-        background: '#ffffff',
-        boxShadow: '0 0 0 4px rgba(102, 126, 234, 0.1)',
-        transform: 'translateY(-2px)',
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderColor: '#667eea',
-          borderWidth: 2,
-        },
+  mb: 1,
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 3,
+    background: 'linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%)',
+    color: '#ccff00',
+    fontSize: '1.3rem',
+    fontWeight: '600',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'transparent', // No visible border initially
+    },
+    '&:hover': {
+      background: 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)',
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#ccff00',
+        borderWidth: 2,
       },
     },
-  } as SxProps<Theme>,
+    '&.Mui-focused': {
+      background: 'linear-gradient(135deg, #333 0%, #1a1a1a 100%)',
+      boxShadow: '0 0 0 4px rgba(204, 255, 0, 0.15)',
+      transform: 'translateY(-2px)',
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#ccff00',
+        borderWidth: 2,
+      },
+    },
+  },
+} as SxProps<Theme>,
+
+
 
   metaBar: {
     display: 'flex',
@@ -265,18 +277,19 @@ export const nameStyles = {
     },
   } as SxProps<Theme>,
 
-  displayText: {
-    fontSize: '1.3rem',
-    fontWeight: '600',
-    lineHeight: 1.4,
-    color: 'text.primary',
-    transition: 'opacity 0.3s ease',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    width: '100%',
-    textAlign: 'center',
-  } as SxProps<Theme>,
+displayText: {
+  fontSize: '1.3rem',
+  fontWeight: '600',
+  lineHeight: 1.4,
+    color: '#013220', // very dark green (almost black)
+  transition: 'opacity 0.3s ease',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  width: '100%',
+  textAlign: 'center',
+} as SxProps<Theme>,
+
 
   editIndicator: {
     position: 'absolute',

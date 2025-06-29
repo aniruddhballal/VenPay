@@ -387,18 +387,21 @@ html {
   height: 320px;
   transition: height 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(204, 255, 0, 0.08); /* slight green glow */
   border-radius: 16px;
   overflow: hidden;
   width: 100%;
   max-width: 300px;
+  background-color: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%); /* match dark base */
+  color: #ccff00; /* for fallback text */
 }
 
 .expand-card-compact:hover:not(.editing) {
-  height: 480px; /* smaller grow */
+  height: 480px;
   transform: translateY(-4px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 25px rgba(204, 255, 0, 0.2); /* glowing on hover */
 }
+
 
 /* ============================================
    IMAGE STYLES

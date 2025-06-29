@@ -7,6 +7,8 @@ import { StyledButton } from "../Buttons/StyledButton";
 import { InlineEditField } from "./InlineEdit/InlineEditField";
 import { ProductEditorHooks } from '../../hooks';
 
+import { useState, useEffect } from "react";
+
 import {
   imageStyles,
   nameStyles,
@@ -41,6 +43,13 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
 
   const { useProductEditor, useNameEditor, usePriceEditor, useDescriptionEditor,
   useImageEditor, useCardInteractions } = ProductEditorHooks;
+
+const [showCameraIcon, setShowCameraIcon] = useState(false);
+const [spinKey, setSpinKey] = useState(0);
+
+
+
+
 
   // Main product editor hook
   const editorState = useProductEditor({ product, onFieldUpdate });
@@ -98,7 +107,17 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
   );
 
   const cardStyles = cardInteractions.getCardStyles();
-
+  // useEffect to detect hover-in
+  useEffect(() => {
+    if (cardInteractions.isHovered) {
+      setSpinKey(prev => prev + 1);
+      setShowCameraIcon(false);
+      setTimeout(() => setShowCameraIcon(true), 400); // match spin duration
+    } else {
+      setShowCameraIcon(false);
+    }
+  }, [cardInteractions.isHovered]);
+  
   return (
     <div 
       className="expand-card-compact"
@@ -125,16 +144,20 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
           {/* Upload placeholder content */}
           {!product.image && (
             <>
-              <Avatar className="upload-icon" sx={imageStyles.uploadAvatar}>
-                <AddPhotoAlternate sx={{ fontSize: 32 }} />
-              </Avatar>
-              <Typography
-                className="upload-text"
-                variant="h6"
-                sx={imageStyles.uploadText}
+              <Avatar
+                className="upload-icon"
+                sx={imageStyles.uploadAvatar}
+                onClick={imageEditor.handleImageClick}
               >
-                Add Product Image
-              </Typography>
+                {!showCameraIcon ? (
+                  <AddPhotoAlternate
+                    key={`spin-${spinKey}`}
+                    sx={imageStyles.rotatingIcon}
+                  />
+                ) : (
+                  <CameraAlt sx={imageStyles.fadeInIcon} />
+                )}
+              </Avatar>
               <Typography
                 variant="caption"
                 sx={imageStyles.uploadCaption}
@@ -143,22 +166,6 @@ export const UpdateProduct: React.FC<UpdateProductProps> = ({
               </Typography>
             </>
           )}
-        </Box>
-
-        <Box className="edit-overlay"
-          sx={{
-            ...imageStyles.editOverlay,
-            ...((!product.image) && {
-              backgroundColor: 'rgb(0, 0, 0) !important'
-            })
-          }}
-        >
-          <Avatar sx={imageStyles.editOverlayAvatar}>
-            <CameraAlt sx={{ fontSize: 24 }} />
-          </Avatar>
-          <Typography variant="caption" sx={imageStyles.editOverlayText}>
-            {!product.image ? "Click to add image" : "Click to change image"}
-          </Typography>
         </Box>
 
         <Grow in={editorState.isEditingImage} timeout={300}>

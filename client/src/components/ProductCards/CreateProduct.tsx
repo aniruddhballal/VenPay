@@ -184,13 +184,6 @@ export const CreateProduct: React.FC<CreateProductProps> = ({
               <Avatar className="upload-icon" sx={imageStyles.uploadAvatar}>
                 <AddPhotoAlternate sx={{ fontSize: 32 }} />
               </Avatar>
-              <Typography
-                className="upload-text"
-                variant="h6"
-                sx={imageStyles.uploadText}
-              >
-                Add Product Image
-              </Typography>
 
               <Typography
                 variant="caption"
