@@ -184,7 +184,11 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
 - [ ] TASK 250: work on updateproductcard - revamp the whole thing - make it classy like the productdetails/display page and then THEN THEN AFTER THAT apply the revamp to addproductcard (which i might have to start from scratch) - throwback to TASK 37.
-- [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product acrd have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
+- [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product card have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
+- [ ] TASK 252: delete button for a product that accessible, on the main dashboard?
+- [ ] TASK 253: New flow: dashboard will have requests, and 
+- [x] TASK 238: "Back to Dashboard" and "Back to Profile" Buttons exist on opposite sides - confusing. streamline. 
+
 
 </details>
 
@@ -262,7 +266,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 230: Reduce the hover area for each of the inline editing - make it smoother - merge backgorund color of the input with the product card or something
 - [ ] TASK 231: Deploy app
 - [ ] TASK 234: Delete Product Image functionality - right after uploading initially while creating product / while updating/editing the image details
-- [ ] TASK 238: "Back to Dashboard" and "Back to Profile" Buttons exist on opposite sides - confusing. streamline. 
 - [ ] TASK 243: the description and all are cornered to the top left
 - [ ] TASK 244: create cancel button arent equally sized
 - [ ] TASK 245: approductcard - the hints ki "add this" add that - font and size is OFF
