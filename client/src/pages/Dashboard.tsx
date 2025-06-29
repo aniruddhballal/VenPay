@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import AnimatedLines from '../components/Partials/AnimatedLines'; // adjust path if needed
 
@@ -33,21 +33,17 @@ interface RootState {
   };
 }
 
+type VendorSection = 'product-management' | 'product-requests';
+type CompanySection = 'product-list' | 'payment-requests';
+
 export default function Dashboard() {
   const { user, isLoading, isInitialized } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Smooth scroll function
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
+  // State to track active section
+  const [activeVendorSection, setActiveVendorSection] = useState<VendorSection>('product-management');
+  const [activeCompanySection, setActiveCompanySection] = useState<CompanySection>('product-list');
 
   useEffect(() => {
     // Only fetch user data if not already initialized
@@ -101,6 +97,14 @@ export default function Dashboard() {
     }
   };
 
+  const handleVendorSectionClick = (section: VendorSection) => {
+    setActiveVendorSection(section);
+  };
+
+  const handleCompanySectionClick = (section: CompanySection) => {
+    setActiveCompanySection(section);
+  };
+
   if (isLoading) {
     return (
       <LoadingContainer>
@@ -118,11 +122,31 @@ export default function Dashboard() {
     );
   }
 
+  // Determine background color based on active section
+  const getBackgroundColor = () => {
+    if (user.userType === "vendor") {
+      return activeVendorSection === 'product-management' 
+        ? 'from-emerald-900/20 via-emerald-800/20 to-emerald-900/20' 
+        : 'from-blue-900/20 via-blue-800/20 to-blue-900/20';
+    } else {
+      return activeCompanySection === 'product-list' 
+        ? 'from-emerald-900/20 via-emerald-800/20 to-emerald-900/20' 
+        : 'from-blue-900/20 via-blue-800/20 to-blue-900/20';
+    }
+  };
+
   return (
-    <DashboardContainer>
-    <div style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, width: '100%', height: '100%' }}>
-      <AnimatedLines />
-    </div>      
+    <div className={`relative w-full min-h-screen bg-gradient-to-br ${getBackgroundColor()}`}>
+      <DashboardContainer>
+      <div style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, width: '100%', height: '100%' }}>
+        <AnimatedLines 
+          activeSet={
+            user.userType === "vendor" 
+              ? (activeVendorSection === 'product-management' ? 'set2' : 'set1')
+              : (activeCompanySection === 'product-list' ? 'set2' : 'set1')
+          } 
+        />
+      </div>      
       <DashboardHeader variant="h1">Welcome, {user.name}</DashboardHeader>
       
       <ProfileButton onClick={goToProfile}>
@@ -141,22 +165,33 @@ export default function Dashboard() {
           <DashboardSubheader variant="h2">Vendor Dashboard</DashboardSubheader>
           
           <NavigationContainer>
-            <NavigationButton onClick={() => scrollToSection('product-management')}>
+            <NavigationButton 
+              onClick={() => handleVendorSectionClick('product-management')}
+              style={{ 
+                opacity: activeVendorSection === 'product-management' ? 1 : 0.7,
+                backgroundColor: activeVendorSection === 'product-management' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+                borderColor: activeVendorSection === 'product-management' ? 'rgba(16, 185, 129, 0.3)' : 'transparent'
+              }}
+            >
               <Inventory />
               Product Management
             </NavigationButton>
-            <NavigationButton2 onClick={() => scrollToSection('product-requests')}>
+            <NavigationButton2 
+              onClick={() => handleVendorSectionClick('product-requests')}
+              style={{ 
+                opacity: activeVendorSection === 'product-requests' ? 1 : 0.7,
+                backgroundColor: activeVendorSection === 'product-requests' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                borderColor: activeVendorSection === 'product-requests' ? 'rgba(59, 130, 246, 0.3)' : 'transparent'
+              }}
+            >
               <RequestPage />
               Product Requests
             </NavigationButton2>
           </NavigationContainer>
 
-          <SectionContainer id="product-management">
-            <ProductManagement />
-          </SectionContainer>
-          
-          <SectionContainer id="product-requests">
-            <ProductRequests />
+          <SectionContainer>
+            {activeVendorSection === 'product-management' && <ProductManagement />}
+            {activeVendorSection === 'product-requests' && <ProductRequests />}
           </SectionContainer>
         </>
       )}
@@ -166,25 +201,37 @@ export default function Dashboard() {
           <DashboardSubheader variant="h2">Company Dashboard</DashboardSubheader>
           
           <NavigationContainer>
-            <NavigationButton onClick={() => scrollToSection('product-list')}>
+            <NavigationButton 
+              onClick={() => handleCompanySectionClick('product-list')}
+              style={{ 
+                opacity: activeCompanySection === 'product-list' ? 1 : 0.7,
+                backgroundColor: activeCompanySection === 'product-list' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+                borderColor: activeCompanySection === 'product-list' ? 'rgba(16, 185, 129, 0.3)' : 'transparent'
+              }}
+            >
               <BusinessCenter />
               Product Catalog
             </NavigationButton>
-            <NavigationButton2 onClick={() => scrollToSection('payment-requests')}>
+            <NavigationButton2 
+              onClick={() => handleCompanySectionClick('payment-requests')}
+              style={{ 
+                opacity: activeCompanySection === 'payment-requests' ? 1 : 0.7,
+                backgroundColor: activeCompanySection === 'payment-requests' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                borderColor: activeCompanySection === 'payment-requests' ? 'rgba(59, 130, 246, 0.3)' : 'transparent'
+              }}
+            >
               <Payment />
               Payment Requests
             </NavigationButton2>
           </NavigationContainer>
 
-          <SectionContainer id="product-list">
-            <ProductList />
-          </SectionContainer>
-          
-          <SectionContainer id="payment-requests">
-            <PaymentRequests />
+          <SectionContainer>
+            {activeCompanySection === 'product-list' && <ProductList />}
+            {activeCompanySection === 'payment-requests' && <PaymentRequests />}
           </SectionContainer>
         </>
       )}
     </DashboardContainer>
+    </div>
   );
 }

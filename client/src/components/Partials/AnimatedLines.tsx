@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 
-const AnimatedLines = () => {
+interface AnimatedLinesProps {
+  activeSet?: 'set1' | 'set2';
+}
+
+const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [shouldDisappear, setShouldDisappear] = useState(false);
   const [shouldEnhanceMain, setShouldEnhanceMain] = useState(false);
-  const [paths, setPaths] = useState<{ set1: string[]; set2: string[] }>({ set1: [], set2: [] });
-  const [survivingIndices, setSurvivingIndices] = useState({ set1: 0, set2: 0 });
-  const [pathSmoothness, setPathSmoothness] = useState<{ set1: string[]; set2: string[] }>({ set1: [], set2: [] });
+  const [paths, setPaths] = useState<string[]>([]);
+  const [survivingIndex, setSurvivingIndex] = useState(0);
+  const [pathSmoothness, setPathSmoothness] = useState<string[]>([]);
 
   // CONFIGURATION: Number of messy background lines
   const NUM_MESSY_LINES = 5; // Modify this value to change the number of background lines
@@ -135,26 +139,29 @@ const AnimatedLines = () => {
   };
 
   useEffect(() => {
-    // Generate one main smooth path per set
-    const mainPath1 = generateMainPath(true);
-    const mainPath2 = generateMainPath(false);
+    // Reset states when activeSet changes
+    setIsLoaded(false);
+    setShouldDisappear(false);
+    setShouldEnhanceMain(false);
+    
+    // Determine which set to use based on activeSet prop
+    const isSet1 = activeSet === 'set1';
+    
+    // Generate one main smooth path for the active set
+    const mainPath = generateMainPath(isSet1);
     
     // Generate messy paths with smooth curves using the configurable number
-    const messyPaths1 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(true));
-    const messyPaths2 = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(false));
+    const messyPaths = Array.from({ length: NUM_MESSY_LINES }, () => generateMessyPath(isSet1));
     
     // Combine paths (main first, then messy)
-    const allPaths1 = [mainPath1, ...messyPaths1];
-    const allPaths2 = [mainPath2, ...messyPaths2];
+    const allPaths = [mainPath, ...messyPaths];
+    const pathTypes = ['main', ...Array(NUM_MESSY_LINES).fill('messy')];
     
-    const pathTypes1 = ['main', ...Array(NUM_MESSY_LINES).fill('messy')];
-    const pathTypes2 = ['main', ...Array(NUM_MESSY_LINES).fill('messy')];
-    
-    setPaths({ set1: allPaths1, set2: allPaths2 });
-    setPathSmoothness({ set1: pathTypes1, set2: pathTypes2 });
+    setPaths(allPaths);
+    setPathSmoothness(pathTypes);
     
     // Main path is always at index 0
-    setSurvivingIndices({ set1: 0, set2: 0 });
+    setSurvivingIndex(0);
 
     // Start animation immediately
     const timer = setTimeout(() => {
@@ -176,15 +183,12 @@ const AnimatedLines = () => {
       clearTimeout(enhanceTimer);
       clearTimeout(disappearTimer);
     };
-  }, [NUM_MESSY_LINES]);
+  }, [NUM_MESSY_LINES, activeSet]); // Added activeSet as dependency
 
-    const renderPathSet = (pathArray: string[], gradientId: string, setName: 'set1' | 'set2') => {
-    const survivingIndex = survivingIndices[setName];
-    const pathTypesArray = pathSmoothness[setName];
-  
+  const renderPaths = (pathArray: string[], gradientId: string) => {
     return pathArray.map((path: string, index: number) => {
       const isSurviving = index === survivingIndex;
-      const pathType = pathTypesArray[index];
+      const pathType = pathSmoothness[index];
       const isMainPath = pathType === 'main';
       const shouldPathDisappear = shouldDisappear && !isSurviving;
 
@@ -268,7 +272,7 @@ const AnimatedLines = () => {
       
       return (
         <path
-          key={index}
+          key={`${activeSet}-${index}`} // Added activeSet to key for proper re-rendering
           d={path}
           fill="none"
           stroke={isMainPath ? `url(#mainGradient)` : `url(#${gradientId})`}
@@ -292,11 +296,8 @@ const AnimatedLines = () => {
         viewBox="0 0 1200 1200"
         preserveAspectRatio="xMidYMid meet"
       >
-        {/* Set 1 - Upper flowing lines */}
-        {renderPathSet(paths.set1, 'gradient1', 'set1')}
-        
-        {/* Set 2 - Lower flowing lines */}
-        {renderPathSet(paths.set2, 'gradient2', 'set2')}
+        {/* Render only the active set */}
+        {renderPaths(paths, activeSet === 'set1' ? 'gradient1' : 'gradient2')}
 
         <defs>
           <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
