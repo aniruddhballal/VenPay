@@ -190,6 +190,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 252: delete button for a product that accessible, on the main dashboard?
 - [ ] TASK 254: was it a good decision to use MUI? was normal css better? should have shifted to tailwind or something else?
 - [x] TASK 255: animation of the animated lines are too mid - and they arent delayed-rendered properly also now that i did the conditional rendering - shift to better lines - synchronise with the border that comes around the sub-content's title?
+- [ ] TASK 256: am i not focusing too much on ui-ux rn - functionalities got left way behind na??
 
 </details>
 
