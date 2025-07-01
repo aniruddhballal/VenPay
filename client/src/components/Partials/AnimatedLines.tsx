@@ -8,33 +8,49 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [phase, setPhase] = useState<'loading' | 'analyzing' | 'connecting' | 'complete'>('loading');
   const [dataNodes, setDataNodes] = useState<Array<{x: number, y: number, id: string, delay: number}>>([]);
   const [connections, setConnections] = useState<string[]>([]);
-  const [pulseNodes, setPulseNodes] = useState<Set<string>>(new Set());
-  const [animationKey, setAnimationKey] = useState(0); // Add key to force re-render
+  const [animationKey, setAnimationKey] = useState(0);
 
   // Generate data flow nodes along the path
   const generateDataNodes = (isSet1: boolean) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
-    const endPoint = isSet1 ? { x: 900, y: 205 } : { x: 320, y: 205 };
+    const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
     
     const nodes = [];
-    const numNodes = 1 + Math.floor(Math.random() * 4); // 8-12 nodes
+    const numNodes = 3;
     
     for (let i = 0; i < numNodes; i++) {
       const progress = i / (numNodes - 1);
       const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
       const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
       
-      // Add some organic variation to node positions
-      const variation = 30 + Math.random() * 40;
-      const offsetX = (Math.random() - 0.5) * variation;
-      const offsetY = (Math.random() - 0.5) * variation * 0.6; // Less vertical variation
-      
-      nodes.push({
-        x: baseX + offsetX,
-        y: Math.max(100, Math.min(baseY + offsetY, endPoint.y - 20)),
-        id: `node-${i}`,
-        delay: i * 200 + Math.random() * 100 // Staggered animation
-      });
+      // For first and last nodes, use exact coordinates without variation
+      if (i === 0) {
+        nodes.push({
+          x: startPoint.x,
+          y: startPoint.y,
+          id: `node-${i}`,
+          delay: i * 200 + Math.random() * 100
+        });
+      } else if (i === numNodes - 1) {
+        nodes.push({
+          x: endPoint.x,
+          y: endPoint.y,
+          id: `node-${i}`,
+          delay: i * 200 + Math.random() * 100
+        });
+      } else {
+        // Add organic variation only to intermediate nodes
+        const variation = 30 + Math.random() * 40;
+        const offsetX = (Math.random() - 0.5) * variation;
+        const offsetY = (Math.random() - 0.5) * variation * 0.6; // Less vertical variation
+        
+        nodes.push({
+          x: baseX + offsetX,
+          y: Math.max(100, Math.min(baseY + offsetY, endPoint.y - 20)),
+          id: `node-${i}`,
+          delay: i * 200 + Math.random() * 100 // Staggered animation
+        });
+      }
     }
     
     return nodes;
@@ -63,14 +79,12 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   };
 
   useEffect(() => {
-    // Clear any existing timeouts and intervals
+    // Clear any existing timeouts
     const timeoutIds: NodeJS.Timeout[] = [];
-    const intervalIds: NodeJS.Timeout[] = [];
     
     // Reset all states immediately
     setPhase('loading');
-    setPulseNodes(new Set());
-    setAnimationKey(prev => prev + 1); // Force re-render with new key
+    setAnimationKey(prev => prev + 1);
     
     // Generate new data layout
     const isSet1 = activeSet === 'set1';
@@ -82,24 +96,9 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     
     // Clear animation sequence with proper delays
     const sequence = [
-      { delay: 500, action: () => setPhase('analyzing') }, // Increased initial delay
-      { delay: 1500, action: () => setPhase('connecting') }, // Adjusted timing
-      { delay: 3000, action: () => setPhase('complete') }, // Adjusted timing
-      { 
-        delay: 3500, // Increased delay before pulsing starts
-        action: () => {
-          // Start pulsing random nodes
-          const interval = setInterval(() => {
-            const randomNodes = nodes
-              .sort(() => Math.random() - 0.5)
-              .slice(0, 2 + Math.floor(Math.random() * 3))
-              .map(n => n.id);
-            setPulseNodes(new Set(randomNodes));
-          }, 1500);
-          
-          intervalIds.push(interval);
-        }
-      }
+      { delay: 500, action: () => setPhase('analyzing') },
+      { delay: 1500, action: () => setPhase('connecting') },
+      { delay: 3000, action: () => setPhase('complete') }
     ];
     
     sequence.forEach(({ delay, action }) => {
@@ -110,7 +109,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     // Cleanup function
     return () => {
       timeoutIds.forEach(id => clearTimeout(id));
-      intervalIds.forEach(id => clearInterval(id));
     };
   }, [activeSet]);
 
@@ -124,41 +122,12 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          {/* Gradients */}
+          {/* Gradients for connections only */}
           <linearGradient id={`connectionGradient-${animationKey}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.8}} />
             <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.9}} />
             <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 1}} />
           </linearGradient>
-          
-          <radialGradient id={`nodeGradient-${animationKey}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style={{stopColor: '#06d6a0', stopOpacity: 1}} />
-            <stop offset="70%" style={{stopColor: '#10b981', stopOpacity: 0.8}} />
-            <stop offset="100%" style={{stopColor: '#059669', stopOpacity: 0.6}} />
-          </radialGradient>
-          
-          <radialGradient id={`pulseGradient-${animationKey}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
-            <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.7}} />
-            <stop offset="100%" style={{stopColor: '#10b981', stopOpacity: 0.3}} />
-          </radialGradient>
-
-          {/* Filters for glow effects */}
-          <filter id={`glow-${animationKey}`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-
-          <filter id={`strongGlow-${animationKey}`} x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
         </defs>
 
         {/* Connection Lines */}
@@ -192,137 +161,35 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               stroke={`url(#connectionGradient-${animationKey})`}
               strokeWidth={phase === 'complete' ? "2.5" : "1.8"}
               strokeLinecap="round"
-              filter={`url(#glow-${animationKey})`}
               style={animationStyle}
             />
           );
         })}
 
-        {/* Data Nodes */}
-        {dataNodes.map((node, index) => {
-          // Only show nodes during analyzing phase and later, with staggered delays
+        {/* Data Nodes - Simple static circles */}
+        {dataNodes.map((node) => {
           const shouldShow = phase === 'analyzing' || phase === 'connecting' || phase === 'complete';
-          const isPulsing = pulseNodes.has(node.id);
-          const isEndpoint = index === 0 || index === dataNodes.length - 1;
           
           return (
-            <g key={`node-group-${animationKey}-${node.id}`}>
-              {/* Pulse Ring for active nodes */}
-              {isPulsing && shouldShow && (
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="12"
-                  fill="none"
-                  stroke={`url(#pulseGradient-${animationKey})`}
-                  strokeWidth="2"
-                  opacity="0.7"
-                  style={{
-                    animation: 'pulse-ring 2s ease-out infinite'
-                  }}
-                />
-              )}
-              
-              {/* Main Node */}
-              <circle
-                key={`node-${animationKey}-${node.id}`}
-                cx={node.x}
-                cy={node.y}
-                r={isEndpoint ? "8" : "5"}
-                fill={isPulsing ? `url(#pulseGradient-${animationKey})` : `url(#nodeGradient-${animationKey})`}
-                filter={isEndpoint ? `url(#strongGlow-${animationKey})` : `url(#glow-${animationKey})`}
-                opacity={shouldShow ? 1 : 0}
-                style={{
-                  transitionDuration: '0.6s',
-                  transitionDelay: shouldShow ? `${node.delay}ms` : '0ms',
-                  transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  transitionProperty: 'opacity, r',
-                  transform: isPulsing ? 'scale(1.2)' : 'scale(1)',
-                  transformOrigin: `${node.x}px ${node.y}px`
-                }}
-              />
-              
-              {/* Data Packet Animation */}
-
-            </g>
+            <circle
+              key={`node-${animationKey}-${node.id}`}
+              cx={node.x}
+              cy={node.y}
+              r="5"
+              fill="#10b981"
+              stroke="none"
+              opacity={shouldShow ? 1 : 0}
+              style={{
+                transitionDuration: '0.6s',
+                transitionDelay: shouldShow ? `${node.delay}ms` : '0ms',
+                transitionProperty: 'opacity'
+              }}
+            />
           );
         })}
 
       </svg>
-
-      {/* Status Indicator */}
-      <div className="absolute top-8 left-8 text-emerald-400 font-mono text-sm">
-        <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full ${
-            phase === 'loading' ? 'bg-yellow-400 animate-pulse' :
-            phase === 'analyzing' ? 'bg-blue-400 animate-pulse' :
-            phase === 'connecting' ? 'bg-emerald-400 animate-pulse' :
-            'bg-emerald-400'
-          }`} />
-          <span>
-            {phase === 'loading' && 'Initializing...'}
-            {phase === 'analyzing' && 'Analyzing Data Points'}
-            {phase === 'connecting' && 'Establishing Connections'}
-            {phase === 'complete' && 'Live Data Stream'}
-          </span>
-        </div>
-      </div>
-
-      {/* Metrics Display */}
-      {phase === 'complete' && (
-        <div className="absolute top-8 right-8 text-emerald-400 font-mono text-xs space-y-1">
-          <div>Throughput: 2.4k TPS</div>
-          <div>Latency: 12ms</div>
-          <div>Nodes: {dataNodes.length}</div>
-        </div>
-      )}
-
-      {/* Test buttons for demonstration */}
-      <div className="absolute bottom-8 left-8 space-x-4">
-        <button 
-          className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
-          onClick={() => {/* This would be handled by parent component */}}
-        >
-          Set 1 (742,120 → 900,205)
-        </button>
-        <button 
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          onClick={() => {/* This would be handled by parent component */}}
-        >
-          Set 2 (457,120 → 320,205)
-        </button>
-      </div>
-
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes pulse-ring {
-          0% {
-            r: 5;
-            opacity: 0.8;
-          }
-          50% {
-            r: 15;
-            opacity: 0.4;
-          }
-          100% {
-            r: 25;
-            opacity: 0;
-          }
-        }
-        
-        @keyframes float-data {
-          0%, 100% {
-            transform: translateY(0px);
-            opacity: 0.6;
-          }
-          50% {
-            transform: translateY(-10px);
-            opacity: 0.3;
-          }
-        }
-      `}</style>
     </div>
   );
 };
-
 export default AnimatedLines;
