@@ -17,7 +17,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     const endPoint = isSet1 ? { x: 900, y: 205 } : { x: 320, y: 205 };
     
     const nodes = [];
-    const numNodes = 8 + Math.floor(Math.random() * 4); // 8-12 nodes
+    const numNodes = 1 + Math.floor(Math.random() * 4); // 8-12 nodes
     
     for (let i = 0; i < numNodes; i++) {
       const progress = i / (numNodes - 1);
@@ -243,50 +243,11 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               />
               
               {/* Data Packet Animation */}
-              {phase === 'complete' && index < dataNodes.length - 1 && (
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="2"
-                  fill="#3b82f6"
-                  opacity="0.9"
-                  filter={`url(#glow-${animationKey})`}
-                >
-                  <animateMotion
-                    dur="3s"
-                    repeatCount="indefinite"
-                    begin={`${index * 0.5}s`}
-                  >
-                    <mpath href={`#connection-path-${index}`} />
-                  </animateMotion>
-                </circle>
-              )}
+
             </g>
           );
         })}
 
-        {/* Floating Data Indicators */}
-        {phase === 'complete' && (
-          <>
-            {[...Array(6)].map((_, i) => (
-              <text
-                key={`indicator-${animationKey}-${i}`}
-                x={400 + Math.random() * 400}
-                y={80 + Math.random() * 40}
-                fill="#10b981"
-                fontSize="10"
-                fontFamily="monospace"
-                opacity="0.6"
-                style={{
-                  animation: `float-data ${3 + Math.random() * 2}s ease-in-out infinite`,
-                  animationDelay: `${Math.random() * 2}s`
-                }}
-              >
-                {['TX', 'USD', 'BTC', 'ETH', 'API', 'SEC'][i]}
-              </text>
-            ))}
-          </>
-        )}
       </svg>
 
       {/* Status Indicator */}
