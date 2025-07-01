@@ -128,6 +128,60 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.9}} />
             <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 1}} />
           </linearGradient>
+
+          {/* Enhanced gradients for nodes */}
+          <radialGradient id={`nodeGradient-${animationKey}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 1}}>
+              <animate attributeName="stop-color" 
+                values="#10b981;#3b82f6;#06d6a0;#10b981" 
+                dur="3s" 
+                repeatCount="indefinite"/>
+            </stop>
+            <stop offset="70%" style={{stopColor: '#059669', stopOpacity: 0.8}}>
+              <animate attributeName="stop-color" 
+                values="#059669;#1d4ed8;#0891b2;#059669" 
+                dur="3s" 
+                repeatCount="indefinite"/>
+            </stop>
+            <stop offset="100%" style={{stopColor: '#064e3b', stopOpacity: 0.4}}>
+              <animate attributeName="stop-color" 
+                values="#064e3b;#1e3a8a;#0c4a6e;#064e3b" 
+                dur="3s" 
+                repeatCount="indefinite"/>
+            </stop>
+          </radialGradient>
+
+          <radialGradient id={`nodeGlow-${animationKey}`} cx="50%" cy="50%" r="80%">
+            <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.6}}>
+              <animate attributeName="stop-color" 
+                values="#10b981;#3b82f6;#06d6a0;#10b981" 
+                dur="3s" 
+                repeatCount="indefinite"/>
+              <animate attributeName="stop-opacity" 
+                values="0.6;0.8;0.4;0.6" 
+                dur="2s" 
+                repeatCount="indefinite"/>
+            </stop>
+            <stop offset="100%" style={{stopColor: '#10b981', stopOpacity: 0}} />
+          </radialGradient>
+
+          {/* Filter for glow effect */}
+          <filter id={`glow-${animationKey}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          {/* Pulsing animation filter */}
+          <filter id={`pulse-${animationKey}`} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
         </defs>
 
         {/* Connection Lines */}
@@ -166,25 +220,77 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           );
         })}
 
-        {/* Data Nodes - Simple static circles */}
-        {dataNodes.map((node) => {
+        {/* Enhanced Stylish Data Nodes */}
+        {dataNodes.map((node, index) => {
           const shouldShow = phase === 'analyzing' || phase === 'connecting' || phase === 'complete';
           
           return (
-            <circle
-              key={`node-${animationKey}-${node.id}`}
-              cx={node.x}
-              cy={node.y}
-              r="5"
-              fill="#10b981"
-              stroke="none"
-              opacity={shouldShow ? 1 : 0}
-              style={{
-                transitionDuration: '0.6s',
-                transitionDelay: shouldShow ? `${node.delay}ms` : '0ms',
-                transitionProperty: 'opacity'
-              }}
-            />
+            <g key={`node-group-${animationKey}-${node.id}`}>
+              {/* Outer glow ring */}
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r="16"
+                fill={`url(#nodeGlow-${animationKey})`}
+                opacity={shouldShow ? 1 : 0}
+                filter={`url(#glow-${animationKey})`}
+                style={{
+                  transitionDuration: '0.8s',
+                  transitionDelay: shouldShow ? `${node.delay}ms` : '0ms',
+                  transitionProperty: 'opacity'
+                }}
+              >
+                <animate attributeName="r" 
+                  values="16;20;16" 
+                  dur="2s" 
+                  repeatCount="indefinite"
+                  begin={shouldShow ? `${node.delay / 1000}s` : 'indefinite'}/>
+              </circle>
+              
+              {/* Main node body */}
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r="8"
+                fill={`url(#nodeGradient-${animationKey})`}
+                stroke="#ffffff"
+                strokeWidth="0.5"
+                opacity={shouldShow ? 1 : 0}
+                filter={`url(#pulse-${animationKey})`}
+                style={{
+                  transitionDuration: '0.6s',
+                  transitionDelay: shouldShow ? `${node.delay + 200}ms` : '0ms',
+                  transitionProperty: 'opacity'
+                }}
+              >
+                <animate attributeName="r" 
+                  values="8;10;8" 
+                  dur="1.5s" 
+                  repeatCount="indefinite"
+                  begin={shouldShow ? `${(node.delay + 200) / 1000}s` : 'indefinite'}/>
+              </circle>
+              
+              {/* Inner core */}
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r="4"
+                fill="#ffffff"
+                opacity={shouldShow ? 0.9 : 0}
+                style={{
+                  transitionDuration: '0.4s',
+                  transitionDelay: shouldShow ? `${node.delay + 400}ms` : '0ms',
+                  transitionProperty: 'opacity'
+                }}
+              >
+                <animate attributeName="opacity" 
+                  values="0.9;0.5;0.9" 
+                  dur="1s" 
+                  repeatCount="indefinite"
+                  begin={shouldShow ? `${(node.delay + 400) / 1000}s` : 'indefinite'}/>
+              </circle>
+
+            </g>
           );
         })}
 
@@ -192,4 +298,5 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     </div>
   );
 };
+
 export default AnimatedLines;
