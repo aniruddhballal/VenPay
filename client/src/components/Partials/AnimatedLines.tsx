@@ -9,6 +9,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [dataNodes, setDataNodes] = useState<Array<{x: number, y: number, id: string, delay: number}>>([]);
   const [connections, setConnections] = useState<string[]>([]);
   const [pulseNodes, setPulseNodes] = useState<Set<string>>(new Set());
+  const [animationKey, setAnimationKey] = useState(0); // Add key to force re-render
 
   // Generate data flow nodes along the path
   const generateDataNodes = (isSet1: boolean) => {
@@ -62,9 +63,14 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   };
 
   useEffect(() => {
-    // Reset animation when activeSet changes
+    // Clear any existing timeouts and intervals
+    const timeoutIds: NodeJS.Timeout[] = [];
+    const intervalIds: NodeJS.Timeout[] = [];
+    
+    // Reset all states immediately
     setPhase('loading');
     setPulseNodes(new Set());
+    setAnimationKey(prev => prev + 1); // Force re-render with new key
     
     // Generate new data layout
     const isSet1 = activeSet === 'set1';
@@ -74,13 +80,13 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     setDataNodes(nodes);
     setConnections(paths);
     
-    // Animation sequence
+    // Clear animation sequence with proper delays
     const sequence = [
-      { delay: 300, action: () => setPhase('analyzing') },
-      { delay: 1200, action: () => setPhase('connecting') },
-      { delay: 2800, action: () => setPhase('complete') },
+      { delay: 500, action: () => setPhase('analyzing') }, // Increased initial delay
+      { delay: 1500, action: () => setPhase('connecting') }, // Adjusted timing
+      { delay: 3000, action: () => setPhase('complete') }, // Adjusted timing
       { 
-        delay: 3200, 
+        delay: 3500, // Increased delay before pulsing starts
         action: () => {
           // Start pulsing random nodes
           const interval = setInterval(() => {
@@ -91,69 +97,54 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             setPulseNodes(new Set(randomNodes));
           }, 1500);
           
-          return () => clearInterval(interval);
+          intervalIds.push(interval);
         }
       }
     ];
     
-    const cleanups: (() => void)[] = [];
-    
     sequence.forEach(({ delay, action }) => {
-      const timeout = setTimeout(() => {
-        const cleanup = action();
-        if (cleanup) cleanups.push(cleanup);
-      }, delay);
-      
-      cleanups.push(() => clearTimeout(timeout));
+      const timeout = setTimeout(action, delay);
+      timeoutIds.push(timeout);
     });
     
+    // Cleanup function
     return () => {
-      cleanups.forEach(cleanup => cleanup());
+      timeoutIds.forEach(id => clearTimeout(id));
+      intervalIds.forEach(id => clearInterval(id));
     };
   }, [activeSet]);
 
   return (
     <div className="relative w-full h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
-      {/* Grid Pattern Background */}
-      {/* <div className="absolute inset-0 opacity-5">
-        <svg className="w-full h-full">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#10b981" strokeWidth="0.5"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div> */}
-
       {/* Main Animation SVG */}
       <svg 
+        key={animationKey} // Force re-render when key changes
         className="absolute inset-0 w-full h-full pointer-events-none"
         viewBox="0 0 1200 1200"
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
           {/* Gradients */}
-          <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id={`connectionGradient-${animationKey}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style={{stopColor: '#10b981', stopOpacity: 0.8}} />
             <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.9}} />
             <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 1}} />
           </linearGradient>
           
-          <radialGradient id="nodeGradient" cx="50%" cy="50%" r="50%">
+          <radialGradient id={`nodeGradient-${animationKey}`} cx="50%" cy="50%" r="50%">
             <stop offset="0%" style={{stopColor: '#06d6a0', stopOpacity: 1}} />
             <stop offset="70%" style={{stopColor: '#10b981', stopOpacity: 0.8}} />
             <stop offset="100%" style={{stopColor: '#059669', stopOpacity: 0.6}} />
           </radialGradient>
           
-          <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
+          <radialGradient id={`pulseGradient-${animationKey}`} cx="50%" cy="50%" r="50%">
             <stop offset="0%" style={{stopColor: '#3b82f6', stopOpacity: 0.9}} />
             <stop offset="50%" style={{stopColor: '#06d6a0', stopOpacity: 0.7}} />
             <stop offset="100%" style={{stopColor: '#10b981', stopOpacity: 0.3}} />
           </radialGradient>
 
           {/* Filters for glow effects */}
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <filter id={`glow-${animationKey}`} x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
             <feMerge>
               <feMergeNode in="coloredBlur"/>
@@ -161,7 +152,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             </feMerge>
           </filter>
 
-          <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+          <filter id={`strongGlow-${animationKey}`} x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
             <feMerge>
               <feMergeNode in="coloredBlur"/>
@@ -195,13 +186,13 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           
           return (
             <path
-              key={`connection-${activeSet}-${index}`}
+              key={`connection-${animationKey}-${index}`}
               d={path}
               fill="none"
-              stroke="url(#connectionGradient)"
+              stroke={`url(#connectionGradient-${animationKey})`}
               strokeWidth={phase === 'complete' ? "2.5" : "1.8"}
               strokeLinecap="round"
-              filter="url(#glow)"
+              filter={`url(#glow-${animationKey})`}
               style={animationStyle}
             />
           );
@@ -209,20 +200,21 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
         {/* Data Nodes */}
         {dataNodes.map((node, index) => {
-          const isVisible = phase === 'analyzing' || phase === 'connecting' || phase === 'complete';
+          // Only show nodes during analyzing phase and later, with staggered delays
+          const shouldShow = phase === 'analyzing' || phase === 'connecting' || phase === 'complete';
           const isPulsing = pulseNodes.has(node.id);
           const isEndpoint = index === 0 || index === dataNodes.length - 1;
           
           return (
-            <g key={`node-${activeSet}-${node.id}`}>
+            <g key={`node-group-${animationKey}-${node.id}`}>
               {/* Pulse Ring for active nodes */}
-              {isPulsing && (
+              {isPulsing && shouldShow && (
                 <circle
                   cx={node.x}
                   cy={node.y}
                   r="12"
                   fill="none"
-                  stroke="url(#pulseGradient)"
+                  stroke={`url(#pulseGradient-${animationKey})`}
                   strokeWidth="2"
                   opacity="0.7"
                   style={{
@@ -233,15 +225,16 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               
               {/* Main Node */}
               <circle
+                key={`node-${animationKey}-${node.id}`}
                 cx={node.x}
                 cy={node.y}
                 r={isEndpoint ? "8" : "5"}
-                fill={isPulsing ? "url(#pulseGradient)" : "url(#nodeGradient)"}
-                filter={isEndpoint ? "url(#strongGlow)" : "url(#glow)"}
-                opacity={isVisible ? 1 : 0}
+                fill={isPulsing ? `url(#pulseGradient-${animationKey})` : `url(#nodeGradient-${animationKey})`}
+                filter={isEndpoint ? `url(#strongGlow-${animationKey})` : `url(#glow-${animationKey})`}
+                opacity={shouldShow ? 1 : 0}
                 style={{
                   transitionDuration: '0.6s',
-                  transitionDelay: `${node.delay}ms`,
+                  transitionDelay: shouldShow ? `${node.delay}ms` : '0ms',
                   transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
                   transitionProperty: 'opacity, r',
                   transform: isPulsing ? 'scale(1.2)' : 'scale(1)',
@@ -257,7 +250,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                   r="2"
                   fill="#3b82f6"
                   opacity="0.9"
-                  filter="url(#glow)"
+                  filter={`url(#glow-${animationKey})`}
                 >
                   <animateMotion
                     dur="3s"
@@ -277,7 +270,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           <>
             {[...Array(6)].map((_, i) => (
               <text
-                key={`indicator-${i}`}
+                key={`indicator-${animationKey}-${i}`}
                 x={400 + Math.random() * 400}
                 y={80 + Math.random() * 40}
                 fill="#10b981"
@@ -322,6 +315,22 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           <div>Nodes: {dataNodes.length}</div>
         </div>
       )}
+
+      {/* Test buttons for demonstration */}
+      <div className="absolute bottom-8 left-8 space-x-4">
+        <button 
+          className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
+          onClick={() => {/* This would be handled by parent component */}}
+        >
+          Set 1 (742,120 → 900,205)
+        </button>
+        <button 
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={() => {/* This would be handled by parent component */}}
+        >
+          Set 2 (457,120 → 320,205)
+        </button>
+      </div>
 
       {/* CSS Animations */}
       <style jsx>{`
