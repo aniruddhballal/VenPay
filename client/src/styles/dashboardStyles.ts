@@ -1,4 +1,5 @@
 import { Box, Typography, Button, keyframes } from "@mui/material";
+import type { ButtonProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 // Keyframes for animations
@@ -78,57 +79,13 @@ export const NavigationContainer = styled(Box)(({ /*theme*/ }) => ({
   },
 }));
 
-export const NavigationButton = styled(Button)(({ /*theme*/ }) => ({
-  flex: 1,
-  minHeight: '60px',
-  background: 'rgba(255, 255, 255, 0.15)',
-  backdropFilter: 'blur(10px)',
-  border: 'none',
-  color: '#1e293b',
-  fontWeight: 600,
-  fontSize: '1.25rem',
-  textTransform: 'none',
-  position: 'relative',
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.75rem',
-  padding: '0 1.5rem',
- 
-  //four lines
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    inset: 0,
-    background: `
-      linear-gradient(90deg, #1e293b, #334155) 0 0/0 3px no-repeat,
-      linear-gradient(270deg, #1e293b, #334155) 100% 100%/0 3px no-repeat,
-      linear-gradient(0deg, #1e293b, #334155) 0 100%/3px 0 no-repeat,
-      linear-gradient(180deg, #1e293b, #334155) 100% 0/3px 0 no-repeat
-    `,
-    transition: 'background-size 0.7s ease',
-  },
- 
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    color: '#1e293b',
-    '&::before': {
-      background: `
-        linear-gradient(90deg, #10b981, #10b981) 0 0/100% 3px no-repeat,
-        linear-gradient(270deg, #10b981, #10b981) 100% 100%/100% 3px no-repeat,
-        linear-gradient(0deg, #10b981, #10b981) 0 100%/3px 100% no-repeat,
-        linear-gradient(180deg, #10b981, #10b981) 100% 0/3px 100% no-repeat
-      `,
-    },
-  },
- 
-  '& .MuiSvgIcon-root': {
-    fontSize: '1.5rem',
-    opacity: 0.8,
-  },
-}));
+interface NavigationButtonProps extends ButtonProps {
+  borderColor?: string;
+}
 
-export const NavigationButton2 = styled(Button)(({ /*theme*/ }) => ({
+export const NavigationButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'borderColor',
+})<NavigationButtonProps>(({ borderColor = '#10b981' }) => ({
   flex: 1,
   minHeight: '60px',
   background: 'rgba(255, 255, 255, 0.15)',
@@ -144,8 +101,7 @@ export const NavigationButton2 = styled(Button)(({ /*theme*/ }) => ({
   alignItems: 'center',
   gap: '0.75rem',
   padding: '0 1.5rem',
- 
-  //four lines
+
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -158,19 +114,19 @@ export const NavigationButton2 = styled(Button)(({ /*theme*/ }) => ({
     `,
     transition: 'background-size 0.7s ease',
   },
- 
+
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     '&::before': {
       background: `
-        linear-gradient(90deg, #3b82f6, #3b82f6) 0 0/100% 3px no-repeat,
-        linear-gradient(270deg, #3b82f6, #3b82f6) 100% 100%/100% 3px no-repeat,
-        linear-gradient(0deg, #3b82f6, #3b82f6) 0 100%/3px 100% no-repeat,
-        linear-gradient(180deg, #3b82f6, #3b82f6) 100% 0/3px 100% no-repeat
+        linear-gradient(90deg, ${borderColor}, ${borderColor}) 0 0/100% 3px no-repeat,
+        linear-gradient(270deg, ${borderColor}, ${borderColor}) 100% 100%/100% 3px no-repeat,
+        linear-gradient(0deg, ${borderColor}, ${borderColor}) 0 100%/3px 100% no-repeat,
+        linear-gradient(180deg, ${borderColor}, ${borderColor}) 100% 0/3px 100% no-repeat
       `,
     },
   },
- 
+
   '& .MuiSvgIcon-root': {
     fontSize: '1.5rem',
     opacity: 0.8,

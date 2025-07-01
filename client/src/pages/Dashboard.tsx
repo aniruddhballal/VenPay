@@ -15,7 +15,7 @@ import { setUser, logout, setLoading, setInitialized } from "../store/authSlice"
 
 import {
   DashboardContainer, DashboardHeader, DashboardSubheader, NavigationContainer, NavigationButton,
-  NavigationButton2, SectionContainer, LoadingContainer, LoadingSpinner, StyledButton,
+  SectionContainer, LoadingContainer, LoadingSpinner, StyledButton,
   ProfileButton, ProfileImage } from "../styles/dashboardStyles";
 
 // Define RootState type for useSelector
@@ -176,7 +176,7 @@ export default function Dashboard() {
               <Inventory />
               Product Management
             </NavigationButton>
-            <NavigationButton2 
+            <NavigationButton borderColor='#3b82f6'
               onClick={() => handleVendorSectionClick('product-requests')}
               style={{ 
                 opacity: activeVendorSection === 'product-requests' ? 1 : 0.7,
@@ -186,7 +186,7 @@ export default function Dashboard() {
             >
               <RequestPage />
               Product Requests
-            </NavigationButton2>
+            </NavigationButton>
           </NavigationContainer>
 
           <SectionContainer>
@@ -212,7 +212,7 @@ export default function Dashboard() {
               <BusinessCenter />
               Product Catalog
             </NavigationButton>
-            <NavigationButton2 
+            <NavigationButton borderColor='#3b82f6'
               onClick={() => handleCompanySectionClick('payment-requests')}
               style={{ 
                 opacity: activeCompanySection === 'payment-requests' ? 1 : 0.7,
@@ -222,7 +222,7 @@ export default function Dashboard() {
             >
               <Payment />
               Payment Requests
-            </NavigationButton2>
+            </NavigationButton>
           </NavigationContainer>
 
           <SectionContainer>
