@@ -21,19 +21,12 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
     
-    const nodes = [];
+    const allNodes = [];
     const numIntermediateNodes = 4 + Math.floor(Math.random() * 2); // 4-5 intermediate nodes
     const usedPositions = new Set<string>();
     
-    // Add start point
-    nodes.push({
-      x: startPoint.x,
-      y: startPoint.y,
-      id: 'start-node',
-      delay: 0
-    });
-    
-    // Generate intermediate nodes on grid intersections
+    // Generate intermediate nodes on grid intersections first
+    const intermediateNodes = [];
     for (let i = 0; i < numIntermediateNodes; i++) {
       let gridX, gridY, x, y;
       let attempts = 0;
@@ -49,25 +42,50 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       
       if (attempts < 50) {
         usedPositions.add(`${gridX}-${gridY}`);
-        nodes.push({
-          x,
-          y,
-          id: `intermediate-node-${i}`,
-          delay: (i + 1) * 400 + Math.random() * 200
-        });
+        intermediateNodes.push({ x, y, id: `intermediate-node-${i}` });
       }
     }
     
-    // Add end point
-    nodes.push({
-      x: endPoint.x,
-      y: endPoint.y,
-      id: 'end-node',
-      delay: (numIntermediateNodes + 1) * 400 + Math.random() * 200
-    });
+    // Create a path that connects all nodes logically
+    const pathNodes = [startPoint, ...intermediateNodes, endPoint];
     
-    // Sort nodes by their appearance delay for better flow
-    return nodes.sort((a, b) => a.delay - b.delay);
+    // Sort intermediate nodes to create a more natural path from start to end
+    // We'll sort by proximity to create a flowing path
+    const sortedPath = [pathNodes[0]]; // Start with the start point
+    const remainingNodes = [...pathNodes.slice(1, -1)]; // Intermediate nodes
+    let currentNode = pathNodes[0];
+    
+    // Build path by always choosing the closest remaining node
+    while (remainingNodes.length > 0) {
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      
+      remainingNodes.forEach((node, index) => {
+        const distance = Math.sqrt(
+          Math.pow(node.x - currentNode.x, 2) + Math.pow(node.y - currentNode.y, 2)
+        );
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      
+      const nextNode = remainingNodes.splice(closestIndex, 1)[0];
+      sortedPath.push(nextNode);
+      currentNode = nextNode;
+    }
+    
+    // Add end point
+    sortedPath.push(pathNodes[pathNodes.length - 1]);
+    
+    // Add delays and IDs for animation
+    return sortedPath.map((node, index) => ({
+      ...node,
+      id: index === 0 ? 'start-node' : 
+          index === sortedPath.length - 1 ? 'end-node' : 
+          `intermediate-node-${index}`,
+      delay: index * 400 + Math.random() * 200
+    }));
   };
 
   // Generate connection paths between nodes in sequence
