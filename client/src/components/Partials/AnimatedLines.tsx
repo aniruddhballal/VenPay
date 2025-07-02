@@ -10,53 +10,67 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [connections, setConnections] = useState<string[]>([]);
   const [animationKey, setAnimationKey] = useState(0);
 
-  // Generate data flow nodes along the path
-  const generateDataNodes = (isSet1: boolean) => {
+  // Grid configuration
+  const GRID_SIZE = 30;
+  const GRID_COLS = Math.floor(1200 / GRID_SIZE);
+  const GRID_ROWS = Math.floor(190 / GRID_SIZE);
+
+  // Generate random grid intersection points as intermediate nodes
+  const generateGridNodes = (isSet1: boolean) => {
+    // Define fixed start and end points
     const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
     const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
     
     const nodes = [];
-    const numNodes = 3;
+    const numIntermediateNodes = 4 + Math.floor(Math.random() * 2); // 4-5 intermediate nodes
+    const usedPositions = new Set<string>();
     
-    for (let i = 0; i < numNodes; i++) {
-      const progress = i / (numNodes - 1);
-      const baseX = startPoint.x + (endPoint.x - startPoint.x) * progress;
-      const baseY = startPoint.y + (endPoint.y - startPoint.y) * progress;
+    // Add start point
+    nodes.push({
+      x: startPoint.x,
+      y: startPoint.y,
+      id: 'start-node',
+      delay: 0
+    });
+    
+    // Generate intermediate nodes on grid intersections
+    for (let i = 0; i < numIntermediateNodes; i++) {
+      let gridX, gridY, x, y;
+      let attempts = 0;
       
-      // For first and last nodes, use exact coordinates without variation
-      if (i === 0) {
+      // Find unused grid intersection
+      do {
+        gridX = Math.floor(Math.random() * GRID_COLS);
+        gridY = Math.floor(Math.random() * GRID_ROWS);
+        x = gridX * GRID_SIZE;
+        y = gridY * GRID_SIZE;
+        attempts++;
+      } while (usedPositions.has(`${gridX}-${gridY}`) && attempts < 50);
+      
+      if (attempts < 50) {
+        usedPositions.add(`${gridX}-${gridY}`);
         nodes.push({
-          x: startPoint.x,
-          y: startPoint.y,
-          id: `node-${i}`,
-          delay: i * 300 + Math.random() * 100
-        });
-      } else if (i === numNodes - 1) {
-        nodes.push({
-          x: endPoint.x,
-          y: endPoint.y,
-          id: `node-${i}`,
-          delay: i * 300 + Math.random() * 100
-        });
-      } else {
-        // Add organic variation only to intermediate nodes
-        const variation = 30 + Math.random() * 40;
-        const offsetX = (Math.random() - 0.5) * variation;
-        const offsetY = (Math.random() - 0.5) * variation * 0.6; // Less vertical variation
-        
-        nodes.push({
-          x: baseX + offsetX,
-          y: Math.max(100, Math.min(baseY + offsetY, endPoint.y - 20)),
-          id: `node-${i}`,
-          delay: i * 300 + Math.random() * 100
+          x,
+          y,
+          id: `intermediate-node-${i}`,
+          delay: (i + 1) * 400 + Math.random() * 200
         });
       }
     }
     
-    return nodes;
+    // Add end point
+    nodes.push({
+      x: endPoint.x,
+      y: endPoint.y,
+      id: 'end-node',
+      delay: (numIntermediateNodes + 1) * 400 + Math.random() * 200
+    });
+    
+    // Sort nodes by their appearance delay for better flow
+    return nodes.sort((a, b) => a.delay - b.delay);
   };
 
-  // Generate connection paths between nodes
+  // Generate connection paths between nodes in sequence
   const generateConnections = (nodes: Array<{x: number, y: number, id: string}>) => {
     const paths = [];
     
@@ -67,10 +81,12 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       // Create smooth bezier curves between nodes
       const midX = (current.x + next.x) / 2;
       const midY = (current.y + next.y) / 2;
-      const cp1x = current.x + (midX - current.x) * 0.5 + (Math.random() - 0.5) * 20;
-      const cp1y = current.y + (midY - current.y) * 0.5 + (Math.random() - 0.5) * 15;
-      const cp2x = next.x + (midX - next.x) * 0.5 + (Math.random() - 0.5) * 20;
-      const cp2y = next.y + (midY - next.y) * 0.5 + (Math.random() - 0.5) * 15;
+      
+      // Control points for smooth curves
+      const cp1x = current.x + (midX - current.x) * 0.6;
+      const cp1y = current.y + (midY - current.y) * 0.6;
+      const cp2x = next.x + (midX - next.x) * 0.6;
+      const cp2y = next.y + (midY - next.y) * 0.6;
       
       paths.push(`M ${current.x} ${current.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${next.x} ${next.y}`);
     }
@@ -86,15 +102,14 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     setPhase('loading');
     setAnimationKey(prev => prev + 1);
     
-    // Generate new data layout
-    const isSet1 = activeSet === 'set1';
-    const nodes = generateDataNodes(isSet1);
+    // Generate new grid-based data layout
+    const nodes = generateGridNodes(activeSet === 'set1');
     const paths = generateConnections(nodes);
     
     setDataNodes(nodes);
     setConnections(paths);
     
-    // Clear animation sequence with proper delays
+    // Animation sequence with proper delays
     const sequence = [
       { delay: 800, action: () => setPhase('analyzing') },
       { delay: 2000, action: () => setPhase('connecting') },
@@ -143,6 +158,13 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             <stop offset="100%" style={{stopColor: '#3b82f6', stopOpacity: 0}} />
           </radialGradient>
 
+          {/* Special gradient for start/end nodes */}
+          <radialGradient id={`endpointGradient-${animationKey}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style={{stopColor: '#06b6d4', stopOpacity: 0.95}} />
+            <stop offset="60%" style={{stopColor: '#0891b2', stopOpacity: 0.85}} />
+            <stop offset="100%" style={{stopColor: '#0e7490', stopOpacity: 0.7}} />
+          </radialGradient>
+
           {/* Minimal glow filter */}
           <filter id={`glow-${animationKey}`} x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
@@ -157,7 +179,27 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             <stop offset="0%" style={{stopColor: '#06b6d4', stopOpacity: 0.8}} />
             <stop offset="100%" style={{stopColor: '#0891b2', stopOpacity: 0.6}} />
           </linearGradient>
+
+          {/* Grid pattern definition */}
+          <pattern id={`grid-${animationKey}`} width="30" height="30" patternUnits="userSpaceOnUse">
+            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#60a5fa" strokeWidth="0.8" opacity="0.6"/>
+            <path d="M 15 0 L 15 30 M 0 15 L 30 15" fill="none" stroke="#3b82f6" strokeWidth="0.3" opacity="0.4"/>
+          </pattern>
         </defs>
+
+        {/* Background Grid */}
+        <rect 
+          x="0" 
+          y="0" 
+          width="1200" 
+          height="190" 
+          fill={`url(#grid-${animationKey})`} 
+          opacity={0.7}
+          style={{
+            transitionDuration: '2s',
+            transitionProperty: 'opacity'
+          }} 
+        />
 
         {/* Connection Lines */}
         {connections.map((path, index) => {
@@ -170,7 +212,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               strokeDashoffset: 0,
               opacity: phase === 'complete' ? 0.9 : 0.7,
               transitionDuration: '1.5s',
-              transitionDelay: `${index * 200}ms`,
+              transitionDelay: `${index * 300}ms`,
               transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
               transitionProperty: 'stroke-dashoffset, opacity'
             };
@@ -188,24 +230,43 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               d={path}
               fill="none"
               stroke={`url(#connectionGradient-${animationKey})`}
-              strokeWidth={phase === 'complete' ? "2" : "1.5"}
+              strokeWidth={phase === 'complete' ? "2.5" : "2"}
               strokeLinecap="round"
               style={animationStyle}
             />
           );
         })}
 
-        {/* Professional Blockchain Nodes */}
-        {dataNodes.map((node) => {
+        {/* Blockchain Nodes */}
+        {dataNodes.map((node, nodeIndex) => {
           const shouldShow = phase === 'analyzing' || phase === 'connecting' || phase === 'complete';
+          const isEndpoint = node.id === 'start-node' || node.id === 'end-node';
           
           return (
             <g key={`node-group-${animationKey}-${node.id}`}>
+              {/* Grid intersection highlight - only for intermediate nodes */}
+              {!isEndpoint && (
+                <circle
+                  cx={node.x}
+                  cy={node.y}
+                  r="15"
+                  fill="none"
+                  stroke="#60a5fa"
+                  strokeWidth="1"
+                  opacity={shouldShow ? 0.4 : 0}
+                  style={{
+                    transitionDuration: '0.6s',
+                    transitionDelay: shouldShow ? `${node.delay - 200}ms` : '0ms',
+                    transitionProperty: 'opacity'
+                  }}
+                />
+              )}
+
               {/* Subtle outer glow */}
               <circle
                 cx={node.x}
                 cy={node.y}
-                r="12"
+                r={isEndpoint ? "15" : "12"}
                 fill={`url(#nodeGlow-${animationKey})`}
                 opacity={shouldShow ? 0.6 : 0}
                 filter={`url(#glow-${animationKey})`}
@@ -216,14 +277,14 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                 }}
               />
               
-              {/* Main node - hexagonal blockchain style */}
+              {/* Main node */}
               <circle
                 cx={node.x}
                 cy={node.y}
-                r="6"
-                fill={`url(#nodeGradient-${animationKey})`}
-                stroke="#60a5fa"
-                strokeWidth="1"
+                r={isEndpoint ? "9" : "7"}
+                fill={isEndpoint ? `url(#endpointGradient-${animationKey})` : `url(#nodeGradient-${animationKey})`}
+                stroke={isEndpoint ? "#06b6d4" : "#60a5fa"}
+                strokeWidth={isEndpoint ? "2" : "1.5"}
                 opacity={shouldShow ? 1 : 0}
                 style={{
                   transitionDuration: '0.8s',
@@ -236,9 +297,9 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               <circle
                 cx={node.x}
                 cy={node.y}
-                r="2.5"
+                r={isEndpoint ? "4" : "3"}
                 fill="#ffffff"
-                opacity={shouldShow ? 0.8 : 0}
+                opacity={shouldShow ? 0.9 : 0}
                 style={{
                   transitionDuration: '0.6s',
                   transitionDelay: shouldShow ? `${node.delay + 500}ms` : '0ms',
@@ -248,7 +309,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                 {/* Very subtle pulse - only opacity changes */}
                 <animate 
                   attributeName="opacity" 
-                  values="0.8;0.4;0.8" 
+                  values="0.9;0.5;0.9" 
                   dur="4s" 
                   repeatCount="indefinite"
                   begin={shouldShow ? `${(node.delay + 500) / 1000}s` : 'indefinite'}
@@ -260,9 +321,9 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                 <circle
                   cx={node.x}
                   cy={node.y}
-                  r="1"
+                  r="1.5"
                   fill={`url(#dataPacket-${animationKey})`}
-                  opacity="0.7"
+                  opacity="0.8"
                 >
                   <animateTransform
                     attributeName="transform"
@@ -274,39 +335,63 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                   <animateTransform
                     attributeName="transform"
                     type="translate"
-                    values="0,0;10,0;0,0;-10,0;0,0"
+                    values="0,0;12,0;0,0;-12,0;0,0"
                     dur="8s"
                     repeatCount="indefinite"
                     additive="sum"
                   />
                 </circle>
               )}
+
+              {/* Node labels for start/end points */}
+              {shouldShow && isEndpoint && (
+                <text
+                  x={node.x}
+                  y={node.y - 25}
+                  textAnchor="middle"
+                  fill="#06b6d4"
+                  fontSize="11"
+                  opacity={0.8}
+                  style={{
+                    fontFamily: 'monospace',
+                    fontWeight: 'bold',
+                    transitionDuration: '0.5s',
+                    transitionDelay: `${node.delay + 700}ms`,
+                    transitionProperty: 'opacity'
+                  }}
+                >
+                  {node.id === 'start-node' ? 'START' : 'END'}
+                </text>
+              )}
+
+              {/* Node sequence indicator for intermediate nodes */}
+              {shouldShow && !isEndpoint && (
+                <text
+                  x={node.x}
+                  y={node.y - 20}
+                  textAnchor="middle"
+                  fill="#60a5fa"
+                  fontSize="10"
+                  opacity={0.6}
+                  style={{
+                    fontFamily: 'monospace',
+                    transitionDuration: '0.5s',
+                    transitionDelay: `${node.delay + 700}ms`,
+                    transitionProperty: 'opacity'
+                  }}
+                >
+                  {nodeIndex}
+                </text>
+              )}
             </g>
           );
         })}
-
-        {/* Blockchain grid pattern overlay - covering top portion to y=190 */}
-        <defs>
-          <pattern id={`grid-${animationKey}`} width="30" height="30" patternUnits="userSpaceOnUse">
-            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#60a5fa" strokeWidth="0.8" opacity="0.6"/>
-            <path d="M 15 0 L 15 30 M 0 15 L 30 15" fill="none" stroke="#3b82f6" strokeWidth="0.3" opacity="0.4"/>
-          </pattern>
-        </defs>
-        
-        {/* Grid covering from top of screen to y=190 */}
-        <rect 
-          x="0" 
-          y="0" 
-          width="1200" 
-          height="190" 
-          fill={`url(#grid-${animationKey})`} 
-          opacity={0.7}
-          style={{
-            transitionDuration: '2s',
-            transitionProperty: 'opacity'
-          }} 
-        />
       </svg>
+      
+      {/* Debug info */}
+      <div className="absolute bottom-4 left-4 text-cyan-400 text-sm font-mono opacity-60">
+        Active Set: {activeSet} | Phase: {phase} | Nodes: {dataNodes.length}
+      </div>
     </div>
   );
 };
