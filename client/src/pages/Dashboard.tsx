@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-
-import AnimatedLines from '../components/Partials/AnimatedLines'; // adjust path if needed
-
-import { useSelector, useDispatch } from "react-redux";
-import { BusinessCenter, RequestPage, Payment, Inventory, AccountCircle } from "@mui/icons-material";
-import api from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+
+import api from "../api/api";
+import { setUser, logout, setLoading, setInitialized } from "../store/authSlice";
+
+import AnimatedLines from '../components/Partials/AnimatedLines';
 import ProductManagement from "../components/Partials/ProductManagement";
 import ProductList from "../components/Partials/ProductList";
 import ProductRequests from "../components/Partials/ProductRequests";
 import PaymentRequests from "../components/Partials/PaymentRequests";
-import { toast } from "react-toastify";
-import { setUser, logout, setLoading, setInitialized } from "../store/authSlice";
 
+import { BusinessCenter, RequestPage, Payment, Inventory, AccountCircle } from "@mui/icons-material";
 import {
   DashboardContainer, DashboardHeader, DashboardSubheader, NavigationContainer, NavigationButton,
   SectionContainer, LoadingContainer, LoadingSpinner, StyledButton,

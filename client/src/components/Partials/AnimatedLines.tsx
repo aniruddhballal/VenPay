@@ -221,7 +221,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
         })}
 
         {/* Enhanced Stylish Data Nodes */}
-        {dataNodes.map((node, index) => {
+        {dataNodes.map((node) => {
           const shouldShow = phase === 'analyzing' || phase === 'connecting' || phase === 'complete';
           
           return (
