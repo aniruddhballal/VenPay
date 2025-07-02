@@ -287,8 +287,9 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
         {/* Blockchain grid pattern overlay - covering top portion to y=190 */}
         <defs>
-          <pattern id={`grid-${animationKey}`} width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e40af" strokeWidth="0.5" opacity="0.15"/>
+          <pattern id={`grid-${animationKey}`} width="30" height="30" patternUnits="userSpaceOnUse">
+            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#60a5fa" strokeWidth="0.8" opacity="0.6"/>
+            <path d="M 15 0 L 15 30 M 0 15 L 30 15" fill="none" stroke="#3b82f6" strokeWidth="0.3" opacity="0.4"/>
           </pattern>
         </defs>
         
@@ -296,10 +297,10 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
         <rect 
           x="0" 
           y="0" 
-          width="100%" 
+          width="1200" 
           height="190" 
           fill={`url(#grid-${animationKey})`} 
-          opacity={0.4}
+          opacity={0.7}
           style={{
             transitionDuration: '2s',
             transitionProperty: 'opacity'
