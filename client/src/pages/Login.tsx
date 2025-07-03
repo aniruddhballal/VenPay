@@ -19,7 +19,12 @@ export default function Login() {
   } = useLogin();
 
   return (
-    <Box sx={loginStyles.container}>
+      <Box
+        sx={{
+          ...loginStyles.container,
+          ...loginStyles.globalSelection
+        }}
+      >
       <Fade in timeout={800}>
         <Box sx={loginStyles.headerBox}>
           <AuthLogo />

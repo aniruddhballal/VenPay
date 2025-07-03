@@ -73,6 +73,12 @@ export const loginStyles = {
       },
     },
   },
+  globalSelection: {
+    '& *::selection': {
+      backgroundColor: '#e5e7eb',
+      color: '#1f2937',
+    },
+  },
 };
 
 export const authLogoStyles = {

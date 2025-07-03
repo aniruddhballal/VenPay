@@ -19,7 +19,11 @@ export default function Register() {
   } = useRegister();
 
   return (
-    <Box sx={registerStyles.container}>
+    <Box
+      sx={{
+        ...registerStyles.container,
+        ...registerStyles.globalSelection
+      }}>
       <Fade in timeout={800}>
         <Box sx={registerStyles.header}>
           <AuthLogo />

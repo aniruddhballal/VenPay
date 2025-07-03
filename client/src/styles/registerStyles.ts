@@ -78,7 +78,13 @@ export const registerStyles = {
         textDecoration: "underline"
       }
     }
-  }
+  },
+  globalSelection: {
+  '& *::selection': {
+    backgroundColor: '#10b981',
+    color: '#ffffff !important',
+  },
+}
 };
 
 export const registerFormStyles = {
