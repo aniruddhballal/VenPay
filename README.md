@@ -195,6 +195,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 256: am i not focusing too much on ui-ux rn - functionalities got left way behind na??
 - [ ] TASK 258: multiple logins - deny? allow?
 - [ ] TASK 259: Cancel product requests
+- [ ] TASK 261: try integrating payment page - separate instead of inline payment amt + pw combo - make it more preofessional, like actually having a payment gateway
 
 </details>
 
