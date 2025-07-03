@@ -144,6 +144,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 242: if there is no image, it should not render the "click to change image" - or idk make it better.
 - [x] TASK 253: New flow: dashboard will have requests, and product mgmt/list rendered onclick. dont display both at the same time, one below the other.
 - [x] TASK 257: Navigation Button redundancy removal in Dashboard (page.tsx and styles.ts)
+- [x] TASK 260: select text - login/register page - colour - not highlighting enough -very uncontrasting/dull
 
 </details>
 
@@ -192,9 +193,8 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 254: was it a good decision to use MUI? was normal css better? should have shifted to tailwind or something else?
 - [x] TASK 255: animation of the animated lines are too mid - and they arent delayed-rendered properly also now that i did the conditional rendering - shift to better lines - synchronise with the border that comes around the sub-content's title?
 - [ ] TASK 256: am i not focusing too much on ui-ux rn - functionalities got left way behind na??
-- [ ] TASK 257: multiple logins - deny? allow?
-- [ ] TASK 258: Cancel product requests
-- [ ] TASK 259: select text - login/register page - colour - not highlighting enough -very uncontrasting/dull
+- [ ] TASK 258: multiple logins - deny? allow?
+- [ ] TASK 259: Cancel product requests
 
 </details>
 
