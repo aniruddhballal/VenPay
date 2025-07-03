@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import ProductDisplay from "./pages/ProductDisplay";
 import UserDisplay from "./pages/UserDisplay";
 import EditProfile from "./pages/EditProfile";
+import MakePayments from "./pages/MakePayments"; // Import the new payments component
 import AuthProvider from "./components/Auth/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
@@ -43,7 +44,7 @@ function ProfileProtectedRoute({ children }: { children: JSX.Element }) {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-
+  
   // Check if the logged-in user is trying to edit their own profile
   if (id && user._id !== id) {
     return <Navigate to={`/user/${id}`} replace />;   // redirects to that user's display page instead of the requested edit page
@@ -104,6 +105,32 @@ function App() {
                 </ProfileProtectedRoute>
               }
             />
+            <Route
+              path="/payments"
+              element={
+                <ProtectedRoute>
+                  <MakePayments />
+                </ProtectedRoute>
+              }
+            />
+            {/* Optional: Product-specific payment route */}
+            {/* <Route
+              path="/payments/:productId"
+              element={
+                <ProtectedRoute>
+                  <MakePayments />
+                </ProtectedRoute>
+              }
+            /> */}
+            {/* Optional: Subscription payment route */}
+            {/* <Route
+              path="/subscribe"
+              element={
+                <ProtectedRoute>
+                  <MakePayments />
+                </ProtectedRoute>
+              }
+            /> */}
           </Routes>
           <ToastContainer
             position="top-right"

@@ -7,6 +7,7 @@ import { tabStyles } from "../../styles/requestsTabStyles";
 import  {reviewStyles} from "../../styles/reviewStyles"
 import api from "../../api/api";
 import {Button} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 interface Transaction {
   _id: string;
@@ -152,7 +153,7 @@ export default function PaymentRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('accepted');
-
+  
   useEffect(() => {
     api
       .get("/requests/company/full")
@@ -259,6 +260,7 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
   const [existingRatings, setExistingRatings] = useState<Record<string, ProductRating>>({});
   const [ratingData, setRatingData] = useState<Record<string, { rating: number; review: string }>>({});
   const [ratingLoading, setRatingLoading] = useState<Record<string, boolean>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     data.forEach(async (req) => {
@@ -292,6 +294,10 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
       }
     });
   }, [data]);
+
+  const handlePaymentClick = () => {
+    navigate('/payments');
+  };
 
   const handlePayment = async (req: Request) => {
     const amount = parseFloat(amounts[req._id] || "0");
@@ -530,7 +536,8 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                           />
                           <StyledButton
                             variant="primary"
-                            onClick={() => handlePayment(req)}
+                            // onClick={() => handlePayment(req)}
+                            onClick={handlePaymentClick}
                           >
                             Make Payment
                           </StyledButton>
