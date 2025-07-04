@@ -80,9 +80,9 @@ export const registerStyles = {
     }
   },
   globalSelection: {
-  '& *::selection': {
-    backgroundColor: '#10b981',
-    color: '#ffffff !important',
+    '& *::selection': {
+      backgroundColor: '#e5e7eb',
+      color: '#1f2937',
   },
 }
 };
