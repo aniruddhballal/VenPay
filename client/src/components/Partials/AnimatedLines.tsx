@@ -16,6 +16,8 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [connectionPoints, setConnectionPoints] = useState<ConnectionPoint[]>([]);
   const [pathLength, setPathLength] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [isExiting, setIsExiting] = useState<boolean>(false);
+  const [previousActiveSet, setPreviousActiveSet] = useState<string>('');
 
   // Generate random offset for path variation
   const getRandomOffset = () => ({
@@ -84,26 +86,60 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
   // Initialize path when activeSet changes
   useEffect(() => {
-    const points = getConnectionPoints(activeSet === 'set1');
-    const path = createConnectionPath(points);
+    // If there's already a line displayed and we're switching sets
+    if (previousActiveSet && previousActiveSet !== activeSet && connectionPath) {
+      // Start exit animation
+      setIsExiting(true);
+      
+      // After exit animation completes, draw new line
+      setTimeout(() => {
+        const points = getConnectionPoints(activeSet === 'set1');
+        const path = createConnectionPath(points);
+        
+        setConnectionPoints(points);
+        setConnectionPath(path);
+        setIsExiting(false);
+        setIsAnimating(true);
+        
+        // Calculate path length for new path
+        setTimeout(() => {
+          const pathElement = document.querySelector('.animated-path') as SVGPathElement;
+          if (pathElement) {
+            const length = pathElement.getTotalLength();
+            setPathLength(length);
+          }
+        }, 10);
+      }, 800); // Wait for exit animation to complete
+    } else {
+      // Initial load or first time showing
+      const points = getConnectionPoints(activeSet === 'set1');
+      const path = createConnectionPath(points);
+      
+      setConnectionPoints(points);
+      setConnectionPath(path);
+      setIsAnimating(true);
+      
+      // Calculate path length after a brief delay to ensure SVG is rendered
+      setTimeout(() => {
+        const pathElement = document.querySelector('.animated-path') as SVGPathElement;
+        if (pathElement) {
+          const length = pathElement.getTotalLength();
+          setPathLength(length);
+        }
+      }, 10);
+    }
     
-    setConnectionPoints(points);
-    setConnectionPath(path);
-    setIsAnimating(true);
-    
-    // Calculate path length after a brief delay to ensure SVG is rendered
-    setTimeout(() => {
-      const pathElement = document.querySelector('.animated-path') as SVGPathElement;
-      if (pathElement) {
-        const length = pathElement.getTotalLength();
-        setPathLength(length);
-      }
-    }, 10);
+    setPreviousActiveSet(activeSet);
   }, [activeSet]);
 
   // Determine animation direction based on activeSet
   const getAnimationDirection = () => {
     return activeSet === 'set1' ? 'dashMoveReverse' : 'dashMove';
+  };
+
+  // Get exit animation direction (same as flow direction)
+  const getExitAnimationDirection = () => {
+    return previousActiveSet === 'set1' ? 'exitReverse' : 'exitForward';
   };
 
   return (
@@ -143,12 +179,16 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             filter="url(#glow)"
             className="animated-path"
             style={{
-              strokeDasharray: `${pathLength} ${pathLength}`,
-              strokeDashoffset: isAnimating ? 0 : pathLength,
-              animation: isAnimating ? 
-                `drawPath 1.5s ease-in-out forwards, ${getAnimationDirection()} 2s linear infinite 1.5s` : 
-                'none',
-              transition: isAnimating ? 'none' : 'stroke-dashoffset 0.3s ease-out'
+              strokeDasharray: isExiting ? "8,4" : `${pathLength} ${pathLength}`,
+              strokeDashoffset: isExiting ? 
+                0 : 
+                (isAnimating ? 0 : pathLength),
+              animation: isExiting ? 
+                `${getExitAnimationDirection()} 0.8s ease-in-out forwards` :
+                (isAnimating ? 
+                  `drawPath 1.5s ease-in-out forwards, ${getAnimationDirection()} 2s linear infinite 1.5s` : 
+                  'none'),
+              transition: isAnimating || isExiting ? 'none' : 'stroke-dashoffset 0.3s ease-out'
             }}
           />
         )}
@@ -181,6 +221,28 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
           100% {
             stroke-dashoffset: 0;
+          }
+        }
+        
+        @keyframes exitForward {
+          0% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+          100% {
+            stroke-dashoffset: -${pathLength};
+            opacity: 0;
+          }
+        }
+        
+        @keyframes exitReverse {
+          0% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+          100% {
+            stroke-dashoffset: ${pathLength};
+            opacity: 0;
           }
         }
       `}</style>
