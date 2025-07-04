@@ -23,19 +23,22 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
   // Define connection points based on active set with random variation
   const getConnectionPoints = (isSet1: boolean): ConnectionPoint[] => {
+    const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
+    const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
+    
     if (isSet1) {
       return [
-        { x: 642 + getRandomOffset().x, y: 120 + getRandomOffset().y, label: 'Source', type: 'start' },
+        { x: startPoint.x, y: startPoint.y, label: 'Source', type: 'start' },
         { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
         { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Validate', type: 'intermediate' },
-        { x: 900 + getRandomOffset().x, y: 190 + getRandomOffset().y, label: 'Destination', type: 'end' }
+        { x: endPoint.x, y: endPoint.y, label: 'Destination', type: 'end' }
       ];
     } else {
       return [
-        { x: 457 + getRandomOffset().x, y: 120 + getRandomOffset().y, label: 'Input', type: 'start' },
+        { x: startPoint.x, y: startPoint.y, label: 'Input', type: 'start' },
         { x: 400 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Filter', type: 'intermediate' },
         { x: 360 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Transform', type: 'intermediate' },
-        { x: 320 + getRandomOffset().x, y: 190 + getRandomOffset().y, label: 'Output', type: 'end' }
+        { x: endPoint.x, y: endPoint.y, label: 'Output', type: 'end' }
       ];
     }
   };
@@ -88,7 +91,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
   // Determine animation direction based on activeSet
   const getAnimationDirection = () => {
-    return activeSet === 'set1' ? 'dashMove' : 'dashMoveReverse';
+    return activeSet === 'set1' ? 'dashMoveReverse' : 'dashMove';
   };
 
   return (
@@ -153,6 +156,27 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }
       `}</style>
+      
+      {/* Demo controls */}
+      <div className="absolute top-4 left-4 pointer-events-auto">
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+        >
+          Regenerate Random Path
+        </button>
+        <select
+          value={activeSet}
+          onChange={(e) => {
+            // This is just for demo - in your actual implementation, this would be controlled by parent component
+            console.log('Selected:', e.target.value);
+          }}
+          className="bg-gray-700 text-white px-3 py-2 rounded"
+        >
+          <option value="set1">Set 1 (Forward)</option>
+          <option value="set2">Set 2 (Reverse)</option>
+        </select>
+      </div>
     </div>
   );
 };
