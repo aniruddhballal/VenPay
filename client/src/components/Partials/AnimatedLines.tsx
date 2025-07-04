@@ -27,8 +27,8 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
   // Define connection points based on active set with random variation
   const getConnectionPoints = (isSet1: boolean): ConnectionPoint[] => {
-    const startPoint = isSet1 ? { x: 742, y: 120 } : { x: 457, y: 120 };
-    const endPoint = isSet1 ? { x: 900, y: 190 } : { x: 320, y: 190 };
+    const startPoint = isSet1 ? { x: 900, y: 190 } : { x: 457, y: 120 };
+    const endPoint = isSet1 ? { x: 742, y: 120 } : { x: 320, y: 190 };
     
     if (isSet1) {
       return [
@@ -134,7 +134,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
 
   // Determine animation direction based on activeSet
   const getAnimationDirection = () => {
-    return activeSet === 'set1' ? 'dashMoveReverse' : 'dashMove';
+    return activeSet === 'set1' ? 'dashMove' : 'dashMove';
   };
 
   // Get exit animation direction (same as flow direction)
