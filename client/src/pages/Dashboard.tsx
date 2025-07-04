@@ -11,6 +11,7 @@ import ProductManagement from "../components/Partials/ProductManagement";
 import ProductList from "../components/Partials/ProductList";
 import ProductRequests from "../components/Partials/ProductRequests";
 import PaymentRequests from "../components/Partials/PaymentRequests";
+import AnimatedSectionTransition from '../components/AnimatedSectionTransition';
 
 import { BusinessCenter, RequestPage, Payment, Inventory, AccountCircle } from "@mui/icons-material";
 import {
@@ -160,77 +161,92 @@ export default function Dashboard() {
         Logout
       </StyledButton>
 
-      {user.userType === "vendor" && (
-        <>
-          <DashboardSubheader variant="h2">Vendor Dashboard</DashboardSubheader>
-          
-          <NavigationContainer>
-            <NavigationButton 
-              onClick={() => handleVendorSectionClick('product-management')}
-              style={{ 
-                opacity: activeVendorSection === 'product-management' ? 1 : 0.7,
-                backgroundColor: activeVendorSection === 'product-management' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
-                borderColor: activeVendorSection === 'product-management' ? 'rgba(16, 185, 129, 0.3)' : 'transparent'
-              }}
-            >
-              <Inventory />
-              Product Management
-            </NavigationButton>
-            <NavigationButton borderColor='#3b82f6'
-              onClick={() => handleVendorSectionClick('product-requests')}
-              style={{ 
-                opacity: activeVendorSection === 'product-requests' ? 1 : 0.7,
-                backgroundColor: activeVendorSection === 'product-requests' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-                borderColor: activeVendorSection === 'product-requests' ? 'rgba(59, 130, 246, 0.3)' : 'transparent'
-              }}
-            >
-              <RequestPage />
-              Product Requests
-            </NavigationButton>
-          </NavigationContainer>
 
-          <SectionContainer>
-            {activeVendorSection === 'product-management' && <ProductManagement />}
-            {activeVendorSection === 'product-requests' && <ProductRequests />}
-          </SectionContainer>
-        </>
-      )}
+{user.userType === "vendor" && (
+  <>
+    <DashboardSubheader variant="h2">Vendor Dashboard</DashboardSubheader>
+    
+    <NavigationContainer>
+      <NavigationButton 
+        onClick={() => handleVendorSectionClick('product-management')}
+        style={{ 
+          opacity: activeVendorSection === 'product-management' ? 1 : 0.7,
+          backgroundColor: activeVendorSection === 'product-management' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+          borderColor: activeVendorSection === 'product-management' ? 'rgba(16, 185, 129, 0.3)' : 'transparent'
+        }}
+      >
+        <Inventory />
+        Product Management
+      </NavigationButton>
+      <NavigationButton borderColor='#3b82f6'
+        onClick={() => handleVendorSectionClick('product-requests')}
+        style={{ 
+          opacity: activeVendorSection === 'product-requests' ? 1 : 0.7,
+          backgroundColor: activeVendorSection === 'product-requests' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+          borderColor: activeVendorSection === 'product-requests' ? 'rgba(59, 130, 246, 0.3)' : 'transparent'
+        }}
+      >
+        <RequestPage />
+        Product Requests
+      </NavigationButton>
+    </NavigationContainer>
 
-      {user.userType === "company" && (
-        <>
-          <DashboardSubheader variant="h2">Company Dashboard</DashboardSubheader>
-          
-          <NavigationContainer>
-            <NavigationButton 
-              onClick={() => handleCompanySectionClick('product-list')}
-              style={{ 
-                opacity: activeCompanySection === 'product-list' ? 1 : 0.7,
-                backgroundColor: activeCompanySection === 'product-list' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
-                borderColor: activeCompanySection === 'product-list' ? 'rgba(16, 185, 129, 0.3)' : 'transparent'
-              }}
-            >
-              <BusinessCenter />
-              Product Catalog
-            </NavigationButton>
-            <NavigationButton borderColor='#3b82f6'
-              onClick={() => handleCompanySectionClick('payment-requests')}
-              style={{ 
-                opacity: activeCompanySection === 'payment-requests' ? 1 : 0.7,
-                backgroundColor: activeCompanySection === 'payment-requests' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-                borderColor: activeCompanySection === 'payment-requests' ? 'rgba(59, 130, 246, 0.3)' : 'transparent'
-              }}
-            >
-              <Payment />
-              Payment Requests
-            </NavigationButton>
-          </NavigationContainer>
+    <SectionContainer>
+      <AnimatedSectionTransition
+        sectionKey={activeVendorSection}
+        animationType={activeVendorSection === 'product-management' ? 'executive' : 'corporate'}
+        showAccents={true}
+        luxuryMode={true}
+      >
+        {activeVendorSection === 'product-management' && <ProductManagement />}
+        {activeVendorSection === 'product-requests' && <ProductRequests />}
+      </AnimatedSectionTransition>
+    </SectionContainer>
+  </>
+)}
 
-          <SectionContainer>
-            {activeCompanySection === 'product-list' && <ProductList />}
-            {activeCompanySection === 'payment-requests' && <PaymentRequests />}
-          </SectionContainer>
-        </>
-      )}
+{user.userType === "company" && (
+  <>
+    <DashboardSubheader variant="h2">Company Dashboard</DashboardSubheader>
+    
+    <NavigationContainer>
+      <NavigationButton 
+        onClick={() => handleCompanySectionClick('product-list')}
+        style={{ 
+          opacity: activeCompanySection === 'product-list' ? 1 : 0.7,
+          backgroundColor: activeCompanySection === 'product-list' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
+          borderColor: activeCompanySection === 'product-list' ? 'rgba(16, 185, 129, 0.3)' : 'transparent'
+        }}
+      >
+        <BusinessCenter />
+        Product Catalog
+      </NavigationButton>
+      <NavigationButton borderColor='#3b82f6'
+        onClick={() => handleCompanySectionClick('payment-requests')}
+        style={{ 
+          opacity: activeCompanySection === 'payment-requests' ? 1 : 0.7,
+          backgroundColor: activeCompanySection === 'payment-requests' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+          borderColor: activeCompanySection === 'payment-requests' ? 'rgba(59, 130, 246, 0.3)' : 'transparent'
+        }}
+      >
+        <Payment />
+        Payment Requests
+      </NavigationButton>
+    </NavigationContainer>
+
+    <SectionContainer>
+      <AnimatedSectionTransition
+        sectionKey={activeCompanySection}
+        animationType={activeCompanySection === 'product-list' ? 'curtain' : 'premium'}
+        showAccents={true}
+        luxuryMode={true}
+      >
+        {activeCompanySection === 'product-list' && <ProductList />}
+        {activeCompanySection === 'payment-requests' && <PaymentRequests />}
+      </AnimatedSectionTransition>
+    </SectionContainer>
+  </>
+)}
     </DashboardContainer>
     </div>
   );
