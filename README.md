@@ -196,6 +196,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 258: multiple logins - deny? allow?
 - [ ] TASK 259: Cancel product requests
 - [x] TASK 261: try integrating payment page - separate instead of inline payment amt + pw combo - make it more preofessional, like actually having a payment gateway
+- [ ] TASK 262: Loading... exists for productlist page but not for paymentrequests - check vendor side too
 
 </details>
 
