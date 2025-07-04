@@ -15,26 +15,32 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [connectionPath, setConnectionPath] = useState<string>('');
   const [connectionPoints, setConnectionPoints] = useState<ConnectionPoint[]>([]);
 
-  // Define connection points based on active set
+  // Generate random offset for path variation
+  const getRandomOffset = () => ({
+    x: (Math.random() - 0.5) * 60, // Random offset between -30 and 30
+    y: (Math.random() - 0.5) * 40  // Random offset between -20 and 20
+  });
+
+  // Define connection points based on active set with random variation
   const getConnectionPoints = (isSet1: boolean): ConnectionPoint[] => {
     if (isSet1) {
       return [
-        { x: 742, y: 120, label: 'Source', type: 'start' },
-        { x: 820, y: 140, label: 'Process', type: 'intermediate' },
-        { x: 860, y: 165, label: 'Validate', type: 'intermediate' },
-        { x: 900, y: 190, label: 'Destination', type: 'end' }
+        { x: 742 + getRandomOffset().x, y: 120 + getRandomOffset().y, label: 'Source', type: 'start' },
+        { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
+        { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Validate', type: 'intermediate' },
+        { x: 900 + getRandomOffset().x, y: 190 + getRandomOffset().y, label: 'Destination', type: 'end' }
       ];
     } else {
       return [
-        { x: 457, y: 120, label: 'Input', type: 'start' },
-        { x: 400, y: 140, label: 'Filter', type: 'intermediate' },
-        { x: 360, y: 165, label: 'Transform', type: 'intermediate' },
-        { x: 320, y: 190, label: 'Output', type: 'end' }
+        { x: 457 + getRandomOffset().x, y: 120 + getRandomOffset().y, label: 'Input', type: 'start' },
+        { x: 400 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Filter', type: 'intermediate' },
+        { x: 360 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Transform', type: 'intermediate' },
+        { x: 320 + getRandomOffset().x, y: 190 + getRandomOffset().y, label: 'Output', type: 'end' }
       ];
     }
   };
 
-  // Create smooth bezier path through connection points
+  // Create smooth bezier path through connection points with random curves
   const createConnectionPath = (points: ConnectionPoint[]): string => {
     if (points.length < 2) return '';
 
@@ -45,19 +51,25 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       const curr = points[i];
       const next = points[i + 1];
       
+      // Add random variation to control points
+      const randomFactor1 = 0.3 + Math.random() * 0.4; // Between 0.3 and 0.7
+      const randomFactor2 = 0.3 + Math.random() * 0.4;
+      const randomOffset1 = getRandomOffset();
+      const randomOffset2 = getRandomOffset();
+      
       if (i === 1) {
-        // First curve
-        const cp1x = prev.x + (curr.x - prev.x) * 0.5;
-        const cp1y = prev.y + (curr.y - prev.y) * 0.3;
-        const cp2x = curr.x - (curr.x - prev.x) * 0.3;
-        const cp2y = curr.y - (curr.y - prev.y) * 0.3;
+        // First curve with random variation
+        const cp1x = prev.x + (curr.x - prev.x) * randomFactor1 + randomOffset1.x;
+        const cp1y = prev.y + (curr.y - prev.y) * randomFactor1 + randomOffset1.y;
+        const cp2x = curr.x - (curr.x - prev.x) * randomFactor2 + randomOffset2.x;
+        const cp2y = curr.y - (curr.y - prev.y) * randomFactor2 + randomOffset2.y;
         path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${curr.x} ${curr.y}`;
       } else {
-        // Smooth curves for remaining points
-        const cp1x = prev.x + (curr.x - prev.x) * 0.6;
-        const cp1y = prev.y + (curr.y - prev.y) * 0.4;
-        const cp2x = curr.x - (next ? (next.x - curr.x) * 0.4 : 20);
-        const cp2y = curr.y - (next ? (next.y - curr.y) * 0.4 : 10);
+        // Smooth curves for remaining points with random variation
+        const cp1x = prev.x + (curr.x - prev.x) * (0.6 + Math.random() * 0.2) + randomOffset1.x;
+        const cp1y = prev.y + (curr.y - prev.y) * (0.4 + Math.random() * 0.2) + randomOffset1.y;
+        const cp2x = curr.x - (next ? (next.x - curr.x) * (0.4 + Math.random() * 0.2) : 20 + Math.random() * 20) + randomOffset2.x;
+        const cp2y = curr.y - (next ? (next.y - curr.y) * (0.4 + Math.random() * 0.2) : 10 + Math.random() * 10) + randomOffset2.y;
         path += ` S ${cp2x} ${cp2y}, ${curr.x} ${curr.y}`;
       }
     }
@@ -73,6 +85,11 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     setConnectionPoints(points);
     setConnectionPath(path);
   }, [activeSet]);
+
+  // Determine animation direction based on activeSet
+  const getAnimationDirection = () => {
+    return activeSet === 'set1' ? 'dashMove' : 'dashMoveReverse';
+  };
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -110,7 +127,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             strokeDasharray="8,4"
             filter="url(#glow)"
             style={{
-              animation: 'dashMove 2s linear infinite'
+              animation: `${getAnimationDirection()} 2s linear infinite`
             }}
           />
         )}
@@ -126,7 +143,37 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             stroke-dashoffset: 24;
           }
         }
+        
+        @keyframes dashMoveReverse {
+          0% {
+            stroke-dashoffset: 24;
+          }
+          100% {
+            stroke-dashoffset: 0;
+          }
+        }
       `}</style>
+      
+      {/* Demo controls */}
+      <div className="absolute top-4 left-4 pointer-events-auto">
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+        >
+          Regenerate Random Path
+        </button>
+        <select
+          value={activeSet}
+          onChange={(e) => {
+            // This is just for demo - in your actual implementation, this would be controlled by parent component
+            console.log('Selected:', e.target.value);
+          }}
+          className="bg-gray-700 text-white px-3 py-2 rounded"
+        >
+          <option value="set1">Set 1 (Forward)</option>
+          <option value="set2">Set 2 (Reverse)</option>
+        </select>
+      </div>
     </div>
   );
 };
