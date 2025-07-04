@@ -25,7 +25,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const getConnectionPoints = (isSet1: boolean): ConnectionPoint[] => {
     if (isSet1) {
       return [
-        { x: 742 + getRandomOffset().x, y: 120 + getRandomOffset().y, label: 'Source', type: 'start' },
+        { x: 642 + getRandomOffset().x, y: 120 + getRandomOffset().y, label: 'Source', type: 'start' },
         { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
         { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Validate', type: 'intermediate' },
         { x: 900 + getRandomOffset().x, y: 190 + getRandomOffset().y, label: 'Destination', type: 'end' }
@@ -153,27 +153,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }
       `}</style>
-      
-      {/* Demo controls */}
-      <div className="absolute top-4 left-4 pointer-events-auto">
-        <button
-          onClick={() => window.location.reload()}
-          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
-        >
-          Regenerate Random Path
-        </button>
-        <select
-          value={activeSet}
-          onChange={(e) => {
-            // This is just for demo - in your actual implementation, this would be controlled by parent component
-            console.log('Selected:', e.target.value);
-          }}
-          className="bg-gray-700 text-white px-3 py-2 rounded"
-        >
-          <option value="set1">Set 1 (Forward)</option>
-          <option value="set2">Set 2 (Reverse)</option>
-        </select>
-      </div>
     </div>
   );
 };
