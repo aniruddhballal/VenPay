@@ -156,27 +156,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }
       `}</style>
-      
-      {/* Demo controls */}
-      <div className="absolute top-4 left-4 pointer-events-auto">
-        <button
-          onClick={() => window.location.reload()}
-          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
-        >
-          Regenerate Random Path
-        </button>
-        <select
-          value={activeSet}
-          onChange={(e) => {
-            // This is just for demo - in your actual implementation, this would be controlled by parent component
-            console.log('Selected:', e.target.value);
-          }}
-          className="bg-gray-700 text-white px-3 py-2 rounded"
-        >
-          <option value="set1">Set 1 (Forward)</option>
-          <option value="set2">Set 2 (Reverse)</option>
-        </select>
-      </div>
     </div>
   );
 };
