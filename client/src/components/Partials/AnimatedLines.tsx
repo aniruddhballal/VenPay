@@ -14,6 +14,8 @@ interface ConnectionPoint {
 const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [connectionPath, setConnectionPath] = useState<string>('');
   const [connectionPoints, setConnectionPoints] = useState<ConnectionPoint[]>([]);
+  const [pathLength, setPathLength] = useState<number>(0);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   // Generate random offset for path variation
   const getRandomOffset = () => ({
@@ -87,6 +89,16 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     
     setConnectionPoints(points);
     setConnectionPath(path);
+    setIsAnimating(true);
+    
+    // Calculate path length after a brief delay to ensure SVG is rendered
+    setTimeout(() => {
+      const pathElement = document.querySelector('.animated-path') as SVGPathElement;
+      if (pathElement) {
+        const length = pathElement.getTotalLength();
+        setPathLength(length);
+      }
+    }, 10);
   }, [activeSet]);
 
   // Determine animation direction based on activeSet
@@ -129,8 +141,14 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             strokeLinecap="round"
             strokeDasharray="8,4"
             filter="url(#glow)"
+            className="animated-path"
             style={{
-              animation: `${getAnimationDirection()} 2s linear infinite`
+              strokeDasharray: `${pathLength} ${pathLength}`,
+              strokeDashoffset: isAnimating ? 0 : pathLength,
+              animation: isAnimating ? 
+                `drawPath 1.5s ease-in-out forwards, ${getAnimationDirection()} 2s linear infinite 1.5s` : 
+                'none',
+              transition: isAnimating ? 'none' : 'stroke-dashoffset 0.3s ease-out'
             }}
           />
         )}
@@ -138,6 +156,16 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       
       {/* CSS animations */}
       <style jsx>{`
+        @keyframes drawPath {
+          0% {
+            stroke-dashoffset: ${pathLength};
+          }
+          100% {
+            stroke-dashoffset: 0;
+            stroke-dasharray: 8, 4;
+          }
+        }
+        
         @keyframes dashMove {
           0% {
             stroke-dashoffset: 0;
@@ -156,6 +184,27 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }
       `}</style>
+      
+      {/* Demo controls */}
+      <div className="absolute top-4 left-4 pointer-events-auto">
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+        >
+          Regenerate Random Path
+        </button>
+        <select
+          value={activeSet}
+          onChange={(e) => {
+            // This is just for demo - in your actual implementation, this would be controlled by parent component
+            console.log('Selected:', e.target.value);
+          }}
+          className="bg-gray-700 text-white px-3 py-2 rounded"
+        >
+          <option value="set1">Set 1 (Forward)</option>
+          <option value="set2">Set 2 (Reverse)</option>
+        </select>
+      </div>
     </div>
   );
 };
