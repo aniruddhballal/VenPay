@@ -26,11 +26,12 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   });
 
   // Define connection points based on active set with random variation
-  const getConnectionPoints = (isSet1: boolean): ConnectionPoint[] => {
-    const startPoint = isSet1 ? { x: 900, y: 190 } : { x: 457, y: 120 };
-    const endPoint = isSet1 ? { x: 742, y: 120 } : { x: 320, y: 190 };
+
+  const getConnectionPoints = (isSet2: boolean): ConnectionPoint[] => {
+    const startPoint = isSet2 ? { x: 900, y: 190 } : { x: 457, y: 120 };
+    const endPoint = isSet2 ? { x: 742, y: 120 } : { x: 320, y: 190 };
     
-    if (isSet1) {
+    if (isSet2) {
       return [
         { x: startPoint.x, y: startPoint.y, label: 'Source', type: 'start' },
         { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
@@ -87,7 +88,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   // Initialize path when activeSet changes
   useEffect(() => {
     // If there's already a line displayed and we're switching sets
-    if (previousActiveSet && previousActiveSet !== activeSet && connectionPath) {
+    if (previousActiveSet && previousActiveSet !== activeSet && connectionPath && !isExiting) {
       // Start exit animation
       setIsExiting(true);
       
@@ -110,7 +111,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }, 10);
       }, 800); // Wait for exit animation to complete
-    } else {
+    } else if (!isExiting) {
       // Initial load or first time showing
       const points = getConnectionPoints(activeSet === 'set1');
       const path = createConnectionPath(points);
@@ -129,17 +130,14 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       }, 10);
     }
     
-    setPreviousActiveSet(activeSet);
+    if (!isExiting) {
+      setPreviousActiveSet(activeSet);
+    }
   }, [activeSet]);
 
-  // Determine animation direction based on activeSet
-  const getAnimationDirection = () => {
-    return activeSet === 'set1' ? 'dashMove' : 'dashMove';
-  };
-
-  // Get exit animation direction (same as flow direction)
+  // Get exit animation direction (set2 goes forward, set1 goes reverse)
   const getExitAnimationDirection = () => {
-    return previousActiveSet === 'set1' ? 'exitReverse' : 'exitForward';
+    return previousActiveSet === 'set2' ? 'exitForward' : 'exitReverse';
   };
 
   return (
@@ -150,12 +148,17 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
-          {/* Gradient for connection path */}
-          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: '#10b981', stopOpacity: 0.8 }} />
-            <stop offset="50%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#06d6a0', stopOpacity: 0.8 }} />
-          </linearGradient>
+{/* Gradient for connection path */}
+<linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+  <stop offset="0%" style={{ 
+    stopColor: activeSet === 'set1' ? '#10b981' : '#3b82f6', 
+    stopOpacity: 0.8 
+  }} />
+  <stop offset="100%" style={{ 
+    stopColor: activeSet === 'set1' ? '#3b82f6' : '#10b981', 
+    stopOpacity: 0.8 
+  }} />
+</linearGradient>
           
           {/* Glow filter */}
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -186,7 +189,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               animation: isExiting ? 
                 `${getExitAnimationDirection()} 0.8s ease-in-out forwards` :
                 (isAnimating ? 
-                  `drawPath 1.5s ease-in-out forwards, ${getAnimationDirection()} 2s linear infinite 1.5s` : 
+                  `drawPath 1.5s ease-in-out forwards, dashMove 2s linear infinite 1.5s` : 
                   'none'),
               transition: isAnimating || isExiting ? 'none' : 'stroke-dashoffset 0.3s ease-out'
             }}
@@ -212,15 +215,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
           100% {
             stroke-dashoffset: 24;
-          }
-        }
-        
-        @keyframes dashMoveReverse {
-          0% {
-            stroke-dashoffset: 24;
-          }
-          100% {
-            stroke-dashoffset: 0;
           }
         }
         
