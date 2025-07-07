@@ -143,8 +143,8 @@ export default function Dashboard() {
         <AnimatedLines 
           activeSet={
             user.userType === "vendor" 
-              ? (activeVendorSection === 'product-management' ? 'set2' : 'set1')
-              : (activeCompanySection === 'product-list' ? 'set2' : 'set1')
+              ? (activeVendorSection === 'product-management' ? 'set1' : 'set2')
+              : (activeCompanySection === 'product-list' ? 'set1' : 'set2')
           } 
         />
       </div>      
