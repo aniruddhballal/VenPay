@@ -18,6 +18,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isExiting, setIsExiting] = useState<boolean>(false);
   const [previousActiveSet, setPreviousActiveSet] = useState<string>('');
+  const [endpointPulse, setEndpointPulse] = useState<boolean>(false);
 
   // Generate random offset for path variation
   const getRandomOffset = () => ({
@@ -26,7 +27,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   });
 
   // Define connection points based on active set with random variation
-
   const getConnectionPoints = (isSet2: boolean): ConnectionPoint[] => {
     const startPoint = isSet2 ? { x: 900, y: 190 } : { x: 457, y: 120 };
     const endPoint = isSet2 ? { x: 742, y: 120 } : { x: 320, y: 190 };
@@ -89,17 +89,19 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   useEffect(() => {
     // If there's already a line displayed and we're switching sets
     if (previousActiveSet && previousActiveSet !== activeSet && connectionPath && !isExiting) {
-      // Start exit animation
+      // Start swallow effect
       setIsExiting(true);
+      setEndpointPulse(true);
       
-      // After exit animation completes, draw new line
+      // After swallow animation completes, draw new line
       setTimeout(() => {
-        const points = getConnectionPoints(activeSet === 'set1');
+        const points = getConnectionPoints(activeSet === 'set2');
         const path = createConnectionPath(points);
         
         setConnectionPoints(points);
         setConnectionPath(path);
         setIsExiting(false);
+        setEndpointPulse(false);
         setIsAnimating(true);
         
         // Calculate path length for new path
@@ -110,10 +112,10 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             setPathLength(length);
           }
         }, 10);
-      }, 800); // Wait for exit animation to complete
+      }, 1200); // Wait for swallow animation to complete
     } else if (!isExiting) {
       // Initial load or first time showing
-      const points = getConnectionPoints(activeSet === 'set1');
+      const points = getConnectionPoints(activeSet === 'set2');
       const path = createConnectionPath(points);
       
       setConnectionPoints(points);
@@ -135,10 +137,13 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     }
   }, [activeSet]);
 
-  // Get exit animation direction (set2 goes forward, set1 goes reverse)
-  const getExitAnimationDirection = () => {
-    return previousActiveSet === 'set2' ? 'exitForward' : 'exitReverse';
+  // Get the endpoint for the current set
+  const getEndpoint = () => {
+    if (connectionPoints.length === 0) return null;
+    return connectionPoints[connectionPoints.length - 1];
   };
+
+  const endpoint = getEndpoint();
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -148,21 +153,30 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
-{/* Gradient for connection path */}
-<linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-  <stop offset="0%" style={{ 
-    stopColor: activeSet === 'set1' ? '#10b981' : '#3b82f6', 
-    stopOpacity: 0.8 
-  }} />
-  <stop offset="100%" style={{ 
-    stopColor: activeSet === 'set1' ? '#3b82f6' : '#10b981', 
-    stopOpacity: 0.8 
-  }} />
-</linearGradient>
+          {/* Gradient for connection path */}
+          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style={{ 
+              stopColor: activeSet === 'set1' ? '#10b981' : '#3b82f6', 
+              stopOpacity: 0.8 
+            }} />
+            <stop offset="100%" style={{ 
+              stopColor: activeSet === 'set1' ? '#3b82f6' : '#10b981', 
+              stopOpacity: 0.8 
+            }} />
+          </linearGradient>
           
           {/* Glow filter */}
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          {/* Endpoint glow filter */}
+          <filter id="endpointGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
             <feMerge> 
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
@@ -182,18 +196,68 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             filter="url(#glow)"
             className="animated-path"
             style={{
-              strokeDasharray: isExiting ? "8,4" : `${pathLength} ${pathLength}`,
+              strokeDasharray: isExiting ? 
+                `${pathLength * 0.8} ${pathLength * 0.2}` : 
+                `${pathLength} ${pathLength}`,
               strokeDashoffset: isExiting ? 
-                0 : 
+                -pathLength * 1.2 : 
                 (isAnimating ? 0 : pathLength),
               animation: isExiting ? 
-                `${getExitAnimationDirection()} 0.8s ease-in-out forwards` :
+                `swallowEffect 1.2s ease-in-out forwards` :
                 (isAnimating ? 
                   `drawPath 1.5s ease-in-out forwards, dashMove 2s linear infinite 1.5s` : 
                   'none'),
               transition: isAnimating || isExiting ? 'none' : 'stroke-dashoffset 0.3s ease-out'
             }}
           />
+        )}
+
+        {/* Endpoint circle that grows during swallow effect */}
+        {endpoint && (
+          <circle
+            cx={endpoint.x}
+            cy={endpoint.y}
+            r={endpointPulse ? 15 : 6}
+            fill="url(#pathGradient)"
+            filter="url(#endpointGlow)"
+            style={{
+              opacity: endpointPulse ? 0.9 : 0.7,
+              animation: endpointPulse ? 
+                `endpointPulse 1.2s ease-in-out forwards` : 
+                'none',
+              transition: 'r 0.3s ease-out, opacity 0.3s ease-out'
+            }}
+          />
+        )}
+
+        {/* Absorption effect particles */}
+        {isExiting && endpoint && (
+          <>
+            <circle
+              cx={endpoint.x}
+              cy={endpoint.y}
+              r="20"
+              fill="none"
+              stroke="url(#pathGradient)"
+              strokeWidth="2"
+              opacity="0.6"
+              style={{
+                animation: `absorptionRing1 1.2s ease-in-out forwards`
+              }}
+            />
+            <circle
+              cx={endpoint.x}
+              cy={endpoint.y}
+              r="30"
+              fill="none"
+              stroke="url(#pathGradient)"
+              strokeWidth="1"
+              opacity="0.4"
+              style={{
+                animation: `absorptionRing2 1.2s ease-in-out forwards 0.2s`
+              }}
+            />
+          </>
         )}
       </svg>
       
@@ -218,25 +282,60 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }
         
-        @keyframes exitForward {
+        @keyframes swallowEffect {
           0% {
             stroke-dashoffset: 0;
-            opacity: 1;
+            stroke-dasharray: 8, 4;
+          }
+          70% {
+            stroke-dashoffset: -${pathLength * 0.7};
+            stroke-dasharray: ${pathLength * 0.3}, ${pathLength * 0.1};
           }
           100% {
-            stroke-dashoffset: -${pathLength};
+            stroke-dashoffset: -${pathLength * 1.2};
+            stroke-dasharray: ${pathLength * 0.1}, ${pathLength * 0.9};
             opacity: 0;
           }
         }
         
-        @keyframes exitReverse {
+        @keyframes endpointPulse {
           0% {
-            stroke-dashoffset: 0;
+            transform: scale(1);
+            opacity: 0.7;
+          }
+          50% {
+            transform: scale(1.8);
             opacity: 1;
           }
           100% {
-            stroke-dashoffset: ${pathLength};
+            transform: scale(2.2);
+            opacity: 0.3;
+          }
+        }
+        
+        @keyframes absorptionRing1 {
+          0% {
+            r: 6;
+            opacity: 0.6;
+            stroke-width: 2;
+          }
+          100% {
+            r: 3;
             opacity: 0;
+            stroke-width: 4;
+          }
+        }
+        
+        @keyframes absorptionRing2 {
+          0% {
+            r: 8;
+            opacity: 0.4;
+            stroke-width: 1;
+          }
+          100% {
+            r: 2;
+            opacity: 0;
+            stroke-width: 3;
           }
         }
       `}</style>
