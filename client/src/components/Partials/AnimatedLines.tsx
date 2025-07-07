@@ -18,7 +18,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isExiting, setIsExiting] = useState<boolean>(false);
   const [previousActiveSet, setPreviousActiveSet] = useState<string>('');
-  const [endpointPulse, setEndpointPulse] = useState<boolean>(false);
 
   // Generate random offset for path variation
   const getRandomOffset = () => ({
@@ -27,23 +26,23 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   });
 
   // Define connection points based on active set with random variation
-  const getConnectionPoints = (isSet2: boolean): ConnectionPoint[] => {
-    const startPoint = isSet2 ? { x: 900, y: 190 } : { x: 457, y: 120 };
-    const endPoint = isSet2 ? { x: 742, y: 120 } : { x: 320, y: 190 };
+  const getConnectionPoints = (isSet1: boolean): ConnectionPoint[] => {
+    const startPoint = isSet1 ? { x: 457, y: 120 } : { x: 742, y: 120 };
+    const endPoint = isSet1 ? { x: 320, y: 190 } : { x: 900, y: 190 };
     
-    if (isSet2) {
-      return [
-        { x: startPoint.x, y: startPoint.y, label: 'Source', type: 'start' },
-        { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
-        { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Validate', type: 'intermediate' },
-        { x: endPoint.x, y: endPoint.y, label: 'Destination', type: 'end' }
-      ];
-    } else {
+    if (isSet1) {
       return [
         { x: startPoint.x, y: startPoint.y, label: 'Input', type: 'start' },
         { x: 400 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Filter', type: 'intermediate' },
         { x: 360 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Transform', type: 'intermediate' },
         { x: endPoint.x, y: endPoint.y, label: 'Output', type: 'end' }
+      ];
+    } else {
+      return [
+        { x: startPoint.x, y: startPoint.y, label: 'Source', type: 'start' },
+        { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
+        { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Validate', type: 'intermediate' },
+        { x: endPoint.x, y: endPoint.y, label: 'Destination', type: 'end' }
       ];
     }
   };
@@ -91,17 +90,15 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     if (previousActiveSet && previousActiveSet !== activeSet && connectionPath && !isExiting) {
       // Start swallow effect
       setIsExiting(true);
-      setEndpointPulse(true);
       
       // After swallow animation completes, draw new line
       setTimeout(() => {
-        const points = getConnectionPoints(activeSet === 'set2');
+        const points = getConnectionPoints(activeSet === 'set1');
         const path = createConnectionPath(points);
         
         setConnectionPoints(points);
         setConnectionPath(path);
         setIsExiting(false);
-        setEndpointPulse(false);
         setIsAnimating(true);
         
         // Calculate path length for new path
@@ -115,7 +112,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       }, 1200); // Wait for swallow animation to complete
     } else if (!isExiting) {
       // Initial load or first time showing
-      const points = getConnectionPoints(activeSet === 'set2');
+      const points = getConnectionPoints(activeSet === 'set1');
       const path = createConnectionPath(points);
       
       setConnectionPoints(points);
@@ -137,13 +134,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     }
   }, [activeSet]);
 
-  // Get the endpoint for the current set
-  const getEndpoint = () => {
-    if (connectionPoints.length === 0) return null;
-    return connectionPoints[connectionPoints.length - 1];
-  };
 
-  const endpoint = getEndpoint();
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -174,14 +165,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             </feMerge>
           </filter>
 
-          {/* Endpoint glow filter */}
-          <filter id="endpointGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
-            <feMerge> 
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
+
         </defs>
         
         {/* Animated dashed path */}
@@ -201,7 +185,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                 `${pathLength} ${pathLength}`,
               strokeDashoffset: isExiting ? 
                 -pathLength * 1.2 : 
-                (isAnimating ? 0 : pathLength),
+                (isAnimating ? 0 : -pathLength),
               animation: isExiting ? 
                 `swallowEffect 1.2s ease-in-out forwards` :
                 (isAnimating ? 
@@ -212,60 +196,14 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           />
         )}
 
-        {/* Endpoint circle that grows during swallow effect */}
-        {endpoint && (
-          <circle
-            cx={endpoint.x}
-            cy={endpoint.y}
-            r={endpointPulse ? 15 : 6}
-            fill="url(#pathGradient)"
-            filter="url(#endpointGlow)"
-            style={{
-              opacity: endpointPulse ? 0.9 : 0.7,
-              animation: endpointPulse ? 
-                `endpointPulse 1.2s ease-in-out forwards` : 
-                'none',
-              transition: 'r 0.3s ease-out, opacity 0.3s ease-out'
-            }}
-          />
-        )}
 
-        {/* Absorption effect particles */}
-        {isExiting && endpoint && (
-          <>
-            <circle
-              cx={endpoint.x}
-              cy={endpoint.y}
-              r="20"
-              fill="none"
-              stroke="url(#pathGradient)"
-              strokeWidth="2"
-              opacity="0.6"
-              style={{
-                animation: `absorptionRing1 1.2s ease-in-out forwards`
-              }}
-            />
-            <circle
-              cx={endpoint.x}
-              cy={endpoint.y}
-              r="30"
-              fill="none"
-              stroke="url(#pathGradient)"
-              strokeWidth="1"
-              opacity="0.4"
-              style={{
-                animation: `absorptionRing2 1.2s ease-in-out forwards 0.2s`
-              }}
-            />
-          </>
-        )}
       </svg>
       
       {/* CSS animations */}
       <style jsx>{`
         @keyframes drawPath {
           0% {
-            stroke-dashoffset: ${pathLength};
+            stroke-dashoffset: -${pathLength};
           }
           100% {
             stroke-dashoffset: 0;
@@ -298,46 +236,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
           }
         }
         
-        @keyframes endpointPulse {
-          0% {
-            transform: scale(1);
-            opacity: 0.7;
-          }
-          50% {
-            transform: scale(1.8);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(2.2);
-            opacity: 0.3;
-          }
-        }
-        
-        @keyframes absorptionRing1 {
-          0% {
-            r: 6;
-            opacity: 0.6;
-            stroke-width: 2;
-          }
-          100% {
-            r: 3;
-            opacity: 0;
-            stroke-width: 4;
-          }
-        }
-        
-        @keyframes absorptionRing2 {
-          0% {
-            r: 8;
-            opacity: 0.4;
-            stroke-width: 1;
-          }
-          100% {
-            r: 2;
-            opacity: 0;
-            stroke-width: 3;
-          }
-        }
+
       `}</style>
     </div>
   );
