@@ -200,47 +200,7 @@ const ContentWrapper = styled(Box)`
   }
 `;
 
-const GeometricAccent = styled(Box)`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 60px;
-  height: 60px;
-  border: 2px solid rgba(16, 185, 129, 0.3);
-  border-radius: 50%;
-  background: radial-gradient(circle, 
-    rgba(16, 185, 129, 0.1) 0%, 
-    transparent 70%
-  );
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgba(59, 130, 246, 0.4);
-    border-radius: 2px;
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 16px;
-    height: 16px;
-    background: linear-gradient(45deg, 
-      rgba(16, 185, 129, 0.6), 
-      rgba(59, 130, 246, 0.6)
-    );
-    border-radius: 50%;
-  }
-`;
+
 
 const ProfessionalGrid = styled(Box)`
   position: absolute;
@@ -256,41 +216,6 @@ const ProfessionalGrid = styled(Box)`
   pointer-events: none;
 `;
 
-const StatusIndicator = styled(Box)<{ isActive: boolean }>`
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: ${({ isActive }) => 
-    isActive 
-      ? 'radial-gradient(circle, rgba(16, 185, 129, 1) 0%, rgba(16, 185, 129, 0.4) 100%)'
-      : 'radial-gradient(circle, rgba(156, 163, 175, 0.8) 0%, rgba(156, 163, 175, 0.3) 100%)'
-  };
-  box-shadow: ${({ isActive }) => 
-    isActive 
-      ? '0 0 20px rgba(16, 185, 129, 0.5)'
-      : '0 0 10px rgba(156, 163, 175, 0.3)'
-  };
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
-    border: 1px solid ${({ isActive }) => 
-      isActive 
-        ? 'rgba(16, 185, 129, 0.3)'
-        : 'rgba(156, 163, 175, 0.2)'
-    };
-    border-radius: 50%;
-    animation: ${({ isActive }) => isActive ? 'pulse 2s infinite' : 'none'};
-  }
-`;
-
 interface AnimatedSectionTransitionProps {
   children: React.ReactNode;
   sectionKey: string;
@@ -303,7 +228,6 @@ export default function AnimatedSectionTransition({
   children,
   sectionKey,
   animationType = 'elegant',
-  showAccents = true,
   luxuryMode = true
 }: AnimatedSectionTransitionProps) {
   const [currentKey, setCurrentKey] = useState(sectionKey);
@@ -337,12 +261,7 @@ export default function AnimatedSectionTransition({
       <ContentWrapper>
         <ProfessionalGrid />
         
-        {showAccents && (
-          <>
-            <StatusIndicator isActive={isActive} />
-            <GeometricAccent />
-          </>
-        )}
+        {/* Accents removed */}
         
         <Box sx={{ 
           position: 'relative', 
