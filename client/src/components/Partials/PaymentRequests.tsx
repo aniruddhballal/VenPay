@@ -260,7 +260,8 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
   const [existingRatings, setExistingRatings] = useState<Record<string, ProductRating>>({});
   const [ratingData, setRatingData] = useState<Record<string, { rating: number; review: string }>>({});
   const [ratingLoading, setRatingLoading] = useState<Record<string, boolean>>({});
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const [showPasswordInput, setShowPasswordInput] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     data.forEach(async (req) => {
@@ -295,23 +296,31 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
     });
   }, [data]);
 
-  const handlePaymentClick = () => {
-    navigate('/payments');
-  };
+  // const handlePaymentClick = () => {     THIS CODE EXISTS TO LATER IMPLEMENT THE PAYMENT GATEWAY THING - redirecting to new page types
+  //   navigate('/payments');
+  // };
 
-  const handlePayment = async (req: Request) => {
-    const amount = parseFloat(amounts[req._id] || "0");
-    const password = passwords[req._id];
-
-    if (!password) {
-      toast.warn("Please enter your password to confirm the payment.");
-      return;
-    }
-
+const handlePayment = async (req: Request) => {
+  const amount = parseFloat(amounts[req._id] || "0");
+  
+  // First click - validate amount and show password input
+  if (!showPasswordInput[req._id]) {
     if (isNaN(amount) || amount <= 0 || amount > (amountDueMap[req._id] ?? req.totalPrice)) {
       toast.warn("Enter a valid amount up to the amount due.");
       return;
     }
+    
+    // Show password input
+    setShowPasswordInput((prev) => ({ ...prev, [req._id]: true }));
+    return;
+  }
+  
+  // Second click - validate password and process payment
+  const password = passwords[req._id];
+  if (!password) {
+    toast.warn("Please enter your password to confirm the payment.");
+    return;
+  }
 
     try {
       const paymentResponse = await api.post(`/paymenttransactions/${req._id}`, { amount, password });
@@ -341,6 +350,7 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
       // Clear form inputs
       setAmounts((prev) => ({ ...prev, [req._id]: "" }));
       setPasswords((prev) => ({ ...prev, [req._id]: "" }));
+      setShowPasswordInput((prev) => ({ ...prev, [req._id]: false }));
     }
   };
 
@@ -516,7 +526,6 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                             <strong>Deadline:</strong> {deadlineDate} – <strong>Time left:</strong> {timeLeft}
                           </p>
                         )}
-
                         <div className="payment-input-group">
                           <input
                             className="payment-input-amount"
@@ -527,20 +536,34 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                             max={amountDueMap[req._id] ?? req.totalPrice}
                             min={1}
                           />
-                          <input
-                            className="payment-input-password"
-                            type="password"
-                            placeholder="Password"
-                            value={passwords[req._id] || ""}
-                            onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
-                          />
+                          
+                          {showPasswordInput[req._id] && (
+                            <input
+                              className="payment-input-password"
+                              type="password"
+                              placeholder="Password"
+                              value={passwords[req._id] || ""}
+                              onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
+                            />
+                          )}
+                          
                           <StyledButton
                             variant="primary"
-                            // onClick={() => handlePayment(req)}
-                            onClick={handlePaymentClick}
+                            onClick={() => handlePayment(req)}
                           >
-                            Make Payment
+                            {showPasswordInput[req._id] ? "Confirm Payment" : "Make Payment"}
                           </StyledButton>
+                        {showPasswordInput[req._id] && (
+                          <StyledButton
+                            variant="danger"
+                            onClick={() => {
+                              setShowPasswordInput((prev) => ({ ...prev, [req._id]: false }));
+                              setPasswords((prev) => ({ ...prev, [req._id]: "" }));
+                            }}
+                          >
+                            Cancel
+                          </StyledButton>
+                        )}
                         </div>
                       </>
                     )}
