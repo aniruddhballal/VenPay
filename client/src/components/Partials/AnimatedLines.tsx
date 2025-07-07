@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface AnimatedLinesProps {
   activeSet?: 'set1' | 'set2';
@@ -18,6 +18,10 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isExiting, setIsExiting] = useState<boolean>(false);
   const [previousActiveSet, setPreviousActiveSet] = useState<string>('');
+  
+  // Use refs to track timeouts and prevent memory leaks
+  const exitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pathLengthTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate random offset for path variation
   const getRandomOffset = () => ({
@@ -84,57 +88,70 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     return path;
   };
 
-  // Initialize path when activeSet changes
-  useEffect(() => {
-    // If there's already a line displayed and we're switching sets
-    if (previousActiveSet && previousActiveSet !== activeSet && connectionPath && !isExiting) {
-      // Start swallow effect
-      setIsExiting(true);
-      
-      // After swallow animation completes, draw new line
-      setTimeout(() => {
-        const points = getConnectionPoints(activeSet === 'set1');
-        const path = createConnectionPath(points);
-        
-        setConnectionPoints(points);
-        setConnectionPath(path);
-        setIsExiting(false);
-        setIsAnimating(true);
-        
-        // Calculate path length for new path
-        setTimeout(() => {
-          const pathElement = document.querySelector('.animated-path') as SVGPathElement;
-          if (pathElement) {
-            const length = pathElement.getTotalLength();
-            setPathLength(length);
-          }
-        }, 10);
-      }, 1200); // Wait for swallow animation to complete
-    } else if (!isExiting) {
-      // Initial load or first time showing
-      const points = getConnectionPoints(activeSet === 'set1');
-      const path = createConnectionPath(points);
-      
-      setConnectionPoints(points);
-      setConnectionPath(path);
-      setIsAnimating(true);
-      
-      // Calculate path length after a brief delay to ensure SVG is rendered
-      setTimeout(() => {
-        const pathElement = document.querySelector('.animated-path') as SVGPathElement;
-        if (pathElement) {
-          const length = pathElement.getTotalLength();
-          setPathLength(length);
-        }
-      }, 10);
+  // Function to draw new path
+  const drawNewPath = (setType: 'set1' | 'set2') => {
+    const points = getConnectionPoints(setType === 'set1');
+    const path = createConnectionPath(points);
+    
+    setConnectionPoints(points);
+    setConnectionPath(path);
+    setIsExiting(false);
+    setIsAnimating(true);
+    
+    // Calculate path length for new path
+    if (pathLengthTimeoutRef.current) {
+      clearTimeout(pathLengthTimeoutRef.current);
     }
     
-    if (!isExiting) {
-      setPreviousActiveSet(activeSet);
+    pathLengthTimeoutRef.current = setTimeout(() => {
+      const pathElement = document.querySelector('.animated-path') as SVGPathElement;
+      if (pathElement) {
+        const length = pathElement.getTotalLength();
+        setPathLength(length);
+      }
+    }, 10);
+  };
+
+  // Initialize path when activeSet changes
+  useEffect(() => {
+    // Clear any existing timeouts
+    if (exitTimeoutRef.current) {
+      clearTimeout(exitTimeoutRef.current);
     }
+    if (pathLengthTimeoutRef.current) {
+      clearTimeout(pathLengthTimeoutRef.current);
+    }
+
+    // If there's already a line displayed and we're switching sets
+    if (previousActiveSet && previousActiveSet !== activeSet && connectionPath) {
+      // Start swallow effect immediately
+      setIsExiting(true);
+      setIsAnimating(false);
+      
+      // After swallow animation completes, draw new line
+      exitTimeoutRef.current = setTimeout(() => {
+        drawNewPath(activeSet);
+      }, 1200); // Wait for swallow animation to complete
+    } else {
+      // Initial load or first time showing - draw immediately
+      drawNewPath(activeSet);
+    }
+    
+    // Always update previous active set
+    setPreviousActiveSet(activeSet);
   }, [activeSet]);
 
-
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current) {
+        clearTimeout(exitTimeoutRef.current);
+      }
+      if (pathLengthTimeoutRef.current) {
+        clearTimeout(pathLengthTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -164,8 +181,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-
-
         </defs>
         
         {/* Animated dashed path */}
@@ -195,8 +210,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             }}
           />
         )}
-
-
       </svg>
       
       {/* CSS animations */}
@@ -235,8 +248,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             opacity: 0;
           }
         }
-        
-
       `}</style>
     </div>
   );
