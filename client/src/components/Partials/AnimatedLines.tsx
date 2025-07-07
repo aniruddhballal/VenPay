@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import './AnimatedLines.css';
 
 interface AnimatedLinesProps {
   activeSet?: 'set1' | 'set2';
@@ -7,13 +8,10 @@ interface AnimatedLinesProps {
 interface ConnectionPoint {
   x: number;
   y: number;
-  label: string;
-  type: 'start' | 'end' | 'intermediate';
 }
 
 const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   const [connectionPath, setConnectionPath] = useState<string>('');
-  const [connectionPoints, setConnectionPoints] = useState<ConnectionPoint[]>([]);
   const [pathLength, setPathLength] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isExiting, setIsExiting] = useState<boolean>(false);
@@ -36,17 +34,17 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     
     if (isSet1) {
       return [
-        { x: startPoint.x, y: startPoint.y, label: 'Input', type: 'start' },
-        { x: 400 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Filter', type: 'intermediate' },
-        { x: 360 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Transform', type: 'intermediate' },
-        { x: endPoint.x, y: endPoint.y, label: 'Output', type: 'end' }
+        { x: startPoint.x, y: startPoint.y },
+        { x: 400 + getRandomOffset().x, y: 140 + getRandomOffset().y },
+        { x: 360 + getRandomOffset().x, y: 165 + getRandomOffset().y },
+        { x: endPoint.x, y: endPoint.y }
       ];
     } else {
       return [
-        { x: startPoint.x, y: startPoint.y, label: 'Source', type: 'start' },
-        { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y, label: 'Process', type: 'intermediate' },
-        { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y, label: 'Validate', type: 'intermediate' },
-        { x: endPoint.x, y: endPoint.y, label: 'Destination', type: 'end' }
+        { x: startPoint.x, y: startPoint.y },
+        { x: 820 + getRandomOffset().x, y: 140 + getRandomOffset().y },
+        { x: 860 + getRandomOffset().x, y: 165 + getRandomOffset().y },
+        { x: endPoint.x, y: endPoint.y }
       ];
     }
   };
@@ -77,8 +75,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
         path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${curr.x} ${curr.y}`;
       } else {
         // Smooth curves for remaining points with random variation
-        const cp1x = prev.x + (curr.x - prev.x) * (0.6 + Math.random() * 0.2) + randomOffset1.x;
-        const cp1y = prev.y + (curr.y - prev.y) * (0.4 + Math.random() * 0.2) + randomOffset1.y;
         const cp2x = curr.x - (next ? (next.x - curr.x) * (0.4 + Math.random() * 0.2) : 20 + Math.random() * 20) + randomOffset2.x;
         const cp2y = curr.y - (next ? (next.y - curr.y) * (0.4 + Math.random() * 0.2) : 10 + Math.random() * 10) + randomOffset2.y;
         path += ` S ${cp2x} ${cp2y}, ${curr.x} ${curr.y}`;
@@ -93,7 +89,6 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
     const points = getConnectionPoints(setType === 'set1');
     const path = createConnectionPath(points);
     
-    setConnectionPoints(points);
     setConnectionPath(path);
     setIsExiting(false);
     setIsAnimating(true);
@@ -131,7 +126,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
       // After swallow animation completes, draw new line
       exitTimeoutRef.current = setTimeout(() => {
         drawNewPath(activeSet);
-      }, 1200); // Wait for swallow animation to complete
+      }, 800); // Wait for swallow animation to complete
     } else {
       // Initial load or first time showing - draw immediately
       drawNewPath(activeSet);
@@ -154,7 +149,17 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
   }, []);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div 
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
+      style={{
+        '--path-length-negative': `-${pathLength}px`,
+        '--swallow-70': `-${pathLength * 0.7}px`,
+        '--swallow-120': `-${pathLength * 1.2}px`,
+        '--swallow-dash-30': `${pathLength * 0.3}px`,
+        '--swallow-dash-10': `${pathLength * 0.1}px`,
+        '--swallow-dash-90': `${pathLength * 0.9}px`
+      } as React.CSSProperties}
+    >
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 1200 800"
@@ -193,7 +198,7 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
             strokeLinecap="round"
             strokeDasharray="8,4"
             filter="url(#glow)"
-            className="animated-path"
+            className={`animated-path ${isExiting ? 'exiting' : ''} ${isAnimating ? 'animating' : ''}`}
             style={{
               strokeDasharray: isExiting ? 
                 `${pathLength * 0.8} ${pathLength * 0.2}` : 
@@ -205,50 +210,11 @@ const AnimatedLines = ({ activeSet = 'set1' }: AnimatedLinesProps) => {
                 `swallowEffect 1.2s ease-in-out forwards` :
                 (isAnimating ? 
                   `drawPath 1.5s ease-in-out forwards, dashMove 2s linear infinite 1.5s` : 
-                  'none'),
-              transition: isAnimating || isExiting ? 'none' : 'stroke-dashoffset 0.3s ease-out'
+                  'none')
             }}
           />
         )}
       </svg>
-      
-      {/* CSS animations */}
-      <style jsx>{`
-        @keyframes drawPath {
-          0% {
-            stroke-dashoffset: -${pathLength};
-          }
-          100% {
-            stroke-dashoffset: 0;
-            stroke-dasharray: 8, 4;
-          }
-        }
-        
-        @keyframes dashMove {
-          0% {
-            stroke-dashoffset: 0;
-          }
-          100% {
-            stroke-dashoffset: 24;
-          }
-        }
-        
-        @keyframes swallowEffect {
-          0% {
-            stroke-dashoffset: 0;
-            stroke-dasharray: 8, 4;
-          }
-          70% {
-            stroke-dashoffset: -${pathLength * 0.7};
-            stroke-dasharray: ${pathLength * 0.3}, ${pathLength * 0.1};
-          }
-          100% {
-            stroke-dashoffset: -${pathLength * 1.2};
-            stroke-dasharray: ${pathLength * 0.1}, ${pathLength * 0.9};
-            opacity: 0;
-          }
-        }
-      `}</style>
     </div>
   );
 };

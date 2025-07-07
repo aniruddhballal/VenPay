@@ -1,0 +1,44 @@
+/* AnimatedLines.css */
+@keyframes drawPath {
+  0% {
+    stroke-dashoffset: var(--path-length-negative);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 8, 4;
+  }
+}
+
+@keyframes dashMove {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 24;
+  }
+}
+
+@keyframes swallowEffect {
+  0% {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 8, 4;
+  }
+  70% {
+    stroke-dashoffset: var(--swallow-70);
+    stroke-dasharray: var(--swallow-dash-30), var(--swallow-dash-10);
+  }
+  100% {
+    stroke-dashoffset: var(--swallow-120);
+    stroke-dasharray: var(--swallow-dash-10), var(--swallow-dash-90);
+    opacity: 0;
+  }
+}
+
+.animated-path {
+  transition: stroke-dashoffset 0.3s ease-out;
+}
+
+.animated-path.animating,
+.animated-path.exiting {
+  transition: none;
+}
