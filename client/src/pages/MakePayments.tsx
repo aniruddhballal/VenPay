@@ -1,160 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { CreditCard, Lock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-
-interface PaymentMethod {
-  id: string;
-  type: 'card' | 'paypal' | 'bank';
-  last4?: string;
-  brand?: string;
-  expiryMonth?: number;
-  expiryYear?: number;
-}
+import React, { useState } from 'react';
+import { CreditCard, Lock, CheckCircle, XCircle } from 'lucide-react';
 
 interface PaymentData {
   amount: number;
   currency: string;
   description: string;
   customerEmail: string;
-}
-
-interface PaymentFormData {
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-  cardholderName: string;
-  billingAddress: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
+  customerName: string;
+  customerContact: string;
 }
 
 const MakePayments: React.FC = () => {
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [selectedMethod, setSelectedMethod] = useState<string>('');
-  const [showAddCard, setShowAddCard] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'success' | 'error' | 'processing'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [paymentId, setPaymentId] = useState('');
   
   const [paymentData, setPaymentData] = useState<PaymentData>({
-    amount: 99.99,
-    currency: 'USD',
-    description: 'Premium Subscription',
-    customerEmail: 'customer@example.com'
+    amount: 1,
+    currency: 'INR',
+    description: 'Vendor Payment',
+    customerEmail: 'company-online@gmail.com',
+    customerName: 'C O',
+    customerContact: '9999999999'
   });
 
-  const [formData, setFormData] = useState<PaymentFormData>({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardholderName: '',
-    billingAddress: {
-      street: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: 'US'
-    }
-  });
-
-  useEffect(() => {
-    const savedMethods: PaymentMethod[] = [
-      {
-        id: '1',
-        type: 'card',
-        last4: '4242',
-        brand: 'Visa',
-        expiryMonth: 12,
-        expiryYear: 2026
-      },
-      {
-        id: '2',
-        type: 'card',
-        last4: '0005',
-        brand: 'Mastercard',
-        expiryMonth: 8,
-        expiryYear: 2025
-      }
-    ];
-    setPaymentMethods(savedMethods);
-  }, []);
-
-  const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-    const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || '';
-    const parts = [];
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    if (parts.length) {
-      return parts.join(' ');
-    } else {
-      return v;
-    }
-  };
-
-  const formatExpiryDate = (value: string) => {
-    const v = value.replace(/\D/g, '');
-    if (v.length >= 2) {
-      return v.substring(0, 2) + '/' + v.substring(2, 4);
-    }
-    return v;
-  };
-
-  const validateCard = (cardNumber: string): boolean => {
-    const num = cardNumber.replace(/\s/g, '');
-    if (num.length < 13 || num.length > 19) return false;
-    
-    let sum = 0;
-    let alternate = false;
-    for (let i = num.length - 1; i >= 0; i--) {
-      let n = parseInt(num[i], 10);
-      if (alternate) {
-        n *= 2;
-        if (n > 9) n -= 9;
-      }
-      sum += n;
-      alternate = !alternate;
-    }
-    return sum % 10 === 0;
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    if (field === 'cardNumber') {
-      value = formatCardNumber(value);
-    } else if (field === 'expiryDate') {
-      value = formatExpiryDate(value);
-    } else if (field === 'cvv') {
-      value = value.replace(/\D/g, '').substring(0, 4);
-    }
-
-    if (field.startsWith('billingAddress.')) {
-      const addressField = field.split('.')[1];
-      setFormData(prev => ({
-        ...prev,
-        billingAddress: {
-          ...prev.billingAddress,
-          [addressField]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }));
-    }
-  };
-
-  const simulatePaymentProcessing = async (paymentMethodId?: string): Promise<boolean> => {
+  // Load Razorpay script dynamically
+  const loadRazorpayScript = () => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.1;
-        resolve(success);
-      }, 2000);
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
     });
   };
 
@@ -164,40 +42,123 @@ const MakePayments: React.FC = () => {
     setErrorMessage('');
 
     try {
-      let success = false;
-
-      if (selectedMethod && selectedMethod !== 'new') {
-        success = await simulatePaymentProcessing(selectedMethod);
-      } else {
-        if (!validateCard(formData.cardNumber)) {
-          throw new Error('Invalid card number');
-        }
-        
-        if (!formData.expiryDate || !formData.cvv || !formData.cardholderName) {
-          throw new Error('Please fill in all required fields');
-        }
-
-        success = await simulatePaymentProcessing();
+      // Load Razorpay script
+      const isScriptLoaded = await loadRazorpayScript();
+      
+      if (!isScriptLoaded) {
+        throw new Error('Failed to load Razorpay SDK');
       }
 
-      if (success) {
-        setPaymentStatus('success');
-      } else {
-        throw new Error('Payment was declined. Please try a different payment method.');
+      // Create order from backend
+      const orderResponse = await fetch('http://localhost:5000/api/razorpay/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: paymentData.amount,
+          currency: paymentData.currency,
+          description: paymentData.description,
+          customerName: paymentData.customerName,
+          customerEmail: paymentData.customerEmail,
+          customerContact: paymentData.customerContact
+        })
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error('Failed to create order');
       }
+
+      const orderData = await orderResponse.json();
+
+      // Razorpay options
+      const options = {
+        key: orderData.key, // Key comes from backend
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'VenPay',
+        description: paymentData.description,
+        order_id: orderData.orderId, // Order ID from backend
+        image: 'https://your-logo-url.com/logo.png',
+        handler: async function (response: any) {
+          try {
+            // Verify payment on backend
+            const verifyResponse = await fetch('http://localhost:5000/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              setPaymentId(response.razorpay_payment_id);
+              setPaymentStatus('success');
+            } else {
+              setPaymentStatus('error');
+              setErrorMessage('Payment verification failed');
+            }
+          } catch (error) {
+            setPaymentStatus('error');
+            setErrorMessage('Payment verification failed');
+          }
+          setProcessing(false);
+        },
+        prefill: {
+          name: paymentData.customerName,
+          email: paymentData.customerEmail,
+          contact: paymentData.customerContact
+        },
+        notes: {
+          address: 'Test Address'
+        },
+        theme: {
+          color: '#ffffff'
+        },
+        modal: {
+          ondismiss: function() {
+            setPaymentStatus('error');
+            setErrorMessage('Payment cancelled by user');
+            setProcessing(false);
+          }
+        }
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      
+      paymentObject.on('payment.failed', function (response: any) {
+        setPaymentStatus('error');
+        setErrorMessage(`Payment Failed: ${response.error.description}`);
+        setProcessing(false);
+        console.log('Payment Failed:', response.error);
+      });
+      
+      paymentObject.open();
     } catch (error) {
       setPaymentStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Payment failed');
-    } finally {
+      setErrorMessage(error instanceof Error ? error.message : 'Payment initialization failed');
       setProcessing(false);
+      console.error('Payment Error:', error);
     }
   };
 
   const resetPayment = () => {
     setPaymentStatus('idle');
     setErrorMessage('');
-    setShowAddCard(false);
-    setSelectedMethod('');
+    setPaymentId('');
+  };
+
+  const handleInputChange = (field: keyof PaymentData, value: string | number) => {
+    setPaymentData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const containerStyle = {
@@ -229,7 +190,8 @@ const MakePayments: React.FC = () => {
     color: '#ffffff',
     fontSize: '16px',
     transition: 'all 0.3s ease',
-    outline: 'none'
+    outline: 'none',
+    boxSizing: 'border-box' as const
   };
 
   const inputFocusStyle = {
@@ -240,22 +202,21 @@ const MakePayments: React.FC = () => {
     transform: 'translateY(-2px)'
   };
 
-const buttonStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '18px',
-  background: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)',
-  color: '#1a1a1a',
-  border: 'none',
-  borderRadius: '14px',
-  fontSize: '18px',
-  fontWeight: 600, // ✅ number, not string
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  boxShadow: '0 8px 25px rgba(255, 255, 255, 0.15)',
-  textTransform: 'uppercase', // ✅ valid enum
-  letterSpacing: '0.5px',
-};
-
+  const buttonStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '18px',
+    background: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)',
+    color: '#1a1a1a',
+    border: 'none',
+    borderRadius: '14px',
+    fontSize: '18px',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 8px 25px rgba(255, 255, 255, 0.15)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  };
 
   const buttonHoverStyle = {
     ...buttonStyle,
@@ -271,25 +232,6 @@ const buttonStyle: React.CSSProperties = {
     cursor: 'not-allowed',
     transform: 'none',
     boxShadow: 'none'
-  };
-
-  const paymentMethodStyle = {
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '12px',
-    padding: '16px',
-    marginBottom: '12px',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    color: '#ffffff'
-  };
-
-  const paymentMethodSelectedStyle = {
-    ...paymentMethodStyle,
-    background: 'rgba(255, 255, 255, 0.15)',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 8px 25px rgba(255, 255, 255, 0.1)'
   };
 
   const summaryStyle = {
@@ -326,19 +268,22 @@ const buttonStyle: React.CSSProperties = {
           <h2 style={{ color: '#ffffff', fontSize: '32px', fontWeight: '700', marginBottom: '16px', letterSpacing: '-0.5px' }}>
             Payment Successful!
           </h2>
-          <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '18px', marginBottom: '32px', lineHeight: '1.6' }}>
-            Your payment of ${paymentData.amount} has been processed successfully.
+          <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '18px', marginBottom: '16px', lineHeight: '1.6' }}>
+            Your payment of ₹{paymentData.amount} has been processed successfully.
           </p>
-<button
-  onClick={resetPayment}
-  style={buttonStyle}
-  onMouseEnter={(e) =>
-    Object.assign((e.currentTarget as HTMLButtonElement).style, buttonHoverStyle)
-  }
-  onMouseLeave={(e) =>
-    Object.assign((e.currentTarget as HTMLButtonElement).style, buttonStyle)
-  }
->
+          <p style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '14px', marginBottom: '32px' }}>
+            Payment ID: {paymentId}
+          </p>
+          <button
+            onClick={resetPayment}
+            style={buttonStyle}
+            onMouseEnter={(e) =>
+              Object.assign((e.currentTarget as HTMLButtonElement).style, buttonHoverStyle)
+            }
+            onMouseLeave={(e) =>
+              Object.assign((e.currentTarget as HTMLButtonElement).style, buttonStyle)
+            }
+          >
             Make Another Payment
           </button>
         </div>
@@ -352,255 +297,90 @@ const buttonStyle: React.CSSProperties = {
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '32px' }}>
           <CreditCard style={{ width: '32px', height: '32px', color: '#ffffff', marginRight: '12px' }} />
           <h2 style={{ color: '#ffffff', fontSize: '28px', fontWeight: '700', margin: 0, letterSpacing: '-0.5px' }}>
-            Make Payment
+            Secure Payment
           </h2>
         </div>
 
-        {/* Payment Summary */}
+        {/* Payment Configuration */}
         <div style={summaryStyle}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '16px' }}>Amount:</span>
-            <span style={{ color: '#ffffff', fontSize: '24px', fontWeight: '700' }}>
-              ${paymentData.amount} {paymentData.currency}
-            </span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '16px' }}>Description:</span>
-            <span style={{ color: '#ffffff', fontSize: '16px' }}>{paymentData.description}</span>
-          </div>
-        </div>
-
-        {/* Payment Methods */}
-        <div style={{ marginBottom: '32px' }}>
-          <h3 style={{ color: '#ffffff', fontSize: '20px', fontWeight: '600', marginBottom: '20px' }}>
-            Payment Method
+          <h3 style={{ color: '#ffffff', fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>
+            Payment Details
           </h3>
           
-          {paymentMethods.map((method) => (
-            <div
-              key={method.id}
-              style={selectedMethod === method.id ? paymentMethodSelectedStyle : paymentMethodStyle}
-              onClick={() => setSelectedMethod(method.id)}
-            onMouseEnter={(e) => {
-            if (selectedMethod !== method.id) {
-                const target = e.currentTarget as HTMLElement;
-                target.style.background = 'rgba(255, 255, 255, 0.08)';
-                target.style.transform = 'translateY(-1px)';
-            }
-              }}
-onMouseLeave={(e) => {
-  if (selectedMethod !== method.id) {
-    const target = e.currentTarget as HTMLElement;
-    target.style.background = 'rgba(255, 255, 255, 0.05)';
-    target.style.transform = 'translateY(0)';
-  }
-}}
+          <div style={{ display: 'grid', gap: '16px' }}>
+            <div>
+              <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                Amount (₹)
+              </label>
+              <input
+                type="number"
+                value={paymentData.amount}
+                onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
+                min="1"
+                style={inputStyle}
+                onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
+                onBlur={(e) => Object.assign(e.target.style, inputStyle)}
+              />
+            </div>
 
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div>
+              <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                Description
+              </label>
+              <input
+                type="text"
+                value={paymentData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                style={inputStyle}
+                onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
+                onBlur={(e) => Object.assign(e.target.style, inputStyle)}
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                  Customer Name
+                </label>
                 <input
-                  type="radio"
-                  checked={selectedMethod === method.id}
-                  onChange={() => setSelectedMethod(method.id)}
-                  style={{ marginRight: '16px', accentColor: '#ffffff' }}
+                  type="text"
+                  value={paymentData.customerName}
+                  onChange={(e) => handleInputChange('customerName', e.target.value)}
+                  style={inputStyle}
+                  onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
+                  onBlur={(e) => Object.assign(e.target.style, inputStyle)}
                 />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px' }}>
-                    {method.brand} ending in {method.last4}
-                  </div>
-                  {method.expiryMonth && method.expiryYear && (
-                    <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>
-                      Expires {method.expiryMonth.toString().padStart(2, '0')}/{method.expiryYear}
-                    </div>
-                  )}
-                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                  Contact Number
+                </label>
+                <input
+                  type="tel"
+                  value={paymentData.customerContact}
+                  onChange={(e) => handleInputChange('customerContact', e.target.value)}
+                  style={inputStyle}
+                  onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
+                  onBlur={(e) => Object.assign(e.target.style, inputStyle)}
+                />
               </div>
             </div>
-          ))}
 
-          <div
-            style={selectedMethod === 'new' || showAddCard ? paymentMethodSelectedStyle : paymentMethodStyle}
-            onClick={() => {
-              setSelectedMethod('new');
-              setShowAddCard(true);
-            }}
-onMouseEnter={(e) => {
-  if (selectedMethod !== 'new') {
-    const target = e.currentTarget as HTMLElement;
-    target.style.background = 'rgba(255, 255, 255, 0.08)';
-    target.style.transform = 'translateY(-1px)';
-  }
-}}
-onMouseLeave={(e) => {
-  if (selectedMethod !== 'new') {
-    const target = e.currentTarget as HTMLElement;
-    target.style.background = 'rgba(255, 255, 255, 0.05)';
-    target.style.transform = 'translateY(0)';
-  }
-}}
-
-          >
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div>
+              <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
+                Customer Email
+              </label>
               <input
-                type="radio"
-                checked={selectedMethod === 'new'}
-                onChange={() => {
-                  setSelectedMethod('new');
-                  setShowAddCard(true);
-                }}
-                style={{ marginRight: '16px', accentColor: '#ffffff' }}
+                type="email"
+                value={paymentData.customerEmail}
+                onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                style={inputStyle}
+                onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
+                onBlur={(e) => Object.assign(e.target.style, inputStyle)}
               />
-              <span style={{ fontWeight: '600', fontSize: '16px' }}>Add new card</span>
             </div>
           </div>
         </div>
-
-        {/* New Card Form */}
-        {showAddCard && (
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '16px',
-            padding: '24px',
-            marginBottom: '32px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            animation: 'slideDown 0.3s ease-out'
-          }}>
-            <style>
-              {`
-                @keyframes slideDown {
-                  from { opacity: 0; transform: translateY(-20px); }
-                  to { opacity: 1; transform: translateY(0); }
-                }
-              `}
-            </style>
-            <div style={{ display: 'grid', gap: '20px' }}>
-              <div>
-                <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                  Card Number
-                </label>
-                <input
-                  type="text"
-                  value={formData.cardNumber}
-                  onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                  placeholder="1234 5678 9012 3456"
-                  maxLength={19}
-                  style={inputStyle}
-                  onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                  onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                    Expiry Date
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.expiryDate}
-                    onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                    placeholder="MM/YY"
-                    maxLength={5}
-                    style={inputStyle}
-                    onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                    onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                    CVV
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.cvv}
-                    onChange={(e) => handleInputChange('cvv', e.target.value)}
-                    placeholder="123"
-                    maxLength={4}
-                    style={inputStyle}
-                    onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                    onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                  Cardholder Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.cardholderName}
-                  onChange={(e) => handleInputChange('cardholderName', e.target.value)}
-                  placeholder="John Doe"
-                  style={inputStyle}
-                  onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                  onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                  Street Address
-                </label>
-                <input
-                  type="text"
-                  value={formData.billingAddress.street}
-                  onChange={(e) => handleInputChange('billingAddress.street', e.target.value)}
-                  placeholder="123 Main St"
-                  style={inputStyle}
-                  onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                  onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.billingAddress.city}
-                    onChange={(e) => handleInputChange('billingAddress.city', e.target.value)}
-                    placeholder="New York"
-                    style={inputStyle}
-                    onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                    onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                    State
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.billingAddress.state}
-                    onChange={(e) => handleInputChange('billingAddress.state', e.target.value)}
-                    placeholder="NY"
-                    style={inputStyle}
-                    onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                    onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', color: '#ffffff', fontSize: '14px', fontWeight: '500', marginBottom: '8px' }}>
-                  Postal Code
-                </label>
-                <input
-                  type="text"
-                  value={formData.billingAddress.postalCode}
-                  onChange={(e) => handleInputChange('billingAddress.postalCode', e.target.value)}
-                  placeholder="10001"
-                  style={inputStyle}
-                  onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
-                  onBlur={(e) => Object.assign(e.target.style, inputStyle)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Error Message */}
         {paymentStatus === 'error' && (
@@ -640,25 +420,25 @@ onMouseLeave={(e) => {
         }}>
           <Lock style={{ width: '20px', height: '20px', color: '#22c55e', marginRight: '12px' }} />
           <span style={{ color: '#22c55e', fontSize: '14px' }}>
-            Your payment information is encrypted and secure
-          </span>
+            Secured by Razorpay with order verification
+          </span>     
         </div>
 
         {/* Payment Button */}
-<button
-  onClick={processPayment}
-  disabled={processing || !selectedMethod}
-  style={processing || !selectedMethod ? buttonDisabledStyle : buttonStyle}
-  onMouseEnter={(e) => {
-    if (!processing && selectedMethod) {
-      Object.assign((e.currentTarget as HTMLButtonElement).style, buttonHoverStyle);
-    }
-  }}
-  onMouseLeave={(e) => {
-    if (!processing && selectedMethod) {
-      Object.assign((e.currentTarget as HTMLButtonElement).style, buttonStyle);
-    }
-  }}
+        <button
+          onClick={processPayment}
+          disabled={processing || paymentData.amount <= 0}
+          style={processing || paymentData.amount <= 0 ? buttonDisabledStyle : buttonStyle}
+          onMouseEnter={(e) => {
+            if (!processing && paymentData.amount > 0) {
+              Object.assign((e.currentTarget as HTMLButtonElement).style, buttonHoverStyle);
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!processing && paymentData.amount > 0) {
+              Object.assign((e.currentTarget as HTMLButtonElement).style, buttonStyle);
+            }
+          }}
         >
           {processing ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -682,7 +462,7 @@ onMouseLeave={(e) => {
               Processing Payment...
             </div>
           ) : (
-            `Pay $${paymentData.amount}`
+            `Pay ₹${paymentData.amount} Securely`
           )}
         </button>
 
@@ -693,7 +473,7 @@ onMouseLeave={(e) => {
           marginTop: '20px',
           lineHeight: '1.5'
         }}>
-          By clicking "Pay", you agree to our terms of service and privacy policy.
+          Your payment will be processed through Razorpay's secure gateway with order verification.
         </p>
       </div>
     </div>
