@@ -1,3 +1,26 @@
+// Razorpay Test Mode Integration
+
+// Start the server: npm run dev
+// Check health: http://localhost:5000/api/razorpay/health
+// Use the React component to make payments
+
+// What This Integration Provides
+
+// Secure Order Creation   : Backend creates orders with proper validation
+// Payment Verification    : Cryptographic signature verification
+// Order Tracking          : Get order status and details
+// Error Handling          : Comprehensive error handling
+// TypeScript Support      : Full type safety
+// Integration Ready       : Works with your existing server structure
+
+// The payment flow now goes:
+
+// Frontend    →   Backend (/api/razorpay/create-order)
+// Backend     →   Razorpay API (creates order)
+// Frontend    →   Razorpay UI (user pays)
+// Frontend    →   Backend (/api/razorpay/verify-payment)
+// Backend verifies payment authenticity
+
 import React, { useState } from 'react';
 import { CreditCard, Lock, CheckCircle, XCircle } from 'lucide-react';
 

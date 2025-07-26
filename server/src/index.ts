@@ -12,7 +12,7 @@ import paymentRequestRoutes from "./routes/paymentRequests";
 import paymentTransactionRoutes from "./routes/paymentTransactions";
 import userRoutes from "./routes/userRoutes";
 import productRatingRoutes from "./routes/productRatingRoutes";
-import razorpayRoutes from "./routes/razorpayRoutes"; // 👈 Add this import
+import razorpayRoutes from "./routes/razorpayRoutes";
 
 dotenv.config();
 
@@ -29,7 +29,6 @@ app.use(express.json());
 app.use(cookieParser());
 //app.use(rateLimiter);
 
-// Existing routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/requests", productRequests);
@@ -37,8 +36,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/paymentrequests", paymentRequestRoutes);
 app.use("/api/paymenttransactions", paymentTransactionRoutes);
 app.use("/api/productratings", productRatingRoutes);
-
-// 👈 Add Razorpay routes
 app.use("/api/razorpay", razorpayRoutes);
 
 connectDB().then(() => {
