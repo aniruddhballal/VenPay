@@ -120,6 +120,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [x] TASK 197: Make use of centralised axios - api.ts throughout the whole app
 - [x] TASK 198: display rating in vendor dashboard - product requests
 - [x] TASK 199: display product image in company dashboard - payment requests
+- [x] TASK 202: the No rating found error - completed payment request which does not have a rating yet
 - [x] TASK 205: extract the reviewStyles and move it out and make new styles.ts file - import and reuse on both company and vendor sides
 - [x] TASK 208: break the ExpandCard component further
 - [x] TASK 209: [ SAME AS TASKS - 95, 99, 154, 174, 235, 240 ] after task 208, refer and stylise the AddProductCard component too
@@ -186,7 +187,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <summary>🚧 Ongoing</summary>
 
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
-- [x] TASK 202: the No rating found error - completed payment request which does not have a rating yet
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
 - [x] TASK 250: work on updateproductcard - revamp the whole thing - make it classy like the productdetails/display page and then THEN THEN AFTER THAT apply the revamp to addproductcard (which i might have to start from scratch) - throwback to TASK 37.
 - [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product card have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
