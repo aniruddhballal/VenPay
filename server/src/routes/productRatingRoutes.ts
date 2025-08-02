@@ -25,7 +25,8 @@ router.get("/productrequest/:productRequestId", protect, async (req, res) => {
       .populate("companyId", "name"); // this is needed to get the company details that you want to print in the frontend 
 
     if (!existingRating) {
-      res.status(404).json({ error: "No rating found" });
+      res.json({ rating: null, message: "No review available yet" });
+      // res.status(404).json({ error: "No rating found" });
       return;
     }
 
