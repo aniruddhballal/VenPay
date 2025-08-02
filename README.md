@@ -200,6 +200,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 262: Loading... exists for productlist page but not for paymentrequests - check vendor side too
 - [ ] TASK 263: "make payment" patch improv (explanation: i want a button that looks like borrows the same styles as the 'status-label' - but this button should say 'clear dues'. on click of this button, it should load the 'amount due' amount directly into the payment-input-amount, and then a toast message saying "please enter password" and then confirms payment i guess) - continuation: initially i just want the "amount to pay" payment-input-amount filed and the "make payment" button to be there, and on click of the make payment button - then the password input must be asked and on the verification of password i want the amount to be paid
 - [x] TASK 264: quantities for products? is this needed? will vendors run out of products/services? overload? shoudl there be a case where a product is unavailable? for this, i will need to define what the set of products that i am trying to sell are, right? so, quantity must be an optional field? and if it exists, then i need to treat it differently?
+- [x] TASK 265: New issue - after completing payment, it doesnt allow user to give review - just shows that a null review exists?!
 
 </details>
 
