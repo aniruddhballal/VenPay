@@ -186,6 +186,7 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 <summary>🚧 Ongoing</summary>
 
 - [ ] TASK 137: component breaking down + reusability + better mui + module.css + unify the colour theming throughout the app
+- [x] TASK 202: the No rating found error - completed payment request which does not have a rating yet
 - [ ] TASK 241: give touchups to the createproduct-updateproduct ui
 - [x] TASK 250: work on updateproductcard - revamp the whole thing - make it classy like the productdetails/display page and then THEN THEN AFTER THAT apply the revamp to addproductcard (which i might have to start from scratch) - throwback to TASK 37.
 - [ ] TASK 251: do we need inline editing on the main dashboard page? also, should every field in the compact product card have its own save/cancel buttons? its not like that for user profile editing - right? its not the usual model either (for editing details)
@@ -199,7 +200,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 262: Loading... exists for productlist page but not for paymentrequests - check vendor side too
 - [ ] TASK 263: "make payment" patch improv (explanation: i want a button that looks like borrows the same styles as the 'status-label' - but this button should say 'clear dues'. on click of this button, it should load the 'amount due' amount directly into the payment-input-amount, and then a toast message saying "please enter password" and then confirms payment i guess) - continuation: initially i just want the "amount to pay" payment-input-amount filed and the "make payment" button to be there, and on click of the make payment button - then the password input must be asked and on the verification of password i want the amount to be paid
 - [x] TASK 264: quantities for products? is this needed? will vendors run out of products/services? overload? shoudl there be a case where a product is unavailable? for this, i will need to define what the set of products that i am trying to sell are, right? so, quantity must be an optional field? and if it exists, then i need to treat it differently?
-- [x] TASK 265: dont throw errors when you dont find reviews for a product whose payment has already been completed 
 
 </details>
 
@@ -262,7 +262,6 @@ on vendor side - if payment has been cleared, remove amount due and deadlines
 - [ ] TASK 192: please work on 189 - compactification, rearrangement, expansion, etc now - PLEASE DO THIS
 - [ ] TASK 195: an option to view the paid/cleared payment requests separately - tab interface again? inside of the accepted? OH OR MAYBE FILTER YES YES FILTER.
 - [ ] TASK 196: prompt user to complete profile setup?
-- [ ] TASK 202: the No rating found error - completed payment request which does not have a rating yet
 - [ ] TASK 203: individual product requests page - have a compact list of all the product requests in the dashboard - or maybe expandable hover card types.
 - [ ] TASK 204: check if the components like reviews and other details dont show false/wrong data while theyre actually loading - add loading screens or skeletons.
 - [ ] TASK 206: check all the browser error logs and the the gap in the heading of the reiews - it will all be changed when i compactify stuff. this is first to do man! annd, the deprecated warnings and the migration upgrade errors.
