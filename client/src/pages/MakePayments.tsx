@@ -159,13 +159,6 @@ const MakePayments: React.FC = () => {
     }
   };
 
-  const resetPayment = () => {
-    setPaymentStatus('idle');
-    setErrorMessage('');
-    setShowPasswordInput(false);
-    setPassword('');
-  };
-
   const goBackToRequests = () => {
     navigate('/dashboard'); // Adjust path as needed
   };
