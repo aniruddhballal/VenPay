@@ -488,16 +488,28 @@ const handlePayment = (req: Request) => {
                           </p>
                         )}
                         <div className="payment-input-group">
-                          <input
-                            className="payment-input-amount"
-                            type="number"
-                            placeholder="Amount to pay"
-                            value={amounts[req._id] || ""}
-                            onChange={(e) => setAmounts({ ...amounts, [req._id]: e.target.value })}
-                            max={amountDueMap[req._id] ?? req.totalPrice}
-                            min={1}
-                          />
-                          
+                        <input
+                          className="payment-input-amount"
+                          type="number"
+                          placeholder="Amount to pay"
+                          value={amounts[req._id] || ""}
+                          onChange={(e) => setAmounts({ ...amounts, [req._id]: e.target.value })}
+                          onKeyDown={(e) => {
+                            // Allow: backspace, delete, tab, escape, enter, and arrow keys
+                            if ([8, 9, 27, 13, 46, 37, 38, 39, 40].includes(e.keyCode) ||
+                                // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+                                (e.ctrlKey && [65, 67, 86, 88, 90].includes(e.keyCode))) {
+                              return;
+                            }
+                            // Prevent if not a number (0-9)
+                            if (e.keyCode < 48 || e.keyCode > 57) {
+                              e.preventDefault();
+                            }
+                          }}
+                          max={amountDueMap[req._id] ?? req.totalPrice}
+                          min={1}
+                          step="1"
+                        />           
                           <StyledButton
                             variant="primary"
                             onClick={() => handlePayment(req)}
