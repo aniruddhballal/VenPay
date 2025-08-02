@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useMemo } from 'react';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom'; // Add this import
 import { paymentRequestsStyles } from '../../styles/paymentRequestsStyles';
 import { tabStyles } from "../../styles/requestsTabStyles";
 import  {reviewStyles} from "../../styles/reviewStyles"
 import api from "../../api/api";
 import {Button} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
 interface Transaction {
   _id: string;
@@ -153,6 +153,7 @@ export default function PaymentRequests() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('accepted');
+  const navigate = useNavigate(); // Add this hook
   
   useEffect(() => {
     api
@@ -212,21 +213,21 @@ return (
               grouped.pending.length === 0 ? (
                 <p className="no-requests">No pending requests yet.</p>
               ) : (
-                <RequestSection title="Pending Requests" data={grouped.pending} />
+                <RequestSection title="Pending Requests" data={grouped.pending} navigate={navigate} />
               )
             )}
             {activeTab === 'accepted' && (
               grouped.accepted.length === 0 ? (
                 <p className="no-requests">No accepted requests yet.</p>
               ) : (
-                <RequestSection title="Accepted Requests" data={grouped.accepted} />
+                <RequestSection title="Accepted Requests" data={grouped.accepted} navigate={navigate} />
               )
             )}
             {activeTab === 'declined' && (
               grouped.declined.length === 0 ? (
                 <p className="no-requests">No declined requests yet.</p>
               ) : (
-                <RequestSection title="Declined Requests" data={grouped.declined} />
+                <RequestSection title="Declined Requests" data={grouped.declined} navigate={navigate} />
               )
             )}
             </div>
@@ -252,16 +253,13 @@ function formatTimeLeft(deadline: string) {
   return `${days}d ${hours}h ${minutes}m`;
 }
 
-function RequestSection({ title, data }: { title: string; data: Request[] }) {
+function RequestSection({ title, data, navigate }: { title: string; data: Request[]; navigate: any }) {
   const [amounts, setAmounts] = useState<Record<string, string>>({});
-  const [passwords, setPasswords] = useState<Record<string, string>>({});
   const [transactions, setTransactions] = useState<Record<string, Transaction[]>>({});
   const [amountDueMap, setAmountDueMap] = useState<Record<string, number>>({});
   const [existingRatings, setExistingRatings] = useState<Record<string, ProductRating>>({});
   const [ratingData, setRatingData] = useState<Record<string, { rating: number; review: string }>>({});
   const [ratingLoading, setRatingLoading] = useState<Record<string, boolean>>({});
-  const navigate = useNavigate();
-  const [showPasswordInput, setShowPasswordInput] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     data.forEach(async (req) => {
@@ -296,64 +294,26 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
     });
   }, [data]);
 
-  const handlePaymentClick = () => {   
-      // THIS CODE EXISTS TO LATER IMPLEMENT THE PAYMENT GATEWAY THING - redirecting to new page types
-    navigate('/payments');
-  };
-
-// const handlePayment = async (req: Request) => {
-//   const amount = parseFloat(amounts[req._id] || "0");
+// Modified payment handler to redirect instead of processing payment
+const handlePayment = (req: Request) => {
+  const amount = parseFloat(amounts[req._id] || "0");
   
-//   // First click - validate amount and show password input
-//   if (!showPasswordInput[req._id]) {
-//     if (isNaN(amount) || amount <= 0 || amount > (amountDueMap[req._id] ?? req.totalPrice)) {
-//       toast.warn("Enter a valid amount up to the amount due.");
-//       return;
-//     }
-    
-//     // Show password input
-//     setShowPasswordInput((prev) => ({ ...prev, [req._id]: true }));
-//     return;
-//   }
-  
-//   // Second click - validate password and process payment
-//   const password = passwords[req._id];
-//   if (!password) {
-//     toast.warn("Please enter your password to confirm the payment.");
-//     return;
-//   }
+  if (isNaN(amount) || amount <= 0 || amount > (amountDueMap[req._id] ?? req.totalPrice)) {
+    toast.warn("Enter a valid amount up to the amount due.");
+    return;
+  }
 
-//     try {
-//       const paymentResponse = await api.post(`/paymenttransactions/${req._id}`, { amount, password });
-
-//       // Update amount due
-//       const newAmountDue = (amountDueMap[req._id] ?? req.totalPrice) - amount;
-//       setAmountDueMap((prev) => ({ ...prev, [req._id]: newAmountDue }));
-
-//       // Add new transaction to the list
-//       const newTransaction = {
-//         _id: paymentResponse.data._id || Date.now().toString(),
-//         amountPaid: amount,
-//         paidBy: { name: paymentResponse.data.paidBy?.name || "You" },
-//         createdAt: new Date().toISOString(),
-//         paidAt: new Date().toISOString(),
-//       };
-
-//       setTransactions((prev) => ({
-//         ...prev,
-//         [req._id]: [newTransaction, ...(prev[req._id] || [])],
-//       }));
-
-//       toast.success("Payment successful!");
-//     } catch (err: any) {
-//       toast.error(err?.response?.data?.error || "Payment failed.");
-//     } finally {
-//       // Clear form inputs
-//       setAmounts((prev) => ({ ...prev, [req._id]: "" }));
-//       setPasswords((prev) => ({ ...prev, [req._id]: "" }));
-//       setShowPasswordInput((prev) => ({ ...prev, [req._id]: false }));
-//     }
-//   };
+  // Navigate to payment page with the amount and request details
+  navigate('/make-payments', { 
+    state: { 
+      amount: amount,
+      requestId: req._id,
+      description: `Payment for ${req.productId?.name || 'Product'}`,
+      vendorName: req.vendorId.name,
+      vendorEmail: req.vendorId.email
+    } 
+  });
+};
 
   const handleRatingSubmit = async (req: Request) => {
     const rating = ratingData[req._id]?.rating;
@@ -538,34 +498,12 @@ function RequestSection({ title, data }: { title: string; data: Request[] }) {
                             min={1}
                           />
                           
-                          {showPasswordInput[req._id] && (
-                            <input
-                              className="payment-input-password"
-                              type="password"
-                              placeholder="Password"
-                              value={passwords[req._id] || ""}
-                              onChange={(e) => setPasswords({ ...passwords, [req._id]: e.target.value })}
-                            />
-                          )}
-                          
                           <StyledButton
                             variant="primary"
-                            onClick={()=>handlePaymentClick()}
-                            // onClick={() => handlePayment(req)}
+                            onClick={() => handlePayment(req)}
                           >
-                            {showPasswordInput[req._id] ? "Confirm Payment" : "Make Payment"}
+                            Make Payment
                           </StyledButton>
-                        {showPasswordInput[req._id] && (
-                          <StyledButton
-                            variant="danger"
-                            onClick={() => {
-                              setShowPasswordInput((prev) => ({ ...prev, [req._id]: false }));
-                              setPasswords((prev) => ({ ...prev, [req._id]: "" }));
-                            }}
-                          >
-                            Cancel
-                          </StyledButton>
-                        )}
                         </div>
                       </>
                     )}
