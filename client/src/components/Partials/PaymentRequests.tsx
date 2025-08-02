@@ -532,48 +532,47 @@ const handlePayment = (req: Request) => {
                         <p>No payments made yet.</p>
                       )}
                     </div>
-
-                    {/* Product Rating Section - Only show when payment is cleared */}
-                    {isPaymentCleared && (
-                      <div className="product-rating-section">
-                        <h5>Product Rating</h5>
-                        {hasExistingRating ? (
-                          <div className="existing-rating">
-                            <p><strong>Your Rating:</strong></p>
-                            {renderStarRating(req._id, hasExistingRating.rating, true)}
-                            <p><strong>Rating:</strong> {hasExistingRating.rating}/5</p>
-                            {hasExistingRating.review && (
-                              <p><strong>Your Review:</strong> "{hasExistingRating.review}"</p>
-                            )}
-                            <p><strong>Rated on:</strong> {new Date(hasExistingRating.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
-                          </div>
-                        ) : (
-                          <div className="rating-form">
-                            <p>How would you rate this product?</p>
-                            {renderStarRating(req._id, ratingData[req._id]?.rating || 0)}
-                            <textarea
-                              className="rating-review"
-                              placeholder="Write a review (optional)..."
-                              value={ratingData[req._id]?.review || ""}
-                              onChange={(e) =>
-                                setRatingData((prev) => ({
-                                  ...prev,
-                                  [req._id]: { ...prev[req._id], review: e.target.value },
-                                }))
-                              }
-                              rows={3}
-                            />
-                            <button
-                              className="rating-submit-button"
-                              onClick={() => handleRatingSubmit(req)}
-                              disabled={!ratingData[req._id]?.rating || ratingLoading[req._id]}
-                            >
-                              {ratingLoading[req._id] ? "Submitting..." : "Submit Rating"}
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  {/* Product Rating Section - Only show when payment is cleared */}
+                  {isPaymentCleared && (
+                    <div className="product-rating-section">
+                      <h5>Product Rating</h5>
+                      {hasExistingRating && hasExistingRating._id ? (
+                        <div className="existing-rating">
+                          <p><strong>Your Rating:</strong></p>
+                          {renderStarRating(req._id, hasExistingRating.rating, true)}
+                          <p><strong>Rating:</strong> {hasExistingRating.rating}/5</p>
+                          {hasExistingRating.review && (
+                            <p><strong>Your Review:</strong> "{hasExistingRating.review}"</p>
+                          )}
+                          <p><strong>Rated on:</strong> {new Date(hasExistingRating.date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
+                        </div>
+                      ) : (
+                        <div className="rating-form">
+                          <p>How would you rate this product?</p>
+                          {renderStarRating(req._id, ratingData[req._id]?.rating || 0)}
+                          <textarea
+                            className="rating-review"
+                            placeholder="Write a review (optional)..."
+                            value={ratingData[req._id]?.review || ""}
+                            onChange={(e) =>
+                              setRatingData((prev) => ({
+                                ...prev,
+                                [req._id]: { ...prev[req._id], review: e.target.value },
+                              }))
+                            }
+                            rows={3}
+                          />
+                          <button
+                            className="rating-submit-button"
+                            onClick={() => handleRatingSubmit(req)}
+                            disabled={!ratingData[req._id]?.rating || ratingLoading[req._id]}
+                          >
+                            {ratingLoading[req._id] ? "Submitting..." : "Submit Rating"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   </>
                 )}
               </div>

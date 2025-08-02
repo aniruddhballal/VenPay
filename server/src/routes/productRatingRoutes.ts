@@ -26,7 +26,6 @@ router.get("/productrequest/:productRequestId", protect, async (req, res) => {
 
     if (!existingRating) {
       res.json({ rating: null, message: "No review available yet" });
-      // res.status(404).json({ error: "No rating found" });
       return;
     }
 
